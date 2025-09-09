@@ -10,7 +10,8 @@
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "lint:fix": "eslint \"src/**/*.{ts,tsx,js,jsx}\" --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
-    "prepare": "husky install"
+    "prepare": "husky",
+    "precommit": "lint-staged"
   },
   "dependencies": {
     "react": "^19.1.1",
