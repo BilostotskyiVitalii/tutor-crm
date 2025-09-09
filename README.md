@@ -1,2 +1,2 @@
-# tutor-crm
+# TutorCRM
 Simple CRM for tutors
