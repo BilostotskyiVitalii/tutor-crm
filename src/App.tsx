@@ -5,7 +5,8 @@ import './App.css';
 
 function App() {
   const [count, setCount] = useState();
-  let a;
+  const a = 0;
+  a = 1;
 
   return (
     <>
