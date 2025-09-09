@@ -1,0 +1,48 @@
+{
+  "todotree": {
+    "tree": [
+      {
+        "key": 1757402495042,
+        "children": [],
+        "todo": {
+          "content": "Set up ES Lint",
+          "id": 1757402495042,
+          "level": "danger",
+          "done": false,
+          "start": 1757402495042
+        }
+      }
+    ],
+    "expandKeys": [
+      1698162058596
+    ],
+    "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
+    "add_mode": "bottom",
+    "virtual": false,
+    "timelines": [],
+    "showLine": false,
+    "restDays": [],
+    "playFontSize": 24,
+    "tags": {
+      "1698162642309": {
+        "label": "backend",
+        "color": "#5de12d",
+        "fontColor": "#000000",
+        "level": 0
+      },
+      "1698162689692": {
+        "label": "frontend",
+        "color": "#363fba",
+        "fontColor": "#000000",
+        "level": 0
+      }
+    },
+    "title": "Tutor CRM",
+    "autoSort": false,
+    "showEndTime": false,
+    "simpleMode": false,
+    "lang": "en",
+    "desc": "App for tutors on React",
+    "version": "1757402523942"
+  }
+}
