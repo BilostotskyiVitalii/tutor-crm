@@ -13,10 +13,67 @@
           "focus": false,
           "end": 1757420488620
         }
+      },
+      {
+        "key": 1757526187598,
+        "children": [
+          {
+            "key": 1757526208479,
+            "children": [],
+            "todo": {
+              "content": "Add logo fron Clips English",
+              "id": 1757526208479,
+              "level": "default",
+              "done": false,
+              "start": 1757526208479
+            }
+          },
+          {
+            "key": 1757526268929,
+            "children": [],
+            "todo": {
+              "content": "Add profile logout, avatar, name",
+              "id": 1757526268929,
+              "level": "default",
+              "done": false,
+              "start": 1757526268929
+            }
+          },
+          {
+            "key": 1757526811591,
+            "children": [],
+            "todo": {
+              "content": "Add shadow for header",
+              "id": 1757526811591,
+              "level": "default",
+              "done": false,
+              "start": 1757526811591
+            }
+          }
+        ],
+        "todo": {
+          "content": "Header",
+          "id": 1757526187598,
+          "level": "warning",
+          "done": false,
+          "start": 1757526187598
+        }
+      },
+      {
+        "key": 1757526754959,
+        "children": [],
+        "todo": {
+          "content": "Add favicon",
+          "id": 1757526754959,
+          "level": "secondary",
+          "done": false,
+          "start": 1757526754959
+        }
       }
     ],
     "expandKeys": [
-      1698162058596
+      1698162058596,
+      1757526187598
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -45,6 +102,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757420488656"
+    "version": "1757526823880"
   }
 }
