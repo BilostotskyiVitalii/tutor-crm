@@ -1,49 +1,14 @@
-import React, {
-  createElement,
-  useState,
-  type CSSProperties,
-  type FC,
-} from 'react';
+import React, { type FC } from 'react';
 
-import {
-  BarChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-  SettingFilled,
-  HomeOutlined,
-  ScheduleOutlined,
-  MailOutlined,
-} from '@ant-design/icons';
+import { UserOutlined, MailOutlined } from '@ant-design/icons';
 
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
+import SiderComponent from './components/SiderComponent/SiderComponent';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Footer } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
-
-const siderStyle: CSSProperties = {
-  overflow: 'auto',
-  height: '100vh',
-  position: 'sticky',
-  insetInlineStart: 0,
-  top: 0,
-  bottom: 0,
-  scrollbarWidth: 'thin',
-  scrollbarGutter: 'stable',
-};
-
-const siderItems: MenuProps['items'] = [
-  { title: 'Dashboard', icon: HomeOutlined },
-  { title: 'Calendar', icon: ScheduleOutlined },
-  { title: 'Students', icon: TeamOutlined },
-  { title: 'Analytics', icon: BarChartOutlined },
-  { title: 'Settings', icon: SettingFilled },
-].map((item, index) => ({
-  key: String(index + 1),
-  icon: createElement(item.icon),
-  label: item.title,
-}));
 
 const headerItems: MenuItem[] = [
   {
@@ -62,24 +27,10 @@ const App: FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-  const [collapsed, setCollapsed] = useState(false);
 
   return (
     <Layout hasSider>
-      <Sider
-        style={siderStyle}
-        breakpoint="lg"
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
-        <Menu
-          theme="dark"
-          mode="inline"
-          items={siderItems}
-          defaultSelectedKeys={['1']}
-        />
-      </Sider>
+      <SiderComponent />
       <Layout>
         <Header
           style={{
