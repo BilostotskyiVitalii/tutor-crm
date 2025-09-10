@@ -1,15 +1,10 @@
 .sider {
   overflow: auto;
-  height: 100vh;
+  height: calc(100vh - 64px);
   position: sticky;
   inset-inline-start: 0;
-  top: 0;
+  top: 64px;
   bottom: 0;
   scrollbar-width: thin;
   scrollbar-gutter: stable;
-}
-
-.logo {
-  color: aliceblue;
-  font-size: large;
 }

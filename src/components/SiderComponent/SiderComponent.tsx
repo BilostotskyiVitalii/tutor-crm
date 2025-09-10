@@ -38,7 +38,6 @@ const SiderComponent: FC = () => {
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
     >
-      <div className={styles.logo}>Tutor CRM</div>
       <Menu
         theme="dark"
         mode="inline"

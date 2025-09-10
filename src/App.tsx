@@ -10,12 +10,14 @@ import {
 
 const App: FC = () => {
   return (
-    <Layout hasSider>
-      <SiderComponent />
-      <Layout>
-        <HeaderComponent />
-        <AppRoutes />
-        <FooterComponent />
+    <Layout>
+      <HeaderComponent />
+      <Layout hasSider>
+        <SiderComponent />
+        <Layout>
+          <AppRoutes />
+          <FooterComponent />
+        </Layout>
       </Layout>
     </Layout>
   );
