@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router';
-import Dashboard from '../pages/Dashboard.tsx/Dashboard';
+import Dashboard from '../pages/Dashboard/Dashboard';
 
 const AppRoutes: FC = () => {
   return (
