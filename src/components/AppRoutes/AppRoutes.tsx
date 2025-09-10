@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { Layout, theme } from 'antd';
 
 import { Analytics, Calendar, Dashboard, Settings, Students } from '@/pages';
@@ -26,6 +26,7 @@ const AppRoutes: FC = () => {
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/calendar" element={<Calendar />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/" element={<Navigate replace to="/dashboard" />} />
       </Routes>
     </Content>
   );
