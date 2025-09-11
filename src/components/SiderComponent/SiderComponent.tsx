@@ -1,6 +1,5 @@
 import { createElement, useState, type FC } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-
 import {
   BarChartOutlined,
   TeamOutlined,
@@ -8,7 +7,9 @@ import {
   HomeOutlined,
   ScheduleOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, type MenuProps } from 'antd';
+
+import { navigationUrls } from '@/constants/navigationUrls';
 
 import styles from './SiderComponent.module.scss';
 
@@ -17,13 +18,14 @@ const SiderComponent: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { Sider } = Layout;
+  const { dashboard, students, calendar, settings, analytics } = navigationUrls;
 
-  const siderItems = [
-    { title: 'Dashboard', icon: HomeOutlined, path: '/dashboard' },
-    { title: 'Calendar', icon: ScheduleOutlined, path: '/calendar' },
-    { title: 'Students', icon: TeamOutlined, path: '/students' },
-    { title: 'Analytics', icon: BarChartOutlined, path: '/analytics' },
-    { title: 'Settings', icon: SettingFilled, path: '/settings' },
+  const siderItems: MenuProps['items'] = [
+    { title: 'Dashboard', icon: HomeOutlined, path: dashboard },
+    { title: 'Calendar', icon: ScheduleOutlined, path: calendar },
+    { title: 'Students', icon: TeamOutlined, path: students },
+    { title: 'Analytics', icon: BarChartOutlined, path: analytics },
+    { title: 'Settings', icon: SettingFilled, path: settings },
   ].map((item) => ({
     key: item.path,
     icon: createElement(item.icon),
