@@ -12,7 +12,7 @@ const LoginPage = () => {
     <div className={styles.backdrop}>
       <Form
         name="login"
-        initialValues={{ remember: true }}
+        // initialValues={{ remember: true }}
         style={{ maxWidth: 360 }}
         onFinish={onFinish}
       >
