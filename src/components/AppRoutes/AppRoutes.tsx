@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
-import { Layout, theme } from 'antd';
+import { Layout } from 'antd';
 
 import { Analytics, Calendar, Dashboard, Settings, Students } from '@/pages';
 import { navigationUrls } from '@/constants/navigationUrls';
@@ -12,15 +12,8 @@ const { dashboard, students, calendar, settings, analytics, index } =
   navigationUrls;
 
 const AppRoutes: FC = () => {
-  // const {
-  //   token: { colorBgContainer, borderRadiusLG },
-  // } = theme.useToken();
-
   return (
-    <Content
-      // style={{ background: colorBgContainer, borderRadius: borderRadiusLG }}
-      className={styles.content}
-    >
+    <Content className={styles.content}>
       <Routes>
         <Route path={dashboard} element={<Dashboard />} />
         <Route path={students} element={<Students />} />
