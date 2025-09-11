@@ -5,4 +5,6 @@ export const navigationUrls = {
   students: '/students',
   calendar: '/calendar',
   analytics: '/analytics',
+  login: '/login',
+  registration: '/registration',
 };

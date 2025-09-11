@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { Layout } from 'antd';
 

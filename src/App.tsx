@@ -1,26 +1,20 @@
 import { type FC } from 'react';
+import { Route, Routes } from 'react-router';
 
-import { Layout } from 'antd';
-
-import {
-  AppRoutes,
-  SiderComponent,
-  HeaderComponent,
-  FooterComponent,
-} from '@/components';
+import { LoginPage, RegistrationPage } from '@/pages';
+import { ContentComponent } from '@/components';
+import { navigationUrls } from '@/constants/navigationUrls';
 
 const App: FC = () => {
   return (
-    <Layout>
-      <HeaderComponent />
-      <Layout hasSider>
-        <SiderComponent />
-        <Layout>
-          <AppRoutes />
-          <FooterComponent />
-        </Layout>
-      </Layout>
-    </Layout>
+    <Routes>
+      <Route path={navigationUrls.login} element={<LoginPage />} />
+      <Route
+        path={navigationUrls.registration}
+        element={<RegistrationPage />}
+      />
+      <Route path="/*" element={<ContentComponent />} />
+    </Routes>
   );
 };
 
