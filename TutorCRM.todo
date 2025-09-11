@@ -24,8 +24,10 @@
               "content": "Add logo fron Clips English",
               "id": 1757526208479,
               "level": "default",
-              "done": false,
-              "start": 1757526208479
+              "done": true,
+              "start": 1757526208479,
+              "focus": false,
+              "end": 1757566064593
             }
           },
           {
@@ -66,8 +68,10 @@
           "content": "Add favicon",
           "id": 1757526754959,
           "level": "secondary",
-          "done": false,
-          "start": 1757526754959
+          "done": true,
+          "start": 1757526754959,
+          "focus": false,
+          "end": 1757564708452
         }
       }
     ],
@@ -102,6 +106,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757526823880"
+    "version": "1757566064686"
   }
 }
