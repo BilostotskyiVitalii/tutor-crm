@@ -12,15 +12,40 @@ const { dashboard, students, calendar, settings, analytics, index } =
   navigationUrls;
 
 const AppRoutes: FC = () => {
+  const routes = [
+    { path: dashboard, element: <Dashboard /> },
+    { path: students, element: <Students /> },
+    { path: calendar, element: <Calendar /> },
+    { path: analytics, element: <Analytics /> },
+    { path: settings, element: <Settings /> },
+  ];
+
   return (
     <Content className={styles.content}>
       <Routes>
-        <Route path={dashboard} element={<Dashboard />} />
-        <Route path={students} element={<Students />} />
-        <Route path={analytics} element={<Analytics />} />
-        <Route path={calendar} element={<Calendar />} />
-        <Route path={settings} element={<Settings />} />
-        <Route path={index} element={<Navigate replace to={dashboard} />} />
+        {routes.map(({ path, element }) => (
+          <Route key={path} path={path} element={element} />
+        ))}
+
+        {/* "/" → dashboard */}
+        <Route
+          path={index}
+          element={<Navigate to={navigationUrls.dashboard} />}
+        />
+
+        {/* глобальный fallback */}
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to={
+                routes.find(({ path }) => location.pathname.startsWith(path))
+                  ?.path ?? navigationUrls.dashboard
+              }
+              replace
+            />
+          }
+        />
       </Routes>
     </Content>
   );
