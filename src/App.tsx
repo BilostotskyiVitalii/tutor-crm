@@ -2,7 +2,7 @@ import { type FC } from 'react';
 import { Route, Routes } from 'react-router';
 
 import { LoginPage, RegistrationPage } from '@/pages';
-import { ContentComponent } from '@/components';
+import { WorkPlaceComponent } from '@/components';
 import { navigationUrls } from '@/constants/navigationUrls';
 
 const App: FC = () => {
@@ -13,7 +13,7 @@ const App: FC = () => {
         path={navigationUrls.registration}
         element={<RegistrationPage />}
       />
-      <Route path="/*" element={<ContentComponent />} />
+      <Route path="/*" element={<WorkPlaceComponent />} />
     </Routes>
   );
 };
