@@ -1,21 +1,29 @@
 import { Button, Checkbox, Flex, Form, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import styles from './LoginPage.module.scss';
+import { useNavigate } from 'react-router';
+import { navigationUrls } from '@/constants/navigationUrls';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
   };
 
+  function onRegHandler(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    navigate(navigationUrls.registration);
+  }
+
   return (
-    <div className={styles.backdrop}>
+    <section className="auth-backdrop">
       <Form
+        className="form"
         name="login"
-        // initialValues={{ remember: true }}
-        style={{ maxWidth: 360 }}
+        initialValues={{ remember: true }}
         onFinish={onFinish}
       >
+        <h2 className="auth-form-title">Login</h2>
         <Form.Item
           name="username"
           rules={[{ required: true, message: 'Please input your Username!' }]}
@@ -45,10 +53,13 @@ const LoginPage = () => {
           <Button block type="primary" htmlType="submit">
             Log in
           </Button>
-          or <a href="">Register now!</a>
+          or{' '}
+          <a href="" onClick={onRegHandler}>
+            Register now!
+          </a>
         </Form.Item>
       </Form>
-    </div>
+    </section>
   );
 };
 

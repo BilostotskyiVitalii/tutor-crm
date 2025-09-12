@@ -7,4 +7,4 @@ export const navigationUrls = {
   analytics: '/analytics',
   login: '/login',
   registration: '/registration',
-};
+} as const;
