@@ -2,12 +2,16 @@ import { useState, type FC } from 'react';
 import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
+import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
+
 import styles from './UserMenu.module.scss';
 
 const items: MenuProps['items'] = [
   {
-    label: '1st menu item',
+    label: <UserMenuCard />,
     key: '0',
+    disabled: true,
+    className: styles.noHover,
   },
   {
     type: 'divider',
@@ -15,6 +19,7 @@ const items: MenuProps['items'] = [
   {
     label: 'Log out',
     key: 'logout',
+    className: styles.logout,
   },
 ];
 
