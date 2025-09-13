@@ -26,21 +26,14 @@ const AppRoutes: FC = () => {
         {routes.map(({ path, element }) => (
           <Route key={path} path={path} element={element} />
         ))}
-
-        {/* "/" → dashboard */}
-        <Route
-          path={index}
-          element={<Navigate to={navigationUrls.dashboard} />}
-        />
-
-        {/* глобальный fallback */}
+        <Route path={index} element={<Navigate to={dashboard} />} />
         <Route
           path="*"
           element={
             <Navigate
               to={
                 routes.find(({ path }) => location.pathname.startsWith(path))
-                  ?.path ?? navigationUrls.dashboard
+                  ?.path ?? dashboard
               }
               replace
             />
