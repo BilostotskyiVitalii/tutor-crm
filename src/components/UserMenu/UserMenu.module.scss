@@ -13,3 +13,13 @@
 .openMenu {
   box-shadow: 0 0 0 4px $header-hover-color;
 }
+
+.noHover {
+  cursor: default !important;
+  pointer-events: none;
+  background: transparent !important;
+}
+
+.logout {
+  color: red !important;
+}
