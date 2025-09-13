@@ -1,0 +1,15 @@
+@use '@/styles/variables.scss' as *;
+
+.avatar {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+  background-color: #8062b1ff;
+
+  &:hover {
+    box-shadow: 0 0 0 4px $header-hover-color;
+  }
+}
+
+.openMenu {
+  box-shadow: 0 0 0 4px $header-hover-color;
+}
