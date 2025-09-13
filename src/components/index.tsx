@@ -4,4 +4,5 @@ export { default as FooterComponent } from './FooterComponent/FooterComponent';
 export { default as LogoComponent } from './LogoComponent/LogoComponent';
 export { default as WorkPlaceComponent } from './WorkPlaceComponent/WorkPlaceComponent';
 export { default as SelectLang } from './SelectLang/SelectLang';
+export { default as UserMenu } from './UserMenu/UserMenu';
 export { default as AppRoutes } from './AppRoutes/AppRoutes';
