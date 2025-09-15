@@ -1,11 +1,13 @@
 import { useState, type FC } from 'react';
 import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { getAuth, signOut } from 'firebase/auth';
 
-import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 import { removeUser } from '@/store/userSlice';
-import styles from './UserMenu.module.scss';
 import { useAppDispatch } from '@/hooks/reduxHooks';
+import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
+
+import styles from './UserMenu.module.scss';
 
 const items: MenuProps['items'] = [
   {
@@ -31,9 +33,15 @@ const UserMenu: FC = () => {
     setIsOpen(open);
   }
 
-  const handleClick: MenuProps['onClick'] = ({ key }) => {
+  const handleClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === 'logout') {
-      dispatch(removeUser());
+      const auth = getAuth();
+      try {
+        await signOut(auth);
+        dispatch(removeUser());
+      } catch (error) {
+        console.error('Ошибка при выходе:', error);
+      }
     }
   };
 
