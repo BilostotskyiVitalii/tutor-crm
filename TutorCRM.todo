@@ -75,11 +75,69 @@
           "focus": false,
           "end": 1757564708452
         }
+      },
+      {
+        "key": 1757941524285,
+        "children": [
+          {
+            "key": 1757941542663,
+            "children": [],
+            "todo": {
+              "content": "add logout in usermenu",
+              "id": 1757941542663,
+              "level": "default",
+              "done": false,
+              "start": 1757941542663
+            }
+          },
+          {
+            "key": 1757941534491,
+            "children": [],
+            "todo": {
+              "content": "add rules",
+              "id": 1757941534491,
+              "level": "default",
+              "done": false,
+              "start": 1757941534491
+            }
+          },
+          {
+            "key": 1757941577811,
+            "children": [],
+            "todo": {
+              "content": "add user info in user menu",
+              "id": 1757941577811,
+              "level": "default",
+              "done": false,
+              "start": 1757941577811
+            }
+          },
+          {
+            "key": 1757941620133,
+            "children": [],
+            "todo": {
+              "content": "add reload stay login",
+              "id": 1757941620133,
+              "level": "default",
+              "done": false,
+              "start": 1757941620133
+            }
+          }
+        ],
+        "todo": {
+          "content": "LogIn/Logout",
+          "id": 1757941524285,
+          "level": "default",
+          "done": false,
+          "start": 1757941524285
+        }
       }
     ],
     "expandKeys": [
       1698162058596,
-      1757526187598
+      1757941524285,
+      1757941534491,
+      1757941542663
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -108,6 +166,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757772542118"
+    "version": "1757943874988"
   }
 }

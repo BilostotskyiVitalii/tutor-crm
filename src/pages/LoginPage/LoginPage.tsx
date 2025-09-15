@@ -1,19 +1,39 @@
-import { Button, Checkbox, Flex, Form, Input } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { Button, Flex, Form, Input, type FormProps } from 'antd';
+import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
+import { setUser } from '@/store/userSlice';
+import { useAppDispatch } from '@/hooks/reducHooks';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+type FieldType = {
+  email: string;
+  password: string;
+};
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-  };
+  const dispatch = useAppDispatch();
 
-  function onRegHandler(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    navigate(navigationUrls.registration);
-  }
+  const handleLogin: FormProps<FieldType>['onFinish'] = ({
+    email,
+    password,
+  }) => {
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then(async ({ user }) => {
+        const token = await user.getIdToken();
+        dispatch(
+          setUser({
+            id: user.uid,
+            email: user.email,
+            token: token,
+          }),
+        );
+        navigate(navigationUrls.index);
+      })
+      .catch(console.error);
+  };
 
   return (
     <section className="auth-backdrop">
@@ -21,14 +41,23 @@ const LoginPage = () => {
         className="form"
         name="login"
         initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={handleLogin}
       >
         <h2 className="auth-form-title">Login</h2>
         <Form.Item
-          name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
+          name="email"
+          rules={[
+            {
+              type: 'email',
+              message: 'The input is not valid E-mail!',
+            },
+            {
+              required: true,
+              message: 'Please input your E-mail!',
+            },
+          ]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<MailOutlined />} placeholder="E-mail" />
         </Form.Item>
         <Form.Item
           name="password"
@@ -42,9 +71,6 @@ const LoginPage = () => {
         </Form.Item>
         <Form.Item>
           <Flex justify="space-between" align="center">
-            <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
             <a href="">Forgot password</a>
           </Flex>
         </Form.Item>
@@ -53,10 +79,7 @@ const LoginPage = () => {
           <Button block type="primary" htmlType="submit">
             Log in
           </Button>
-          or{' '}
-          <a href="" onClick={onRegHandler}>
-            Register now!
-          </a>
+          or <Link to={navigationUrls.registration}>Register now!</Link>
         </Form.Item>
       </Form>
     </section>
