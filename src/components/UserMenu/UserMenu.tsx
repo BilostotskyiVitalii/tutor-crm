@@ -3,13 +3,14 @@ import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
-
+import { removeUser } from '@/store/userSlice';
 import styles from './UserMenu.module.scss';
+import { useAppDispatch } from '@/hooks/reducHooks';
 
 const items: MenuProps['items'] = [
   {
     label: <UserMenuCard />,
-    key: '0',
+    key: 'user',
     className: styles.noHover,
   },
   {
@@ -24,6 +25,7 @@ const items: MenuProps['items'] = [
 
 const UserMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useAppDispatch();
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -31,7 +33,7 @@ const UserMenu: FC = () => {
 
   const handleClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') {
-      console.log('Выходим из аккаунта');
+      dispatch(removeUser());
     }
   };
 

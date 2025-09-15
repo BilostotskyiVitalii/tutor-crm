@@ -1,28 +1,47 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
+import { setUser } from '@/store/userSlice';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { useAppDispatch } from '@/hooks/reducHooks';
+
+type FieldType = {
+  email: string;
+  password: string;
+};
 
 const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
+  const handleRegister: FormProps<FieldType>['onFinish'] = ({
+    email,
+    password,
+  }) => {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(async ({ user }) => {
+        const token = await user.getIdToken();
+        dispatch(
+          setUser({
+            id: user.uid,
+            email: user.email,
+            token: token,
+          }),
+        );
+        navigate(navigationUrls.index);
+      })
+      .catch(console.log);
   };
-
-  function onLoginHandler(e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    navigate(navigationUrls.login);
-  }
 
   return (
     <section className="auth-backdrop">
       <Form
         form={form}
         name="register"
-        onFinish={onFinish}
+        onFinish={handleRegister}
         className="form"
         scrollToFirstError
       >
@@ -99,10 +118,7 @@ const RegistrationPage: React.FC = () => {
           <Button block type="primary" htmlType="submit">
             Register
           </Button>
-          or{' '}
-          <a href="" onClick={onLoginHandler}>
-            Log in!
-          </a>
+          or <Link to={navigationUrls.login}>Login now!</Link>
         </Form.Item>
       </Form>
     </section>

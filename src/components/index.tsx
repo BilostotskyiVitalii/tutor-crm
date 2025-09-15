@@ -1,4 +1,5 @@
 export { default as AppRoutes } from './AppRoutes/AppRoutes';
+export { default as PrivateRoute } from './PrivateRoute/PrivateRoute';
 export { default as SiderComponent } from './SiderComponent/SiderComponent';
 export { default as HeaderComponent } from './HeaderComponent/HeaderComponent';
 export { default as FooterComponent } from './FooterComponent/FooterComponent';
