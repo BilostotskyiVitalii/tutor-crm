@@ -5,6 +5,7 @@ export const navigationUrls = {
   dashboard: '/dashboard',
   settings: '/settings',
   students: '/students',
+  student: '/students/:id',
   calendar: '/calendar',
   analytics: '/analytics',
 } as const;
