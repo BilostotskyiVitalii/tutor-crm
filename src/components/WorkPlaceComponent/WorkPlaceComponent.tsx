@@ -1,11 +1,6 @@
 import { Layout } from 'antd';
-
-import {
-  AppRoutes,
-  SiderComponent,
-  HeaderComponent,
-  FooterComponent,
-} from '@/components';
+import { SiderComponent, HeaderComponent, FooterComponent } from '@/components';
+import AppRoutes from '@/routes/AppRoutes/AppRoutes';
 
 const WorkPlaceComponent = () => {
   return (
