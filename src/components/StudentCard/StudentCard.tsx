@@ -29,7 +29,7 @@ const StudentCard: FC = () => {
           />
         }
         title={
-          <Link to={'/students/:id'}>
+          <Link to={'/students/id'}>
             <span>Name</span> <span>Surname</span>
           </Link>
         }

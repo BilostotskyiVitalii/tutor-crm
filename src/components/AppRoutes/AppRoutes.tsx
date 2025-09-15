@@ -2,13 +2,20 @@ import { type FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { Layout } from 'antd';
 
-import { Analytics, Calendar, Dashboard, Settings, Students } from '@/pages';
+import {
+  Analytics,
+  Calendar,
+  Dashboard,
+  Settings,
+  StudentPage,
+  Students,
+} from '@/pages';
 import { navigationUrls } from '@/constants/navigationUrls';
 
 import styles from './AppRoutes.module.scss';
 
 const { Content } = Layout;
-const { dashboard, students, calendar, settings, analytics, index } =
+const { dashboard, students, student, calendar, settings, analytics, index } =
   navigationUrls;
 
 const AppRoutes: FC = () => {
@@ -18,6 +25,7 @@ const AppRoutes: FC = () => {
     { path: calendar, element: <Calendar /> },
     { path: analytics, element: <Analytics /> },
     { path: settings, element: <Settings /> },
+    { path: student, element: <StudentPage /> },
   ];
 
   return (
