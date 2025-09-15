@@ -131,6 +131,17 @@
           "done": false,
           "start": 1757941524285
         }
+      },
+      {
+        "key": 1757947452272,
+        "children": [],
+        "todo": {
+          "content": "Set error handler",
+          "id": 1757947452272,
+          "level": "default",
+          "done": false,
+          "start": 1757947452272
+        }
       }
     ],
     "expandKeys": [
@@ -166,6 +177,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757943874988"
+    "version": "1757947463919"
   }
 }
