@@ -1,27 +1,43 @@
 import { type FC } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 
 import { LoginPage, RegistrationPage } from '@/pages';
-import { PrivateRoute, WorkPlaceComponent } from '@/components';
+import { WorkPlaceComponent } from '@/components';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthListener } from '@/hooks/useAuthListener';
+import { useAuth } from '@/hooks/useAuth';
 
 const App: FC = () => {
-  useAuthListener();
+  const { isAuth } = useAuth();
+  const { loading } = useAuthListener();
+
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
 
   return (
     <Routes>
-      <Route path={navigationUrls.login} element={<LoginPage />} />
+      <Route
+        path={navigationUrls.login}
+        element={
+          isAuth ? <Navigate to={navigationUrls.index} /> : <LoginPage />
+        }
+      />
       <Route
         path={navigationUrls.registration}
-        element={<RegistrationPage />}
+        element={
+          isAuth ? <Navigate to={navigationUrls.index} /> : <RegistrationPage />
+        }
       />
+
       <Route
         path="/*"
         element={
-          <PrivateRoute>
+          !isAuth ? (
+            <Navigate to={navigationUrls.login} />
+          ) : (
             <WorkPlaceComponent />
-          </PrivateRoute>
+          )
         }
       />
     </Routes>
