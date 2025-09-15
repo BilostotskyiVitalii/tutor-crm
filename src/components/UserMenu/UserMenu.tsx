@@ -5,7 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 import { removeUser } from '@/store/userSlice';
 import styles from './UserMenu.module.scss';
-import { useAppDispatch } from '@/hooks/reducHooks';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 
 const items: MenuProps['items'] = [
   {
