@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { setUser } from '@/store/userSlice';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { useAppDispatch } from '@/hooks/reducHooks';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 
 type FieldType = {
   email: string;

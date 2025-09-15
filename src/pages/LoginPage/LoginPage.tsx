@@ -3,7 +3,7 @@ import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { setUser } from '@/store/userSlice';
-import { useAppDispatch } from '@/hooks/reducHooks';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 type FieldType = {
