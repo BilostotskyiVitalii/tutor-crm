@@ -10,7 +10,6 @@ const items: MenuProps['items'] = [
   {
     label: <UserMenuCard />,
     key: '0',
-    disabled: true,
     className: styles.noHover,
   },
   {

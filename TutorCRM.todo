@@ -48,8 +48,10 @@
               "content": "Add shadow for header",
               "id": 1757526811591,
               "level": "default",
-              "done": false,
-              "start": 1757526811591
+              "done": true,
+              "start": 1757526811591,
+              "focus": false,
+              "end": 1757772542063
             }
           }
         ],
@@ -106,6 +108,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757566064686"
+    "version": "1757772542118"
   }
 }
