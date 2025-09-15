@@ -35,18 +35,7 @@ const AppRoutes: FC = () => {
           <Route key={path} path={path} element={element} />
         ))}
         <Route path={index} element={<Navigate to={dashboard} />} />
-        <Route
-          path="*"
-          element={
-            <Navigate
-              to={
-                routes.find(({ path }) => location.pathname.startsWith(path))
-                  ?.path ?? dashboard
-              }
-              replace
-            />
-          }
-        />
+        <Route path="*" element={<Navigate to={dashboard} replace />} />
       </Routes>
     </Content>
   );

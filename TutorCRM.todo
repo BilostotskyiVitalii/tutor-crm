@@ -86,15 +86,17 @@
               "content": "add logout in usermenu",
               "id": 1757941542663,
               "level": "default",
-              "done": false,
-              "start": 1757941542663
+              "done": true,
+              "start": 1757941542663,
+              "focus": false,
+              "end": 1757957922438
             }
           },
           {
             "key": 1757941534491,
             "children": [],
             "todo": {
-              "content": "add rules",
+              "content": "add rules for input password 6 char min",
               "id": 1757941534491,
               "level": "default",
               "done": false,
@@ -108,8 +110,10 @@
               "content": "add user info in user menu",
               "id": 1757941577811,
               "level": "default",
-              "done": false,
-              "start": 1757941577811
+              "done": true,
+              "start": 1757941577811,
+              "focus": false,
+              "end": 1757957937765
             }
           },
           {
@@ -119,8 +123,21 @@
               "content": "add reload stay login",
               "id": 1757941620133,
               "level": "default",
+              "done": true,
+              "start": 1757941620133,
+              "focus": false,
+              "end": 1757957942766
+            }
+          },
+          {
+            "key": 1757958218570,
+            "children": [],
+            "todo": {
+              "content": "add possibility to post username on registration",
+              "id": 1757958218570,
+              "level": "default",
               "done": false,
-              "start": 1757941620133
+              "start": 1757958218570
             }
           }
         ],
@@ -141,6 +158,39 @@
           "level": "default",
           "done": false,
           "start": 1757947452272
+        }
+      },
+      {
+        "key": 1757957981941,
+        "children": [],
+        "todo": {
+          "content": "Add spinner to app on loading",
+          "id": 1757957981941,
+          "level": "default",
+          "done": false,
+          "start": 1757957981941
+        }
+      },
+      {
+        "key": 1757958031101,
+        "children": [],
+        "todo": {
+          "content": "Add message on error",
+          "id": 1757958031101,
+          "level": "default",
+          "done": false,
+          "start": 1757958031101
+        }
+      },
+      {
+        "key": 1757958183295,
+        "children": [],
+        "todo": {
+          "content": "Refactor login and reg pages",
+          "id": 1757958183295,
+          "level": "default",
+          "done": false,
+          "start": 1757958183295
         }
       }
     ],
@@ -177,6 +227,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1757947463919"
+    "version": "1757958268794"
   }
 }

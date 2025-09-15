@@ -1,18 +1,23 @@
-import { type FC } from 'react';
-import { Navigate, Route, Routes } from 'react-router';
+import type { FC } from 'react';
+import { Route, Routes } from 'react-router';
 
 import { LoginPage, RegistrationPage } from '@/pages';
 import { WorkPlaceComponent } from '@/components';
+import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
+
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthListener } from '@/hooks/useAuthListener';
-import { useAuth } from '@/hooks/useAuth';
+import { Flex, Spin } from 'antd';
 
 const App: FC = () => {
-  const { isAuth } = useAuth();
   const { loading } = useAuthListener();
 
   if (loading) {
-    return <div>Загрузка...</div>;
+    return (
+      <Flex align="center" justify="center" gap="middle">
+        <Spin size="large" />
+      </Flex>
+    );
   }
 
   return (
@@ -20,24 +25,26 @@ const App: FC = () => {
       <Route
         path={navigationUrls.login}
         element={
-          isAuth ? <Navigate to={navigationUrls.index} /> : <LoginPage />
+          <AuthRoute requireAuth={false}>
+            <LoginPage />
+          </AuthRoute>
         }
       />
       <Route
         path={navigationUrls.registration}
         element={
-          isAuth ? <Navigate to={navigationUrls.index} /> : <RegistrationPage />
+          <AuthRoute requireAuth={false}>
+            <RegistrationPage />
+          </AuthRoute>
         }
       />
 
       <Route
         path="/*"
         element={
-          !isAuth ? (
-            <Navigate to={navigationUrls.login} />
-          ) : (
+          <AuthRoute requireAuth={true}>
             <WorkPlaceComponent />
-          )
+          </AuthRoute>
         }
       />
     </Routes>
