@@ -8,6 +8,8 @@ import type { ILoginField } from '@/types/authFieldsTypes';
 import { useLogin } from '@/hooks/useLogin';
 import { useGoogleLogin } from '@/hooks/useGoogleLogin';
 
+import styles from './LoginPage.module.scss';
+
 const LoginPage: FC = () => {
   const { login } = useLogin();
   const { loginWithGoogle } = useGoogleLogin();
@@ -54,12 +56,14 @@ const LoginPage: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button block type="primary" htmlType="submit">
-            Log in
-          </Button>
-          <Button block icon={<GoogleOutlined />} onClick={loginWithGoogle}>
-            Log in with Google
-          </Button>
+          <div className={styles.buttonsWrapper}>
+            <Button block type="primary" htmlType="submit">
+              Log in
+            </Button>
+            <Button block icon={<GoogleOutlined />} onClick={loginWithGoogle}>
+              Log in with Google
+            </Button>
+          </div>
           or <Link to={navigationUrls.registration}>Register now!</Link>
         </Form.Item>
       </Form>
