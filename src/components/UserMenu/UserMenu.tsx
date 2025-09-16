@@ -5,6 +5,7 @@ import { getAuth, signOut } from 'firebase/auth';
 
 import { removeUser } from '@/store/userSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
+import { useAuthProfile } from '@/hooks/useAuthProfile';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 
 import styles from './UserMenu.module.scss';
@@ -28,6 +29,7 @@ const items: MenuProps['items'] = [
 const UserMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
+  const { profile } = useAuthProfile();
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -53,7 +55,8 @@ const UserMenu: FC = () => {
     >
       <Avatar
         className={`${styles.avatar} ${isOpen ? styles.openMenu : ''}`}
-        icon={<UserOutlined />}
+        src={profile?.avatar ?? undefined}
+        icon={!profile?.avatar ? <UserOutlined /> : undefined}
       />
     </Dropdown>
   );

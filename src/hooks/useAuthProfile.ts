@@ -24,6 +24,7 @@ export const useAuthProfile = () => {
           // Если нет nickName в БД, используем displayName из Google
           const nickName = dbData.nickName ?? user.displayName ?? null;
           const createdAt = dbData.createdAt ?? serverTimestamp();
+          const avatar = dbData.avatar ?? user.photoURL ?? null;
 
           // Если пользователя нет в БД, создаем запись
           if (!snapshot.exists()) {
@@ -31,6 +32,7 @@ export const useAuthProfile = () => {
               nickName,
               email: user.email,
               createdAt,
+              avatar,
             });
           }
 
@@ -40,6 +42,7 @@ export const useAuthProfile = () => {
             token,
             nickName,
             createdAt,
+            avatar,
           };
 
           setProfile(fullProfile);
