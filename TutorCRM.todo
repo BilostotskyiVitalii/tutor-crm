@@ -145,6 +145,19 @@
               "focus": false,
               "end": 1758029686121
             }
+          },
+          {
+            "key": 1758048389348,
+            "children": [],
+            "todo": {
+              "content": "No name for email user",
+              "id": 1758048389348,
+              "level": "default",
+              "done": true,
+              "start": 1758048389348,
+              "focus": false,
+              "end": 1758062081804
+            }
           }
         ],
         "todo": {
@@ -247,6 +260,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758047311616"
+    "version": "1758062081917"
   }
 }

@@ -7,6 +7,7 @@ const initialState: IUserProfile = {
   token: null,
   nickName: null,
   createdAt: null,
+  avatar: null,
 };
 
 const userSlice = createSlice({
@@ -19,6 +20,7 @@ const userSlice = createSlice({
       state.token = action.payload.token;
       state.nickName = action.payload.nickName;
       state.createdAt = action.payload.createdAt ?? null;
+      state.avatar = action.payload.avatar ?? null;
     },
     removeUser(state) {
       state.id = null;
@@ -26,6 +28,7 @@ const userSlice = createSlice({
       state.token = null;
       state.nickName = null;
       state.createdAt = null;
+      state.avatar = null;
     },
   },
 });
