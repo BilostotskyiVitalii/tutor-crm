@@ -37,8 +37,10 @@
               "content": "Add avatar",
               "id": 1757526268929,
               "level": "default",
-              "done": false,
-              "start": 1757526268929
+              "done": true,
+              "start": 1757526268929,
+              "focus": false,
+              "end": 1758047311537
             }
           },
           {
@@ -99,8 +101,10 @@
               "content": "add rules for input password 6 char min",
               "id": 1757941534491,
               "level": "default",
-              "done": false,
-              "start": 1757941534491
+              "done": true,
+              "start": 1757941534491,
+              "focus": false,
+              "end": 1758045725579
             }
           },
           {
@@ -211,10 +215,10 @@
     ],
     "expandKeys": [
       1698162058596,
-      1757941524285,
       1757941534491,
       1757941542663,
-      1757526187598
+      1757526187598,
+      1757941524285
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -243,6 +247,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758045276654"
+    "version": "1758047311616"
   }
 }

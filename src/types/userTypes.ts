@@ -3,5 +3,6 @@ export interface IUserProfile {
   email: string | null;
   token: string | null;
   nickName: string | null;
-  createdAt?: number | null;
+  createdAt: number | null;
+  avatar: string | null;
 }
