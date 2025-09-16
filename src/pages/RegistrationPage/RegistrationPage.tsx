@@ -33,7 +33,10 @@ const RegistrationPage: FC = () => {
 
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[
+            { required: true, message: 'Please input your password!' },
+            { min: 6, message: 'Password must be at least 6 characters!' },
+          ]}
           hasFeedback
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />

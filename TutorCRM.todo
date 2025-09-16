@@ -34,7 +34,7 @@
             "key": 1757526268929,
             "children": [],
             "todo": {
-              "content": "Add profile logout, avatar, name",
+              "content": "Add avatar",
               "id": 1757526268929,
               "level": "default",
               "done": false,
@@ -243,6 +243,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758044201310"
+    "version": "1758045276654"
   }
 }
