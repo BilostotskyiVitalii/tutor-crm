@@ -191,8 +191,10 @@
           "content": "Refactor login and reg pages",
           "id": 1757958183295,
           "level": "default",
-          "done": false,
-          "start": 1757958183295
+          "done": true,
+          "start": 1757958183295,
+          "focus": false,
+          "end": 1758044201220
         }
       },
       {
@@ -241,6 +243,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758029686211"
+    "version": "1758044201310"
   }
 }
