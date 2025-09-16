@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getDatabase, ref, get } from 'firebase/database';
+import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import { getDatabase, ref, get, set, serverTimestamp } from 'firebase/database';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { setUser, removeUser } from '@/store/userSlice';
 import type { IUserProfile } from '@/types/userTypes';
@@ -9,24 +9,37 @@ export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<IUserProfile | null>(null);
+  const db = getDatabase();
+  const auth = getAuth();
 
   useEffect(() => {
-    const auth = getAuth();
-    const db = getDatabase();
-
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
       if (user) {
         try {
           const token = await user.getIdToken();
-          const snapshot = await get(ref(db, 'users/' + user.uid));
+          const userRef = ref(db, 'users/' + user.uid);
+          const snapshot = await get(userRef);
           const dbData = snapshot.exists() ? snapshot.val() : {};
+
+          // Если нет nickName в БД, используем displayName из Google
+          const nickName = dbData.nickName ?? user.displayName ?? null;
+          const createdAt = dbData.createdAt ?? serverTimestamp();
+
+          // Если пользователя нет в БД, создаем запись
+          if (!snapshot.exists()) {
+            await set(userRef, {
+              nickName,
+              email: user.email,
+              createdAt,
+            });
+          }
 
           const fullProfile: IUserProfile = {
             id: user.uid,
             email: user.email,
             token,
-            nickName: dbData.nickName ?? null,
-            createdAt: dbData.createdAt ?? null,
+            nickName,
+            createdAt,
           };
 
           setProfile(fullProfile);
@@ -43,7 +56,7 @@ export const useAuthProfile = () => {
     });
 
     return () => unsubscribe();
-  }, [dispatch]);
+  }, [dispatch, db, auth]);
 
   return {
     loading,

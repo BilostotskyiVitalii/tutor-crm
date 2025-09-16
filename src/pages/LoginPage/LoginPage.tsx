@@ -1,14 +1,16 @@
 import type { FC } from 'react';
 import { Link } from 'react-router';
 import { Button, Flex, Form, Input, type FormProps } from 'antd';
-import { LockOutlined, MailOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { ILoginField } from '@/types/authFieldsTypes';
 import { useLogin } from '@/hooks/useLogin';
+import { useGoogleLogin } from '@/hooks/useGoogleLogin';
 
 const LoginPage: FC = () => {
   const { login } = useLogin();
+  const { loginWithGoogle } = useGoogleLogin();
   const handleLogin: FormProps<ILoginField>['onFinish'] = login;
 
   return (
@@ -54,6 +56,9 @@ const LoginPage: FC = () => {
         <Form.Item>
           <Button block type="primary" htmlType="submit">
             Log in
+          </Button>
+          <Button block icon={<GoogleOutlined />} onClick={loginWithGoogle}>
+            Log in with Google
           </Button>
           or <Link to={navigationUrls.registration}>Register now!</Link>
         </Form.Item>
