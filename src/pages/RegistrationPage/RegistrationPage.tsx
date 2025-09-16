@@ -1,22 +1,18 @@
+import type { FC } from 'react';
 import { Button, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, set, serverTimestamp } from 'firebase/database';
+import type { IRegField } from '@/types/authFieldsTypes';
 
-type FieldType = {
-  email: string;
-  password: string;
-  nickName: string;
-};
-
-const RegistrationPage: React.FC = () => {
+const RegistrationPage: FC = () => {
   const navigate = useNavigate();
   const db = getDatabase();
   const auth = getAuth();
 
-  const handleRegister: FormProps<FieldType>['onFinish'] = async ({
+  const handleRegister: FormProps<IRegField>['onFinish'] = async ({
     email,
     password,
     nickName,
