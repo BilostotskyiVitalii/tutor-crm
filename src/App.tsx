@@ -6,11 +6,11 @@ import { WorkPlaceComponent } from '@/components';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 
 import { navigationUrls } from '@/constants/navigationUrls';
-import { useAuthListener } from '@/hooks/useAuthListener';
+import { useAuthProfile } from '@/hooks/useAuthProfile';
 import { Flex, Spin } from 'antd';
 
 const App: FC = () => {
-  const { loading } = useAuthListener();
+  const { loading } = useAuthProfile();
 
   if (loading) {
     return (

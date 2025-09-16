@@ -1,13 +1,14 @@
 import type { FC } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuthProfile } from '@/hooks/useAuthProfile';
 import styles from './UserMenuCard.module.scss';
 
 const UserMenuCard: FC = () => {
-  const { email } = useAuth();
+  const { profile } = useAuthProfile();
+
   return (
     <div className={styles.wrapper}>
-      <p className={styles.nickname}>Valeriia Bilostotska</p>
-      <p>{email}</p>
+      <p className={styles.nickname}>{profile?.nickName}</p>
+      <p>{profile?.email}</p>
     </div>
   );
 };
