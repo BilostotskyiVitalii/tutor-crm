@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import { Navigate } from 'react-router';
-import { useAuth } from '@/hooks/useAuth';
 import { navigationUrls } from '@/constants/navigationUrls';
+import { useAuthProfile } from '@/hooks/useAuthProfile';
 
 interface AuthRouteProps {
   children: ReactNode;
@@ -14,7 +14,7 @@ export const AuthRoute: FC<AuthRouteProps> = ({
   requireAuth,
   redirectPath,
 }) => {
-  const { isAuth } = useAuth();
+  const { isAuth } = useAuthProfile();
 
   if (requireAuth && !isAuth) {
     return <Navigate to={redirectPath ?? navigationUrls.login} replace />;

@@ -1,10 +1,9 @@
+import { Link, useNavigate } from 'react-router';
 import { Button, Flex, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router';
-import { navigationUrls } from '@/constants/navigationUrls';
-import { setUser } from '@/store/userSlice';
-import { useAppDispatch } from '@/hooks/reduxHooks';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
+import { navigationUrls } from '@/constants/navigationUrls';
 
 type FieldType = {
   email: string;
@@ -13,26 +12,18 @@ type FieldType = {
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+  const auth = getAuth();
 
-  const handleLogin: FormProps<FieldType>['onFinish'] = ({
+  const handleLogin: FormProps<FieldType>['onFinish'] = async ({
     email,
     password,
   }) => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
-        const token = await user.getIdToken();
-        dispatch(
-          setUser({
-            id: user.uid,
-            email: user.email,
-            token: token,
-          }),
-        );
-        navigate(navigationUrls.index);
-      })
-      .catch(console.error);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate(navigationUrls.index);
+    } catch (error) {
+      console.error('Ошибка при логине:', error);
+    }
   };
 
   return (

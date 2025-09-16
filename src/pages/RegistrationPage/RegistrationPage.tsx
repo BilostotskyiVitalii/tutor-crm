@@ -2,44 +2,47 @@ import { Button, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
-import { setUser } from '@/store/userSlice';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { useAppDispatch } from '@/hooks/reduxHooks';
+import { getDatabase, ref, set, serverTimestamp } from 'firebase/database';
 
 type FieldType = {
   email: string;
   password: string;
+  nickName: string;
 };
 
 const RegistrationPage: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
+  const db = getDatabase();
+  const auth = getAuth();
 
-  const handleRegister: FormProps<FieldType>['onFinish'] = ({
+  const handleRegister: FormProps<FieldType>['onFinish'] = async ({
     email,
     password,
+    nickName,
   }) => {
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(async ({ user }) => {
-        const token = await user.getIdToken();
-        dispatch(
-          setUser({
-            id: user.uid,
-            email: user.email,
-            token: token,
-          }),
-        );
-        navigate(navigationUrls.index);
-      })
-      .catch(console.log);
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      await set(ref(db, 'users/' + user.uid), {
+        nickName: nickName ?? '',
+        email: user.email,
+        createdAt: serverTimestamp(),
+      });
+
+      navigate(navigationUrls.index);
+    } catch (error) {
+      console.error('Ошибка при регистрации:', error);
+    }
   };
 
   return (
     <section className="auth-backdrop">
       <Form
-        form={form}
         name="register"
         onFinish={handleRegister}
         className="form"
@@ -101,7 +104,7 @@ const RegistrationPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          name="nickname"
+          name="nickName"
           tooltip="What do you want others to call you?"
           rules={[
             {
