@@ -1,40 +1,15 @@
 import type { FC } from 'react';
 import { Button, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { getDatabase, ref, set, serverTimestamp } from 'firebase/database';
 import type { IRegField } from '@/types/authFieldsTypes';
+import { useRegister } from '@/hooks/useRegister';
 
 const RegistrationPage: FC = () => {
-  const navigate = useNavigate();
-  const db = getDatabase();
-  const auth = getAuth();
+  const { register, loading } = useRegister();
 
-  const handleRegister: FormProps<IRegField>['onFinish'] = async ({
-    email,
-    password,
-    nickName,
-  }) => {
-    try {
-      const { user } = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-
-      await set(ref(db, 'users/' + user.uid), {
-        nickName: nickName ?? '',
-        email: user.email,
-        createdAt: serverTimestamp(),
-      });
-
-      navigate(navigationUrls.index);
-    } catch (error) {
-      console.error('Ошибка при регистрации:', error);
-    }
-  };
+  const handleRegister: FormProps<IRegField>['onFinish'] = register;
 
   return (
     <section className="auth-backdrop">
@@ -45,17 +20,12 @@ const RegistrationPage: FC = () => {
         scrollToFirstError
       >
         <h2 className="auth-form-title">Registration</h2>
+
         <Form.Item
           name="email"
           rules={[
-            {
-              type: 'email',
-              message: 'The input is not valid E-mail!',
-            },
-            {
-              required: true,
-              message: 'Please input your E-mail!',
-            },
+            { type: 'email', message: 'The input is not valid E-mail!' },
+            { required: true, message: 'Please input your E-mail!' },
           ]}
         >
           <Input prefix={<MailOutlined />} placeholder="E-mail" />
@@ -63,12 +33,7 @@ const RegistrationPage: FC = () => {
 
         <Form.Item
           name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your password!',
-            },
-          ]}
+          rules={[{ required: true, message: 'Please input your password!' }]}
           hasFeedback
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
@@ -79,10 +44,7 @@ const RegistrationPage: FC = () => {
           dependencies={['password']}
           hasFeedback
           rules={[
-            {
-              required: true,
-              message: 'Please confirm your password!',
-            },
+            { required: true, message: 'Please confirm your password!' },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue('password') === value) {
@@ -114,7 +76,7 @@ const RegistrationPage: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button block type="primary" htmlType="submit">
+          <Button block type="primary" htmlType="submit" loading={loading}>
             Register
           </Button>
           or <Link to={navigationUrls.login}>Login now!</Link>
