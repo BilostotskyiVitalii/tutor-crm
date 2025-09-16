@@ -1,20 +1,17 @@
+import type { FC } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { Button, Flex, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
 import { navigationUrls } from '@/constants/navigationUrls';
+import type { ILoginField } from '@/types/authFieldsTypes';
 
-type FieldType = {
-  email: string;
-  password: string;
-};
-
-const LoginPage = () => {
+const LoginPage: FC = () => {
   const navigate = useNavigate();
   const auth = getAuth();
 
-  const handleLogin: FormProps<FieldType>['onFinish'] = async ({
+  const handleLogin: FormProps<ILoginField>['onFinish'] = async ({
     email,
     password,
   }) => {

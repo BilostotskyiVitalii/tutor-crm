@@ -1,15 +1,10 @@
-import type { FC, ReactNode } from 'react';
+import type { FC } from 'react';
 import { Navigate } from 'react-router';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
+import type { IAuthRouteProps } from '@/types/routeTypes';
 
-interface AuthRouteProps {
-  children: ReactNode;
-  requireAuth: boolean;
-  redirectPath?: string;
-}
-
-export const AuthRoute: FC<AuthRouteProps> = ({
+export const AuthRoute: FC<IAuthRouteProps> = ({
   children,
   requireAuth,
   redirectPath,
