@@ -11,7 +11,7 @@ import { useGoogleLogin } from '@/hooks/useGoogleLogin';
 import styles from './LoginPage.module.scss';
 
 const LoginPage: FC = () => {
-  const { login } = useLogin();
+  const { login, loading } = useLogin();
   const { loginWithGoogle } = useGoogleLogin();
   const handleLogin: FormProps<ILoginField>['onFinish'] = login;
 
@@ -57,10 +57,15 @@ const LoginPage: FC = () => {
 
         <Form.Item>
           <div className={styles.buttonsWrapper}>
-            <Button block type="primary" htmlType="submit">
+            <Button block type="primary" htmlType="submit" loading={loading}>
               Log in
             </Button>
-            <Button block icon={<GoogleOutlined />} onClick={loginWithGoogle}>
+            <Button
+              block
+              icon={<GoogleOutlined />}
+              onClick={loginWithGoogle}
+              loading={loading}
+            >
               Log in with Google
             </Button>
           </div>

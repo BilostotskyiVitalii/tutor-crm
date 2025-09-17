@@ -2,22 +2,17 @@ import type { FC } from 'react';
 import { Route, Routes } from 'react-router';
 
 import { LoginPage, RegistrationPage } from '@/pages';
-import { WorkPlaceComponent } from '@/components';
+import { WorkPlaceComponent, CustomSpinner } from '@/components';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
-import { Flex, Spin } from 'antd';
 
 const App: FC = () => {
   const { loading } = useAuthProfile();
 
   if (loading) {
-    return (
-      <Flex align="center" justify="center" gap="middle">
-        <Spin size="large" />
-      </Flex>
-    );
+    return <CustomSpinner />;
   }
 
   return (

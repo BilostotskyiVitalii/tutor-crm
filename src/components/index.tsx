@@ -6,3 +6,4 @@ export { default as WorkPlaceComponent } from './WorkPlaceComponent/WorkPlaceCom
 export { default as SelectLang } from './SelectLang/SelectLang';
 export { default as UserMenu } from './UserMenu/UserMenu';
 export { default as UserMenuCard } from './UserMenuCard/UserMenuCard';
+export { default as CustomSpinner } from './CustomSpinner/CustomSpinner';

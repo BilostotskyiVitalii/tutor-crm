@@ -21,17 +21,11 @@ export const useAuthProfile = () => {
           const snapshot = await get(userRef);
           const dbData = snapshot.exists() ? snapshot.val() : {};
 
-          // Если нет nickName в БД, используем displayName из Google
-          const nickName = dbData.nickName ?? user.displayName ?? null;
-          const createdAt = dbData.createdAt ?? serverTimestamp();
-          const avatar = dbData.avatar ?? user.photoURL ?? null;
-
-          // Если пользователя нет в БД, создаем запись
           if (!snapshot.exists() && user.displayName) {
             await set(userRef, {
-              nickName: user.displayName,
               email: user.email,
-              createdAt: Date.now(),
+              nickName: user.displayName,
+              createdAt: serverTimestamp(),
               avatar: user.photoURL,
             });
           }
@@ -40,9 +34,9 @@ export const useAuthProfile = () => {
             id: user.uid,
             email: user.email,
             token,
-            nickName,
-            createdAt,
-            avatar,
+            nickName: dbData.nickName ?? user.displayName ?? null,
+            createdAt: dbData.createdAt ?? serverTimestamp(),
+            avatar: dbData.avatar ?? user.photoURL ?? null,
           };
 
           setProfile(fullProfile);
