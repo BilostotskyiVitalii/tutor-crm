@@ -4,6 +4,7 @@ import { getDatabase, ref, get, set, serverTimestamp } from 'firebase/database';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { setUser, removeUser } from '@/store/userSlice';
 import type { IUserProfile } from '@/types/userTypes';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
@@ -11,6 +12,7 @@ export const useAuthProfile = () => {
   const [profile, setProfile] = useState<IUserProfile | null>(null);
   const db = getDatabase();
   const auth = getAuth();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
@@ -42,7 +44,8 @@ export const useAuthProfile = () => {
           setProfile(fullProfile);
           dispatch(setUser(fullProfile));
         } catch (err) {
-          console.error('Ошибка при получении профиля:', err);
+          // console.error('Ошибка при получении профиля:', err);
+          handleError(err, 'Auth Error');
           setProfile(null);
         }
       } else {

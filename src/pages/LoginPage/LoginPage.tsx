@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { Link } from 'react-router';
 import { Button, Flex, Form, Input, type FormProps } from 'antd';
 import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
