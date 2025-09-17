@@ -175,8 +175,10 @@
           "content": "Set error handler",
           "id": 1757947452272,
           "level": "default",
-          "done": false,
-          "start": 1757947452272
+          "done": true,
+          "start": 1757947452272,
+          "focus": false,
+          "end": 1758114152937
         }
       },
       {
@@ -186,19 +188,10 @@
           "content": "Add spinner to app on loading",
           "id": 1757957981941,
           "level": "default",
-          "done": false,
-          "start": 1757957981941
-        }
-      },
-      {
-        "key": 1757958031101,
-        "children": [],
-        "todo": {
-          "content": "Add message on error",
-          "id": 1757958031101,
-          "level": "default",
-          "done": false,
-          "start": 1757958031101
+          "done": true,
+          "start": 1757957981941,
+          "focus": false,
+          "end": 1758104056870
         }
       },
       {
@@ -229,9 +222,7 @@
     "expandKeys": [
       1698162058596,
       1757941534491,
-      1757941542663,
-      1757526187598,
-      1757941524285
+      1757941542663
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -260,6 +251,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758062081917"
+    "version": "1758114156551"
   }
 }

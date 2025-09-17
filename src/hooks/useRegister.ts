@@ -4,6 +4,7 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { getDatabase, ref, serverTimestamp, set } from 'firebase/database';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { IRegField } from '@/types/authFieldsTypes';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export const useRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,7 @@ export const useRegister = () => {
   const navigate = useNavigate();
   const auth = getAuth();
   const db = getDatabase();
+  const { handleError } = useErrorHandler();
 
   const register = async ({ email, password, nickName }: IRegField) => {
     setLoading(true);
@@ -32,11 +34,8 @@ export const useRegister = () => {
       navigate(navigationUrls.index);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        setError(err.message);
-        console.error('Ошибка при регистрации:', err);
-      } else {
-        setError('Неизвестная ошибка при регистрации');
-        console.error('Неизвестная ошибка при регистрации:', err);
+        const errMessage = handleError(err, 'Registration Error');
+        setError(errMessage);
       }
     } finally {
       setLoading(false);

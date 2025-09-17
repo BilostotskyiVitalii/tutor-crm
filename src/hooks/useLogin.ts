@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { ILoginField } from '@/types/authFieldsTypes';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const auth = getAuth();
+  const { handleError } = useErrorHandler();
 
   const login = async ({ email, password }: ILoginField) => {
     setLoading(true);
@@ -17,13 +19,8 @@ export const useLogin = () => {
       await signInWithEmailAndPassword(auth, email, password);
       navigate(navigationUrls.index);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-        console.error('Ошибка при логине:', err);
-      } else {
-        setError('Неизвестная ошибка при логине');
-        console.error('Неизвестная ошибка при логине:', err);
-      }
+      const errMessage = handleError(err, 'Login Error');
+      setError(errMessage);
     } finally {
       setLoading(false);
     }
