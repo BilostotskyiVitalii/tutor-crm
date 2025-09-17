@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import {
-  getDatabase,
-  ref,
-  set,
-  serverTimestamp,
-  update,
-  get,
-} from 'firebase/database';
+import { getDatabase, ref, serverTimestamp, set } from 'firebase/database';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { IRegField } from '@/types/authFieldsTypes';
 
@@ -30,8 +23,8 @@ export const useRegister = () => {
         password,
       );
 
-      await update(ref(db, 'users/' + user.uid), {
-        nickName,
+      await set(ref(db, 'users/' + user.uid), {
+        nickName: nickName,
         email: user.email,
         createdAt: serverTimestamp(),
       });
