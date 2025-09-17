@@ -217,6 +217,19 @@
           "done": false,
           "start": 1757959242477
         }
+      },
+      {
+        "key": 1758116195498,
+        "children": [],
+        "todo": {
+          "content": "User menu bug (first click)",
+          "id": 1758116195498,
+          "level": "default",
+          "done": true,
+          "start": 1758116195499,
+          "focus": false,
+          "end": 1758117046325
+        }
       }
     ],
     "expandKeys": [
@@ -251,6 +264,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758114156551"
+    "version": "1758117046375"
   }
 }

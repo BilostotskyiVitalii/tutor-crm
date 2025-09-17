@@ -12,7 +12,11 @@ import styles from './UserMenu.module.scss';
 
 const items: MenuProps['items'] = [
   {
-    label: <UserMenuCard />,
+    label: (
+      <div className={styles.userMenuCardWrapper}>
+        <UserMenuCard />
+      </div>
+    ),
     key: 'user',
     className: styles.noHover,
   },
@@ -30,6 +34,7 @@ const UserMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { profile } = useAuthProfile();
+  const auth = getAuth();
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -37,7 +42,6 @@ const UserMenu: FC = () => {
 
   const handleClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === 'logout') {
-      const auth = getAuth();
       try {
         await signOut(auth);
         dispatch(removeUser());
