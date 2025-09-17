@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { ILoginField } from '@/types/authFieldsTypes';

@@ -9,6 +9,7 @@ import { useAuthProfile } from '@/hooks/useAuthProfile';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 
 import styles from './UserMenu.module.scss';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 const items: MenuProps['items'] = [
   {
@@ -35,6 +36,7 @@ const UserMenu: FC = () => {
   const dispatch = useAppDispatch();
   const { profile } = useAuthProfile();
   const auth = getAuth();
+  const { handleError } = useErrorHandler();
 
   function handleOpenChange(open: boolean) {
     setIsOpen(open);
@@ -46,7 +48,7 @@ const UserMenu: FC = () => {
         await signOut(auth);
         dispatch(removeUser());
       } catch (error) {
-        console.error('Ошибка при выходе:', error);
+        handleError(error, 'Login Error');
       }
     }
   };

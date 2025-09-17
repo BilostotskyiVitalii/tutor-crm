@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Navigate } from 'react-router';
+import { Navigate } from 'react-router-dom';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
 import type { IAuthRouteProps } from '@/types/routeTypes';
