@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Route, Routes } from 'react-router';
+import { Route, Routes } from 'react-router-dom';
 
 import { LoginPage, RegistrationPage } from '@/pages';
 import { WorkPlaceComponent, CustomSpinner } from '@/components';

@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import { Navigate, Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import {

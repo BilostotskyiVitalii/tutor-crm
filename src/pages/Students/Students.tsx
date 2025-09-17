@@ -9,20 +9,6 @@ const Students: FC = () => {
       <h1 className="pageTitle">Students</h1>
       <Space size="large" wrap>
         <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
-        <StudentCard />
       </Space>
     </>
   );

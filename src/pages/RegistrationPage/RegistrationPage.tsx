@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Button, Form, Input, type FormProps } from 'antd';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { IRegField } from '@/types/authFieldsTypes';
 import { useRegister } from '@/hooks/useRegister';

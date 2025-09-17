@@ -1,6 +1,3 @@
-import StudentCard from '@/components/StudentCard/StudentCard';
-import { Space } from 'antd';
-
 import type { FC } from 'react';
 
 const StudentPage: FC = () => {
