@@ -27,12 +27,12 @@ export const useAuthProfile = () => {
           const avatar = dbData.avatar ?? user.photoURL ?? null;
 
           // Если пользователя нет в БД, создаем запись
-          if (!snapshot.exists()) {
+          if (!snapshot.exists() && user.displayName) {
             await set(userRef, {
-              nickName,
+              nickName: user.displayName,
               email: user.email,
-              createdAt,
-              avatar,
+              createdAt: Date.now(),
+              avatar: user.photoURL,
             });
           }
 
