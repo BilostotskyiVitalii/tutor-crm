@@ -6,10 +6,10 @@ import { getAuth, signOut } from 'firebase/auth';
 import { removeUser } from '@/store/userSlice';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 
 import styles from './UserMenu.module.scss';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
 
 const items: MenuProps['items'] = [
   {
@@ -62,7 +62,8 @@ const UserMenu: FC = () => {
       <Avatar
         className={`${styles.avatar} ${isOpen ? styles.openMenu : ''}`}
         src={profile?.avatar ?? undefined}
-        icon={!profile?.avatar ? <UserOutlined /> : undefined}
+        icon={<UserOutlined />}
+        onError={() => true}
       />
     </Dropdown>
   );
