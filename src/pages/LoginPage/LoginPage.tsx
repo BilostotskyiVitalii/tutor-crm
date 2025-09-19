@@ -51,7 +51,7 @@ const LoginPage: FC = () => {
         </Form.Item>
         <Form.Item>
           <Flex justify="space-between" align="center">
-            <a href="">Forgot password</a>
+            <Link to={navigationUrls.forgotPassword}>Forgot password?</Link>
           </Flex>
         </Form.Item>
 

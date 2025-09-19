@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { LoginPage, RegistrationPage } from '@/pages';
+import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
 import { WorkPlaceComponent, CustomSpinner } from '@/components';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 
@@ -30,6 +30,14 @@ const App: FC = () => {
         element={
           <AuthRoute requireAuth={false}>
             <RegistrationPage />
+          </AuthRoute>
+        }
+      />
+      <Route
+        path={navigationUrls.forgotPassword}
+        element={
+          <AuthRoute requireAuth={false}>
+            <ForgotPasswordPage />
           </AuthRoute>
         }
       />

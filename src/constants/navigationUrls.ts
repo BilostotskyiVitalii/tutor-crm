@@ -8,4 +8,5 @@ export const navigationUrls = {
   student: '/students/:id',
   calendar: '/calendar',
   analytics: '/analytics',
+  forgotPassword: '/forgot-password',
 } as const;
