@@ -2,58 +2,17 @@
   "todotree": {
     "tree": [
       {
-        "key": 1757402495042,
-        "children": [],
-        "todo": {
-          "content": "Set up ES Lint",
-          "id": 1757402495042,
-          "level": "danger",
-          "done": true,
-          "start": 1757402495042,
-          "focus": false,
-          "end": 1757420488620
-        }
-      },
-      {
         "key": 1757526187598,
         "children": [
           {
-            "key": 1757526208479,
+            "key": 1758269749032,
             "children": [],
             "todo": {
-              "content": "Add logo fron Clips English",
-              "id": 1757526208479,
+              "content": "lang select",
+              "id": 1758269749032,
               "level": "default",
-              "done": true,
-              "start": 1757526208479,
-              "focus": false,
-              "end": 1757566064593
-            }
-          },
-          {
-            "key": 1757526268929,
-            "children": [],
-            "todo": {
-              "content": "Add avatar",
-              "id": 1757526268929,
-              "level": "default",
-              "done": true,
-              "start": 1757526268929,
-              "focus": false,
-              "end": 1758047311537
-            }
-          },
-          {
-            "key": 1757526811591,
-            "children": [],
-            "todo": {
-              "content": "Add shadow for header",
-              "id": 1757526811591,
-              "level": "default",
-              "done": true,
-              "start": 1757526811591,
-              "focus": false,
-              "end": 1757772542063
+              "done": false,
+              "start": 1758269749032
             }
           }
         ],
@@ -66,169 +25,60 @@
         }
       },
       {
-        "key": 1757526754959,
-        "children": [],
-        "todo": {
-          "content": "Add favicon",
-          "id": 1757526754959,
-          "level": "secondary",
-          "done": true,
-          "start": 1757526754959,
-          "focus": false,
-          "end": 1757564708452
-        }
-      },
-      {
         "key": 1757941524285,
         "children": [
           {
-            "key": 1757941542663,
+            "key": 1758269473078,
             "children": [],
             "todo": {
-              "content": "add logout in usermenu",
-              "id": 1757941542663,
+              "content": "add forgot password",
+              "id": 1758269473078,
               "level": "default",
-              "done": true,
-              "start": 1757941542663,
-              "focus": false,
-              "end": 1757957922438
-            }
-          },
-          {
-            "key": 1757941534491,
-            "children": [],
-            "todo": {
-              "content": "add rules for input password 6 char min",
-              "id": 1757941534491,
-              "level": "default",
-              "done": true,
-              "start": 1757941534491,
-              "focus": false,
-              "end": 1758045725579
-            }
-          },
-          {
-            "key": 1757941577811,
-            "children": [],
-            "todo": {
-              "content": "add user info in user menu",
-              "id": 1757941577811,
-              "level": "default",
-              "done": true,
-              "start": 1757941577811,
-              "focus": false,
-              "end": 1757957937765
-            }
-          },
-          {
-            "key": 1757941620133,
-            "children": [],
-            "todo": {
-              "content": "add reload stay login",
-              "id": 1757941620133,
-              "level": "default",
-              "done": true,
-              "start": 1757941620133,
-              "focus": false,
-              "end": 1757957942766
-            }
-          },
-          {
-            "key": 1757958218570,
-            "children": [],
-            "todo": {
-              "content": "add possibility to post username on registration",
-              "id": 1757958218570,
-              "level": "default",
-              "done": true,
-              "start": 1757958218570,
-              "focus": false,
-              "end": 1758029686121
-            }
-          },
-          {
-            "key": 1758048389348,
-            "children": [],
-            "todo": {
-              "content": "No name for email user",
-              "id": 1758048389348,
-              "level": "default",
-              "done": true,
-              "start": 1758048389348,
-              "focus": false,
-              "end": 1758062081804
+              "done": false,
+              "start": 1758269473078
             }
           }
         ],
         "todo": {
           "content": "LogIn/Logout",
           "id": 1757941524285,
-          "level": "default",
+          "level": "warning",
           "done": false,
           "start": 1757941524285
         }
       },
       {
-        "key": 1757947452272,
-        "children": [],
+        "key": 1758269597724,
+        "children": [
+          {
+            "key": 1757959242476,
+            "children": [],
+            "todo": {
+              "content": "On students page bug (probably with z-index)",
+              "id": 1757959242476,
+              "level": "default",
+              "done": false,
+              "start": 1757959242477
+            }
+          }
+        ],
         "todo": {
-          "content": "Set error handler",
-          "id": 1757947452272,
-          "level": "default",
-          "done": true,
-          "start": 1757947452272,
-          "focus": false,
-          "end": 1758114152937
-        }
-      },
-      {
-        "key": 1757957981941,
-        "children": [],
-        "todo": {
-          "content": "Add spinner to app on loading",
-          "id": 1757957981941,
-          "level": "default",
-          "done": true,
-          "start": 1757957981941,
-          "focus": false,
-          "end": 1758104056870
-        }
-      },
-      {
-        "key": 1757958183295,
-        "children": [],
-        "todo": {
-          "content": "Refactor login and reg pages",
-          "id": 1757958183295,
-          "level": "default",
-          "done": true,
-          "start": 1757958183295,
-          "focus": false,
-          "end": 1758044201220
-        }
-      },
-      {
-        "key": 1757959242476,
-        "children": [],
-        "todo": {
-          "content": "On students page bug (probably with z-index)",
-          "id": 1757959242476,
-          "level": "default",
+          "content": "Bugs",
+          "id": 1758269597724,
+          "level": "warning",
           "done": false,
-          "start": 1757959242477
+          "start": 1758269597724
         }
       },
       {
-        "key": 1758116195498,
+        "key": 1758269690310,
         "children": [],
         "todo": {
-          "content": "User menu bug (first click)",
-          "id": 1758116195498,
-          "level": "default",
-          "done": true,
-          "start": 1758116195499,
-          "focus": false,
-          "end": 1758118110533
+          "content": "Refactor",
+          "id": 1758269690310,
+          "level": "warning",
+          "done": false,
+          "start": 1758269690310
         }
       }
     ],
@@ -236,7 +86,13 @@
       1698162058596,
       1757941534491,
       1757941542663,
-      1758116195498
+      1758116195498,
+      1757941524285,
+      1757526187598,
+      1758269597724,
+      1757959242476,
+      1758269473078,
+      1758048389348
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -265,6 +121,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758118125491"
+    "version": "1758269769879"
   }
 }
