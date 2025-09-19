@@ -7,4 +7,3 @@ export { default as StudentPage } from './StudentPage/StudentPage';
 export { default as LoginPage } from './LoginPage/LoginPage';
 export { default as RegistrationPage } from './RegistrationPage/RegistrationPage';
 export { default as ForgotPasswordPage } from './ForgotPasswordPage/ForgotPasswordPage';
-export { default as ResetPasswordPage } from './ResetPasswordPage/ResetPasswordPage';
