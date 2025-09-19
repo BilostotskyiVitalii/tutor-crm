@@ -44,7 +44,6 @@ export const useAuthProfile = () => {
           setProfile(fullProfile);
           dispatch(setUser(fullProfile));
         } catch (err) {
-          // console.error('Ошибка при получении профиля:', err);
           handleError(err, 'Auth Error');
           setProfile(null);
         }
@@ -56,7 +55,7 @@ export const useAuthProfile = () => {
     });
 
     return () => unsubscribe();
-  }, [dispatch, db, auth]);
+  }, [dispatch, db, auth, handleError]);
 
   return {
     loading,

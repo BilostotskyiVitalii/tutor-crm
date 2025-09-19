@@ -1,9 +1,10 @@
+import { useCallback } from 'react';
 import { notification } from 'antd';
 import { FirebaseError } from 'firebase/app';
 import { firebaseErrorMap } from '@/constants/errors';
 
 export const useErrorHandler = () => {
-  const handleError = (err: unknown, context?: string) => {
+  const handleError = useCallback((err: unknown, context?: string) => {
     let errMessage = 'Неизвестная ошибка';
 
     if (err instanceof FirebaseError) {
@@ -21,7 +22,7 @@ export const useErrorHandler = () => {
     });
 
     return errMessage;
-  };
+  }, []);
 
   return { handleError };
 };
