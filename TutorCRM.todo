@@ -34,8 +34,10 @@
               "content": "add forgot password",
               "id": 1758269473078,
               "level": "default",
-              "done": false,
-              "start": 1758269473078
+              "done": true,
+              "start": 1758269473078,
+              "focus": false,
+              "end": 1758276075003
             }
           }
         ],
@@ -121,6 +123,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758269769879"
+    "version": "1758276075074"
   }
 }
