@@ -10,6 +10,7 @@ import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 
 import styles from './UserMenu.module.scss';
+import { studentsApi } from '@/store/studentsApi';
 
 const items: MenuProps['items'] = [
   {

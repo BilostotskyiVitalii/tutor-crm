@@ -5,6 +5,7 @@ import { useAppDispatch } from '@/hooks/reduxHooks';
 import { setUser, removeUser } from '@/store/userSlice';
 import type { IUserProfile } from '@/types/userTypes';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { studentsApi } from '@/store/studentsApi';
 
 export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
@@ -50,6 +51,7 @@ export const useAuthProfile = () => {
       } else {
         setProfile(null);
         dispatch(removeUser());
+        dispatch(studentsApi.util.resetApiState());
       }
       setLoading(false);
     });
