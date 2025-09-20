@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Card, notification } from 'antd';
+import { Avatar, Card, notification, Popconfirm } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { useDeleteStudentMutation } from '@/store/studentsApi';
 import { navigationUrls } from '@/constants/navigationUrls';
@@ -37,11 +37,14 @@ const StudentCard: FC<IStudentCardProps> = ({ student, onEdit }) => {
       actions={[
         <PlusOutlined key="add" onClick={() => console.log('Add lesson')} />,
         <EditOutlined key="edit" onClick={() => onEdit(student)} />,
-        <DeleteOutlined
-          key="delete"
-          className={styles.delete}
-          onClick={removeHandler}
-        />,
+        <Popconfirm
+          title="Delete this student?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={removeHandler}
+        >
+          <DeleteOutlined key="delete" className={styles.delete} />,
+        </Popconfirm>,
       ]}
     >
       <Meta
