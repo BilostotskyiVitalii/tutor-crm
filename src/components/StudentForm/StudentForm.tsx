@@ -1,20 +1,41 @@
 import { useAuthProfile } from '@/hooks/useAuthProfile';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { useAddStudentMutation } from '@/store/studentsApi';
-import type { IStudentFormValues } from '@/types/studentTypes';
+import {
+  useAddStudentMutation,
+  useUpdateStudentMutation,
+} from '@/store/studentsApi';
+import type { IStudent, IStudentFormValues } from '@/types/studentTypes';
 import { Form, Input, InputNumber, message, Modal } from 'antd';
-import { type FC } from 'react';
+import { useEffect, type FC } from 'react';
 
 interface StudentFormProps {
   isModalOpen: boolean;
   onClose: () => void;
+  editedStudent?: IStudent | null;
 }
 
-const StudentForm: FC<StudentFormProps> = ({ onClose, isModalOpen }) => {
+const StudentForm: FC<StudentFormProps> = ({
+  onClose,
+  isModalOpen,
+  editedStudent,
+}) => {
   const [form] = Form.useForm<IStudentFormValues>();
   const [addStudent] = useAddStudentMutation();
+  const [updateStudent] = useUpdateStudentMutation();
   const { profile } = useAuthProfile();
   const { handleError } = useErrorHandler();
+
+  useEffect(() => {
+    if (editedStudent) {
+      form.setFieldsValue({
+        name: editedStudent.name,
+        email: editedStudent.email,
+        age: editedStudent.age,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [isModalOpen, editedStudent, form]);
 
   const handleCancel = () => {
     onClose();
@@ -28,7 +49,14 @@ const StudentForm: FC<StudentFormProps> = ({ onClose, isModalOpen }) => {
         message.error('Student wasn`t created!');
         return;
       }
-      await addStudent({ ...values });
+      if (editedStudent) {
+        await updateStudent({
+          id: editedStudent.id,
+          data: values,
+        });
+      } else {
+        await addStudent({ ...values });
+      }
       message.success('Student created!');
       onClose();
       form.resetFields();
@@ -39,11 +67,11 @@ const StudentForm: FC<StudentFormProps> = ({ onClose, isModalOpen }) => {
 
   return (
     <Modal
-      title="New student"
+      title={editedStudent ? 'Update student' : 'New student'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText="Create"
+      okText={editedStudent ? 'Update' : 'Create'}
       cancelText="Cancel"
     >
       <Form form={form} layout="vertical" name="add_student_form">
