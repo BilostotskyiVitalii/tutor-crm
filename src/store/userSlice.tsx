@@ -1,13 +1,18 @@
 import type { IUserProfile } from '@/types/userTypes';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-const initialState: IUserProfile = {
+interface UserState extends IUserProfile {
+  loading: boolean;
+}
+
+const initialState: UserState = {
   id: null,
   email: null,
   token: null,
   nickName: null,
   createdAt: null,
   avatar: null,
+  loading: true,
 };
 
 const userSlice = createSlice({
@@ -21,6 +26,7 @@ const userSlice = createSlice({
       state.nickName = action.payload.nickName;
       state.createdAt = action.payload.createdAt ?? null;
       state.avatar = action.payload.avatar ?? null;
+      state.loading = false;
     },
     removeUser(state) {
       state.id = null;
@@ -29,10 +35,14 @@ const userSlice = createSlice({
       state.nickName = null;
       state.createdAt = null;
       state.avatar = null;
+      state.loading = false;
+    },
+    setLoading(state, action: PayloadAction<boolean>) {
+      state.loading = action.payload;
     },
   },
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, setLoading } = userSlice.actions;
 
 export default userSlice.reducer;

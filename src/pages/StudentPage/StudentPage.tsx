@@ -1,4 +1,4 @@
-import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import { Avatar } from 'antd';
 import type { FC } from 'react';
@@ -6,8 +6,8 @@ import { useParams } from 'react-router-dom';
 
 const StudentPage: FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { profile } = useAuthProfile();
-  const { data: students } = useGetStudentsQuery(profile?.id ?? '');
+  const userId = useAppSelector((state) => state.user.id);
+  const { data: students } = useGetStudentsQuery(userId ?? '');
   const student = students?.find((s) => s.id === id);
 
   return (

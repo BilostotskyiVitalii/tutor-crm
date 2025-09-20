@@ -1,4 +1,4 @@
-import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { useAppSelector } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import {
   useAddStudentMutation,
@@ -24,7 +24,7 @@ const StudentForm: FC<StudentFormProps> = ({
   const [form] = Form.useForm<IStudentFormValues>();
   const [addStudent] = useAddStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
-  const { profile } = useAuthProfile();
+  const id = useAppSelector((state) => state.user.id);
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const StudentForm: FC<StudentFormProps> = ({
     try {
       const values = await form.validateFields();
 
-      if (!profile?.id) {
+      if (!id) {
         notification.error({ message: 'Student wasn’t created!' });
         return;
       }
