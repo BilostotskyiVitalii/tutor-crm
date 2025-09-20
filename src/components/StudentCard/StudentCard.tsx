@@ -3,22 +3,41 @@ import { Link } from 'react-router-dom';
 import { Avatar, Card } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 
+import { useDeleteStudentMutation } from '@/store/studentsApi';
+import { navigationUrls } from '@/constants/navigationUrls';
+import type { IStudent } from '@/types/studentTypes';
+
 import styles from './StudentCard.module.scss';
 
 const { Meta } = Card;
 
-const StudentCard: FC = () => {
-  function addHandler() {
-    console.log('ADD');
+interface IStudentCardProps {
+  student: IStudent;
+}
+
+const StudentCard: FC<IStudentCardProps> = ({ student }) => {
+  const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
+
+  function addLessonHandler() {
+    console.log('ADDed LESSON');
+  }
+
+  function removeHandler() {
+    deleteStudent(student.id);
   }
 
   return (
     <Card
+      loading={isDeleting}
       className={styles.card}
       actions={[
-        <PlusOutlined key="add" onClick={addHandler} />,
+        <PlusOutlined key="add" onClick={addLessonHandler} />,
         <EditOutlined key="edit" />,
-        <DeleteOutlined key="delete" className={styles.delete} />,
+        <DeleteOutlined
+          key="delete"
+          className={styles.delete}
+          onClick={removeHandler}
+        />,
       ]}
     >
       <Meta
@@ -29,11 +48,11 @@ const StudentCard: FC = () => {
           />
         }
         title={
-          <Link to={'/students/id'}>
-            <span>Name</span> <span>Surname</span>
+          <Link to={`${navigationUrls.students}/${student.id}`}>
+            <span>{student.name}</span>
           </Link>
         }
-        description="Preparation for English B1"
+        description={student.email}
       />
     </Card>
   );

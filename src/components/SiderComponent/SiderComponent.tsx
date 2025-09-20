@@ -32,6 +32,14 @@ const SiderComponent: FC = () => {
     label: item.title,
   }));
 
+  const selectedItem = siderItems.find((item) =>
+    location.pathname.toLowerCase().startsWith(String(item?.key).toLowerCase()),
+  );
+
+  const selectedKey: string[] = selectedItem?.key
+    ? [String(selectedItem.key)]
+    : [];
+
   return (
     <Sider
       className={styles.sider}
@@ -45,7 +53,7 @@ const SiderComponent: FC = () => {
         mode="inline"
         items={siderItems}
         onClick={({ key }) => navigate(key)}
-        selectedKeys={[location.pathname.toLowerCase()]}
+        selectedKeys={selectedKey}
       />
     </Sider>
   );

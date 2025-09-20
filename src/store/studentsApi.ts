@@ -1,14 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import type { IStudent } from '@/types/studentTypes';
+import { apiURL } from '@/constants/apiUrl';
+import type { RootState } from '@/store';
+import type {
+  IStudent,
+  StudentData,
+  IStudentFormValues,
+  IUpdtUser,
+} from '@/types/studentTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-// Firebase возвращает объект вида { id1: StudentData, id2: StudentData, ... }
-type StudentData = Omit<IStudent, 'id'>;
-type UpdtUser = { id: string; data: Partial<IStudent> };
+const { base, students } = apiURL;
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl:
-    'https://tutor-crm-49cae-default-rtdb.europe-west1.firebasedatabase.app/',
+  baseUrl: base,
 });
 
 const baseQueryWithAuth: typeof rawBaseQuery = async (
@@ -16,17 +19,41 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
   api,
   extraOptions,
 ) => {
-  const token = (api.getState() as any).user.token;
+  const state = api.getState() as RootState;
+  const token = state.user.token;
+  const userId = state.user.id;
 
-  if (token) {
-    if (typeof args === 'string') {
-      args = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
-    } else if (args.url) {
-      args.url = `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`;
+  let newArgs = args;
+
+  if (!token) {
+    return rawBaseQuery(args, api, extraOptions);
+  }
+
+  if (typeof args === 'string') {
+    // добавляем токен
+    newArgs = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
+    // если это getStudents, добавляем userId
+    if (args.includes('students.json') && args.includes('orderBy')) {
+      newArgs += `&equalTo="${userId}"`;
+    }
+  } else if ('url' in args) {
+    newArgs = {
+      ...args,
+      url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
+    };
+
+    // если это getStudents, добавляем userId
+    if (args.url.includes('students.json') && args.url.includes('orderBy')) {
+      newArgs.url += `&equalTo="${userId}"`;
+    }
+
+    // для POST-запросов добавляем userId в тело
+    if (args.method === 'POST' && args.body) {
+      newArgs.body = { ...args.body, userId };
     }
   }
 
-  return rawBaseQuery(args, api, extraOptions);
+  return rawBaseQuery(newArgs, api, extraOptions);
 };
 
 export const studentsApi = createApi({
@@ -34,16 +61,11 @@ export const studentsApi = createApi({
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Students'],
   endpoints: (build) => ({
-    getStudents: build.query<IStudent[], string | null>({
-      query: (userId) => {
-        return `students.json?orderBy="userId"&equalTo="${userId}"`;
-      },
+    getStudents: build.query<IStudent[], void>({
+      query: () => `${students}.json?orderBy="userId"`, // userId подставится автоматически
       transformResponse: (response: Record<string, StudentData> | null) =>
         response
-          ? Object.entries(response).map(([id, value]) => ({
-              id,
-              ...value,
-            }))
+          ? Object.entries(response).map(([id, value]) => ({ id, ...value }))
           : [],
       providesTags: (result) =>
         result
@@ -54,22 +76,22 @@ export const studentsApi = createApi({
           : [{ type: 'Students', id: 'LIST' }],
     }),
 
-    addStudent: build.mutation<IStudent, StudentData>({
-      query: ({ name, age, userId, email }) => ({
-        url: 'students.json',
+    addStudent: build.mutation<IStudent, IStudentFormValues>({
+      query: (student) => ({
+        url: `${students}.json`,
         method: 'POST',
-        body: { name, email, age, userId },
+        body: student, // userId добавится автоматически
       }),
       invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
 
-    updateStudent: build.mutation<IStudent, UpdtUser>({
+    updateStudent: build.mutation<IStudent, IUpdtUser>({
       query: ({ id, data }) => ({
-        url: `students/${id}.json`,
+        url: `${students}/${id}.json`,
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: 'Students', id },
         { type: 'Students', id: 'LIST' },
       ],
@@ -77,10 +99,10 @@ export const studentsApi = createApi({
 
     deleteStudent: build.mutation<{ success: boolean }, string>({
       query: (id) => ({
-        url: `students/${id}.json`,
+        url: `${students}/${id}.json`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, id) => [
+      invalidatesTags: (_result, _error, id) => [
         { type: 'Students', id },
         { type: 'Students', id: 'LIST' },
       ],
