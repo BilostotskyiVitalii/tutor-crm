@@ -43,7 +43,7 @@ const StudentCard: FC<IStudentCardProps> = ({ student, onEdit }) => {
           cancelText="No"
           onConfirm={removeHandler}
         >
-          <DeleteOutlined key="delete" className={styles.delete} />,
+          <DeleteOutlined key="delete" className={styles.delete} />
         </Popconfirm>,
       ]}
     >
