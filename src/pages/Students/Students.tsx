@@ -4,10 +4,12 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import { useState, type FC } from 'react';
 import { useGetStudentsQuery } from '@/store/studentsApi';
+import { useAuthProfile } from '@/hooks/useAuthProfile';
 
 const Students: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: students } = useGetStudentsQuery();
+  const { profile } = useAuthProfile();
+  const { data: students } = useGetStudentsQuery(profile?.id ?? '');
   const showModal = () => setIsModalOpen(true);
   const hideModal = () => setIsModalOpen(false);
 

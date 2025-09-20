@@ -2,17 +2,15 @@ import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
 import type {
   IStudent,
-  StudentData,
   IStudentFormValues,
   IUpdtUser,
+  StudentData,
 } from '@/types/studentTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const { base, students } = apiURL;
 
-const rawBaseQuery = fetchBaseQuery({
-  baseUrl: base,
-});
+const rawBaseQuery = fetchBaseQuery({ baseUrl: base });
 
 const baseQueryWithAuth: typeof rawBaseQuery = async (
   args,
@@ -30,9 +28,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
   }
 
   if (typeof args === 'string') {
-    // добавляем токен
     newArgs = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
-    // если это getStudents, добавляем userId
     if (args.includes('students.json') && args.includes('orderBy')) {
       newArgs += `&equalTo="${userId}"`;
     }
@@ -42,12 +38,10 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
       url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
     };
 
-    // если это getStudents, добавляем userId
     if (args.url.includes('students.json') && args.url.includes('orderBy')) {
       newArgs.url += `&equalTo="${userId}"`;
     }
 
-    // для POST-запросов добавляем userId в тело
     if (args.method === 'POST' && args.body) {
       newArgs.body = { ...args.body, userId };
     }
@@ -61,8 +55,9 @@ export const studentsApi = createApi({
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Students'],
   endpoints: (build) => ({
-    getStudents: build.query<IStudent[], void>({
-      query: () => `${students}.json?orderBy="userId"`, // userId подставится автоматически
+    getStudents: build.query<IStudent[], string | void>({
+      query: (userId) =>
+        `${students}.json?orderBy="userId"&equalTo="${userId}"`,
       transformResponse: (response: Record<string, StudentData> | null) =>
         response
           ? Object.entries(response).map(([id, value]) => ({ id, ...value }))
@@ -80,7 +75,7 @@ export const studentsApi = createApi({
       query: (student) => ({
         url: `${students}.json`,
         method: 'POST',
-        body: student, // userId добавится автоматически
+        body: student,
       }),
       invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
