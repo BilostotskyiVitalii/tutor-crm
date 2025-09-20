@@ -4,13 +4,11 @@ import { UserOutlined } from '@ant-design/icons';
 import { getAuth, signOut } from 'firebase/auth';
 
 import { removeUser } from '@/store/userSlice';
-import { useAppDispatch } from '@/hooks/reduxHooks';
-import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 
 import styles from './UserMenu.module.scss';
-import { studentsApi } from '@/store/studentsApi';
 
 const items: MenuProps['items'] = [
   {
@@ -35,7 +33,7 @@ const items: MenuProps['items'] = [
 const UserMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { profile } = useAuthProfile();
+  const avatar = useAppSelector((state) => state.user.avatar);
   const auth = getAuth();
   const { handleError } = useErrorHandler();
 
@@ -62,7 +60,7 @@ const UserMenu: FC = () => {
     >
       <Avatar
         className={`${styles.avatar} ${isOpen ? styles.openMenu : ''}`}
-        src={profile?.avatar ?? undefined}
+        src={avatar ?? undefined}
         icon={<UserOutlined />}
         onError={() => true}
       />

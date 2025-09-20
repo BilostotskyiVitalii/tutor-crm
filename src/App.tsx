@@ -2,18 +2,14 @@ import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
-import { WorkPlaceComponent, CustomSpinner } from '@/components';
+import { WorkPlaceComponent } from '@/components';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
 
 const App: FC = () => {
-  const { loading } = useAuthProfile();
-
-  if (loading) {
-    return <CustomSpinner />;
-  }
+  useAuthProfile();
 
   return (
     <Routes>

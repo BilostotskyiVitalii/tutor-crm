@@ -1,22 +1,20 @@
-import { useEffect, useState } from 'react';
-import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import { useEffect } from 'react';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { getDatabase, ref, get, set, serverTimestamp } from 'firebase/database';
 import { useAppDispatch } from '@/hooks/reduxHooks';
-import { setUser, removeUser } from '@/store/userSlice';
-import type { IUserProfile } from '@/types/userTypes';
+import { setUser, removeUser, setLoading } from '@/store/userSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import { studentsApi } from '@/store/studentsApi';
 
 export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
-  const [loading, setLoading] = useState(true);
-  const [profile, setProfile] = useState<IUserProfile | null>(null);
   const db = getDatabase();
   const auth = getAuth();
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user: User | null) => {
+    dispatch(setLoading(true));
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const token = await user.getIdToken();
@@ -33,35 +31,25 @@ export const useAuthProfile = () => {
             });
           }
 
-          const fullProfile: IUserProfile = {
-            id: user.uid,
-            email: user.email,
-            token,
-            nickName: dbData.nickName ?? user.displayName ?? null,
-            createdAt: dbData.createdAt ?? serverTimestamp(),
-            avatar: dbData.avatar ?? user.photoURL ?? null,
-          };
-
-          setProfile(fullProfile);
-          dispatch(setUser(fullProfile));
+          dispatch(
+            setUser({
+              id: user.uid,
+              email: user.email,
+              token,
+              nickName: dbData.nickName ?? user.displayName ?? null,
+              createdAt: dbData.createdAt ?? serverTimestamp(),
+              avatar: dbData.avatar ?? user.photoURL ?? null,
+            }),
+          );
         } catch (err) {
           handleError(err, 'Auth Error');
-          setProfile(null);
+          dispatch(removeUser());
         }
       } else {
-        setProfile(null);
         dispatch(removeUser());
-        dispatch(studentsApi.util.resetApiState());
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
   }, [dispatch, db, auth, handleError]);
-
-  return {
-    loading,
-    isAuth: !!profile?.email,
-    profile,
-  };
 };
