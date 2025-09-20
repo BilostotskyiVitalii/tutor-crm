@@ -1,34 +1,33 @@
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Card } from 'antd';
+import { Avatar, Card, notification } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-
 import { useDeleteStudentMutation } from '@/store/studentsApi';
 import { navigationUrls } from '@/constants/navigationUrls';
 import type { IStudent } from '@/types/studentTypes';
-
 import styles from './StudentCard.module.scss';
 
 const { Meta } = Card;
 
 interface IStudentCardProps {
   student: IStudent;
-  showEdit: (id: IStudent) => void;
+  onEdit: (student: IStudent) => void;
 }
 
-const StudentCard: FC<IStudentCardProps> = ({ student, showEdit }) => {
+const StudentCard: FC<IStudentCardProps> = ({ student, onEdit }) => {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
 
-  function addLessonHandler() {
-    console.log('ADDed LESSON');
-  }
-
-  function removeHandler() {
-    deleteStudent(student.id);
-  }
-
-  function editHandler() {
-    showEdit(student);
+  async function removeHandler() {
+    try {
+      await deleteStudent(student.id).unwrap();
+      notification.success({
+        message: 'Student deleted!',
+      });
+    } catch {
+      notification.error({
+        message: 'Failed to delete student',
+      });
+    }
   }
 
   return (
@@ -36,8 +35,8 @@ const StudentCard: FC<IStudentCardProps> = ({ student, showEdit }) => {
       loading={isDeleting}
       className={styles.card}
       actions={[
-        <PlusOutlined key="add" onClick={addLessonHandler} />,
-        <EditOutlined key="edit" onClick={editHandler} />,
+        <PlusOutlined key="add" onClick={() => console.log('Add lesson')} />,
+        <EditOutlined key="edit" onClick={() => onEdit(student)} />,
         <DeleteOutlined
           key="delete"
           className={styles.delete}
@@ -49,7 +48,7 @@ const StudentCard: FC<IStudentCardProps> = ({ student, showEdit }) => {
         avatar={
           <Avatar
             size={64}
-            src="https://api.dicebear.com/7.x/miniavs/svg?seed=8"
+            src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student.id}`}
           />
         }
         title={
