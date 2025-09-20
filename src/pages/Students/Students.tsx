@@ -1,5 +1,5 @@
-import { CustomSpinner, StudentCard, StudentForm } from '@/components';
-import { Button, Space } from 'antd';
+import { StudentCard, StudentForm } from '@/components';
+import { Button, Flex, Space, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState, type FC } from 'react';
 import { useGetStudentsQuery } from '@/store/studentsApi';
@@ -33,9 +33,7 @@ const Students: FC = () => {
 
   return (
     <>
-      {isLoading && <CustomSpinner />}
-      {error && <p style={{ color: 'red' }}>Failed to load students</p>}
-      <Space direction="vertical" size="large">
+      <Flex vertical gap="large">
         <Space direction="vertical" size="large">
           <h1>Students</h1>
           <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
@@ -43,12 +41,14 @@ const Students: FC = () => {
           </Button>
         </Space>
 
-        <Space size="large" wrap>
+        <Flex wrap gap="large">
+          {error && <p style={{ color: 'red' }}>Failed to load students</p>}
+          {isLoading && <Spin size="large" />}
           {students?.map((student) => (
             <StudentCard key={student.id} student={student} onEdit={showEdit} />
           ))}
-        </Space>
-      </Space>
+        </Flex>
+      </Flex>
 
       <StudentForm
         isModalOpen={isModalOpen}
