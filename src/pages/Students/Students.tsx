@@ -1,7 +1,6 @@
-import { StudentCard, StudentForm } from '@/components';
+import { CustomSpinner, StudentCard, StudentForm } from '@/components';
 import { Button, Space } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-
 import { useState, type FC } from 'react';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
@@ -9,11 +8,16 @@ import type { IStudent } from '@/types/studentTypes';
 
 const Students: FC = () => {
   const { profile } = useAuthProfile();
-  const { data: students } = useGetStudentsQuery(profile?.id ?? '');
+  const {
+    data: students,
+    isLoading,
+    error,
+  } = useGetStudentsQuery(profile?.id ?? '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedStudent, setEditedStudent] = useState<IStudent | null>(null);
 
   const showCreate = () => {
+    setEditedStudent(null);
     setIsModalOpen(true);
   };
 
@@ -27,33 +31,30 @@ const Students: FC = () => {
     setEditedStudent(null);
   };
 
-  //TODO add spinner on loading, and error handler
-
   return (
     <>
+      {isLoading && <CustomSpinner />}
+      {error && <p style={{ color: 'red' }}>Failed to load students</p>}
       <Space direction="vertical" size="large">
         <Space direction="vertical" size="large">
           <h1>Students</h1>
-          <div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
-              New student
-            </Button>
-          </div>
+          <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
+            New student
+          </Button>
         </Space>
+
         <Space size="large" wrap>
           {students?.map((student) => (
-            <StudentCard
-              key={student.id}
-              student={student}
-              showEdit={showEdit}
-            />
+            <StudentCard key={student.id} student={student} onEdit={showEdit} />
           ))}
         </Space>
       </Space>
+
       <StudentForm
         isModalOpen={isModalOpen}
         onClose={hideModal}
         editedStudent={editedStudent}
+        isEditMode={!!editedStudent}
       />
     </>
   );

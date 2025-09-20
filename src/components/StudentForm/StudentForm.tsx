@@ -5,18 +5,20 @@ import {
   useUpdateStudentMutation,
 } from '@/store/studentsApi';
 import type { IStudent, IStudentFormValues } from '@/types/studentTypes';
-import { Form, Input, InputNumber, message, Modal } from 'antd';
+import { Form, Input, InputNumber, Modal, notification } from 'antd';
 import { useEffect, type FC } from 'react';
 
 interface StudentFormProps {
   isModalOpen: boolean;
   onClose: () => void;
+  isEditMode: boolean;
   editedStudent?: IStudent | null;
 }
 
 const StudentForm: FC<StudentFormProps> = ({
   onClose,
   isModalOpen,
+  isEditMode,
   editedStudent,
 }) => {
   const [form] = Form.useForm<IStudentFormValues>();
@@ -26,16 +28,14 @@ const StudentForm: FC<StudentFormProps> = ({
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    if (editedStudent) {
-      form.setFieldsValue({
-        name: editedStudent.name,
-        email: editedStudent.email,
-        age: editedStudent.age,
-      });
-    } else {
-      form.resetFields();
+    if (isModalOpen) {
+      if (isEditMode && editedStudent) {
+        form.setFieldsValue(editedStudent);
+      } else {
+        form.resetFields();
+      }
     }
-  }, [isModalOpen, editedStudent, form]);
+  }, [isModalOpen, isEditMode, editedStudent, form]);
 
   const handleCancel = () => {
     onClose();
@@ -45,19 +45,20 @@ const StudentForm: FC<StudentFormProps> = ({
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
+
       if (!profile?.id) {
-        message.error('Student wasn`t created!');
+        notification.error({ message: 'Student wasn’t created!' });
         return;
       }
-      if (editedStudent) {
-        await updateStudent({
-          id: editedStudent.id,
-          data: values,
-        });
+
+      if (isEditMode && editedStudent) {
+        await updateStudent({ id: editedStudent.id, data: values }).unwrap();
+        notification.success({ message: 'Student updated!' });
       } else {
-        await addStudent({ ...values });
+        await addStudent(values).unwrap();
+        notification.success({ message: 'Student created!' });
       }
-      message.success('Student created!');
+
       onClose();
       form.resetFields();
     } catch (error) {
@@ -67,18 +68,18 @@ const StudentForm: FC<StudentFormProps> = ({
 
   return (
     <Modal
-      title={editedStudent ? 'Update student' : 'New student'}
+      title={isEditMode ? 'Update student' : 'New student'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText={editedStudent ? 'Update' : 'Create'}
+      okText={isEditMode ? 'Update' : 'Create'}
       cancelText="Cancel"
     >
-      <Form form={form} layout="vertical" name="add_student_form">
+      <Form form={form} layout="vertical" name="student_form">
         <Form.Item
           label="Name"
           name="name"
-          rules={[{ required: true, message: 'Enter students name' }]}
+          rules={[{ required: true, message: 'Enter student name' }]}
         >
           <Input placeholder="John Snow" />
         </Form.Item>
@@ -95,9 +96,9 @@ const StudentForm: FC<StudentFormProps> = ({
         </Form.Item>
 
         <Form.Item
-          label="Birthdate"
+          label="Age"
           name="age"
-          rules={[{ required: true, message: 'Birthdate' }]}
+          rules={[{ required: true, message: 'Enter age' }]}
         >
           <InputNumber
             type="number"
