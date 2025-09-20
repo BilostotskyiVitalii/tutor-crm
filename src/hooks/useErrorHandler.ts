@@ -5,7 +5,7 @@ import { firebaseErrorMap } from '@/constants/errors';
 
 export const useErrorHandler = () => {
   const handleError = useCallback((err: unknown, context?: string) => {
-    let errMessage = 'Неизвестная ошибка';
+    let errMessage = 'Unknown error';
 
     if (err instanceof FirebaseError) {
       errMessage = firebaseErrorMap[err.code] ?? err.message;
@@ -14,7 +14,7 @@ export const useErrorHandler = () => {
     }
 
     notification.error({
-      message: context || 'Ошибка',
+      message: context || 'Error',
       description: errMessage,
       duration: 4,
       pauseOnHover: true,
