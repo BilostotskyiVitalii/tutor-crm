@@ -13,9 +13,10 @@ const { Meta } = Card;
 
 interface IStudentCardProps {
   student: IStudent;
+  showEdit: (id: IStudent) => void;
 }
 
-const StudentCard: FC<IStudentCardProps> = ({ student }) => {
+const StudentCard: FC<IStudentCardProps> = ({ student, showEdit }) => {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
 
   function addLessonHandler() {
@@ -26,13 +27,17 @@ const StudentCard: FC<IStudentCardProps> = ({ student }) => {
     deleteStudent(student.id);
   }
 
+  function editHandler() {
+    showEdit(student);
+  }
+
   return (
     <Card
       loading={isDeleting}
       className={styles.card}
       actions={[
         <PlusOutlined key="add" onClick={addLessonHandler} />,
-        <EditOutlined key="edit" />,
+        <EditOutlined key="edit" onClick={editHandler} />,
         <DeleteOutlined
           key="delete"
           className={styles.delete}

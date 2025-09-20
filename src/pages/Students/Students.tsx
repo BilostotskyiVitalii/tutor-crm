@@ -5,13 +5,27 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useState, type FC } from 'react';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
+import type { IStudent } from '@/types/studentTypes';
 
 const Students: FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const { profile } = useAuthProfile();
   const { data: students } = useGetStudentsQuery(profile?.id ?? '');
-  const showModal = () => setIsModalOpen(true);
-  const hideModal = () => setIsModalOpen(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editedStudent, setEditedStudent] = useState<IStudent | null>(null);
+
+  const showCreate = () => {
+    setIsModalOpen(true);
+  };
+
+  const showEdit = (student: IStudent) => {
+    setEditedStudent(student);
+    setIsModalOpen(true);
+  };
+
+  const hideModal = () => {
+    setIsModalOpen(false);
+    setEditedStudent(null);
+  };
 
   //TODO add spinner on loading, and error handler
 
@@ -21,18 +35,26 @@ const Students: FC = () => {
         <Space direction="vertical" size="large">
           <h1>Students</h1>
           <div>
-            <Button type="primary" icon={<PlusOutlined />} onClick={showModal}>
+            <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
               New student
             </Button>
           </div>
         </Space>
         <Space size="large" wrap>
           {students?.map((student) => (
-            <StudentCard key={student.id} student={student} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              showEdit={showEdit}
+            />
           ))}
         </Space>
       </Space>
-      <StudentForm isModalOpen={isModalOpen} onClose={hideModal} />
+      <StudentForm
+        isModalOpen={isModalOpen}
+        onClose={hideModal}
+        editedStudent={editedStudent}
+      />
     </>
   );
 };
