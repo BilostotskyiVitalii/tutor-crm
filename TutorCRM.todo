@@ -62,6 +62,17 @@
               "done": false,
               "start": 1757959242477
             }
+          },
+          {
+            "key": 1758382220230,
+            "children": [],
+            "todo": {
+              "content": "Select lang bug",
+              "id": 1758382220230,
+              "level": "default",
+              "done": false,
+              "start": 1758382220231
+            }
           }
         ],
         "todo": {
@@ -123,6 +134,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758276075074"
+    "version": "1758382229355"
   }
 }
