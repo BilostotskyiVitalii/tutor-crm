@@ -7,8 +7,12 @@ import type { IStudent } from '@/types/studentTypes';
 import { useAppSelector } from '@/hooks/reduxHooks';
 
 const Students: FC = () => {
-  const id = useAppSelector((state) => state.user.id);
-  const { data: students, isLoading, error } = useGetStudentsQuery(id ?? '');
+  const tutorId = useAppSelector((state) => state.user.id);
+  const {
+    data: students,
+    isLoading,
+    error,
+  } = useGetStudentsQuery(tutorId ?? '');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedStudent, setEditedStudent] = useState<IStudent | null>(null);
 
