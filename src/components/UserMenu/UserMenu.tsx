@@ -47,7 +47,7 @@ const UserMenu: FC = () => {
         await signOut(auth);
         dispatch(removeUser());
       } catch (error) {
-        handleError(error, 'Login Error');
+        handleError(error, 'logout Error');
       }
     }
   };
