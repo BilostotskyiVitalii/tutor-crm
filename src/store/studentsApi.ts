@@ -1,9 +1,9 @@
 import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
 import type {
-  IStudent,
-  IStudentFormValues,
-  IUpdtUser,
+  Student,
+  StudentFormValues,
+  UpdateUser,
   StudentData,
 } from '@/types/studentTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -55,7 +55,7 @@ export const studentsApi = createApi({
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Students'],
   endpoints: (build) => ({
-    getStudents: build.query<IStudent[], string | void>({
+    getStudents: build.query<Student[], string | void>({
       query: (userId) =>
         `${students}.json?orderBy="userId"&equalTo="${userId}"`,
       transformResponse: (response: Record<string, StudentData> | null) =>
@@ -71,7 +71,7 @@ export const studentsApi = createApi({
           : [{ type: 'Students', id: 'LIST' }],
     }),
 
-    addStudent: build.mutation<IStudent, IStudentFormValues>({
+    addStudent: build.mutation<Student, StudentFormValues>({
       query: (student) => ({
         url: `${students}.json`,
         method: 'POST',
@@ -80,7 +80,7 @@ export const studentsApi = createApi({
       invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
 
-    updateStudent: build.mutation<IStudent, IUpdtUser>({
+    updateStudent: build.mutation<Student, UpdateUser>({
       query: ({ id, data }) => ({
         url: `${students}/${id}.json`,
         method: 'PATCH',

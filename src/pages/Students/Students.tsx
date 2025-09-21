@@ -3,7 +3,7 @@ import { Button, Flex, Space, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useState, type FC } from 'react';
 import { useGetStudentsQuery } from '@/store/studentsApi';
-import type { IStudent } from '@/types/studentTypes';
+import type { Student } from '@/types/studentTypes';
 import { useAppSelector } from '@/hooks/reduxHooks';
 
 const Students: FC = () => {
@@ -14,14 +14,14 @@ const Students: FC = () => {
     error,
   } = useGetStudentsQuery(tutorId ?? '');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedStudent, setEditedStudent] = useState<IStudent | null>(null);
+  const [editedStudent, setEditedStudent] = useState<Student | null>(null);
 
   const showCreate = () => {
     setEditedStudent(null);
     setIsModalOpen(true);
   };
 
-  const showEdit = (student: IStudent) => {
+  const showEdit = (student: Student) => {
     setEditedStudent(student);
     setIsModalOpen(true);
   };
