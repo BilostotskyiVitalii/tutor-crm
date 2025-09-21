@@ -1,6 +1,6 @@
 import { type FC, useEffect } from 'react';
 import { Modal, Form, Input, DatePicker, Select, Button } from 'antd';
-import type { ILesson } from '@/types/lessonTypes';
+import type { Lesson } from '@/types/lessonTypes';
 import {
   useCreateLessonMutation,
   useUpdateLessonMutation,
@@ -11,7 +11,7 @@ import { useAppSelector } from '@/hooks/reduxHooks';
 interface LessonFormModalProps {
   visible: boolean;
   onClose: () => void;
-  lesson?: ILesson;
+  lesson?: Lesson;
 }
 
 interface LessonFormValues {
@@ -49,7 +49,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   }, [lesson, form]);
 
   const handleFinish = async (values: LessonFormValues) => {
-    const payload: Omit<ILesson, 'id' | 'tutorId'> = {
+    const payload: Omit<Lesson, 'id' | 'tutorId'> = {
       ...values,
       start: values.start.toISOString(),
       end: values.end.toISOString(),

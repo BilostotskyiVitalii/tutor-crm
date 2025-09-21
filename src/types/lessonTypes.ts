@@ -1,4 +1,4 @@
-export interface ILesson {
+export interface Lesson {
   id: string;
   type: 'individual' | 'group';
   tutorId: string;
@@ -11,10 +11,11 @@ export interface ILesson {
   notes?: string;
 }
 
-export interface IGroup {
+export type LessonData = Omit<Lesson, 'id'>;
+
+export type LessonFormValues = Omit<Lesson, 'id' | 'tutorId'>;
+
+export type UpdateLesson = {
   id: string;
-  tutorId: string;
-  name: string;
-  notes?: string;
-  studentIds: string[];
-}
+  data: Partial<Lesson>;
+};

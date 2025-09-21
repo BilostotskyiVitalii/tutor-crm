@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '@/store';
-import type { ILesson } from '@/types/lessonTypes';
+import type {
+  Lesson,
+  LessonData,
+  LessonFormValues,
+  UpdateLesson,
+} from '@/types/lessonTypes';
 import { apiURL } from '@/constants/apiUrl';
 
 const { base, lessons } = apiURL;
@@ -14,7 +19,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
 ) => {
   const state = api.getState() as RootState;
   const token = state.user.token;
-  const userId = state.user.id;
+  const tutorId = state.user.id;
 
   let newArgs = args;
 
@@ -32,7 +37,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
 
     // Для POST автоматически добавляем tutorId
     if (args.method === 'POST' && args.body) {
-      newArgs.body = { ...args.body, tutorId: userId };
+      newArgs.body = { ...args.body, tutorId: tutorId };
     }
   }
 
@@ -44,12 +49,10 @@ export const lessonsApi = createApi({
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Lessons'],
   endpoints: (builder) => ({
-    getLessons: builder.query<ILesson[], string | void>({
-      query: (userId) =>
-        `${lessons}.json?orderBy="tutorId"&equalTo="${userId}"`,
-      transformResponse: (
-        response: Record<string, Omit<ILesson, 'id'>> | null,
-      ) =>
+    getLessons: builder.query<Lesson[], string | void>({
+      query: (tutorId) =>
+        `${lessons}.json?orderBy="tutorId"&equalTo="${tutorId}"`,
+      transformResponse: (response: Record<string, LessonData> | null) =>
         response
           ? Object.entries(response).map(([key, lesson]) => ({
               id: key,
@@ -65,12 +68,12 @@ export const lessonsApi = createApi({
           : [{ type: 'Lessons', id: 'LIST' }],
     }),
 
-    getLesson: builder.query<ILesson, string>({
+    getLesson: builder.query<Lesson, string>({
       query: (id) => `${lessons}/${id}.json`,
       providesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
     }),
 
-    createLesson: builder.mutation<ILesson, Omit<ILesson, 'id' | 'tutorId'>>({
+    createLesson: builder.mutation<Lesson, LessonFormValues>({
       query: (lesson) => ({
         url: `${lessons}.json`,
         method: 'POST',
@@ -79,10 +82,7 @@ export const lessonsApi = createApi({
       invalidatesTags: ['Lessons'],
     }),
 
-    updateLesson: builder.mutation<
-      ILesson,
-      { id: string; data: Partial<ILesson> }
-    >({
+    updateLesson: builder.mutation<Lesson, UpdateLesson>({
       query: ({ id, data }) => ({
         url: `${lessons}/${id}.json`,
         method: 'PATCH',
