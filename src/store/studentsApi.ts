@@ -1,11 +1,6 @@
 import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
-import type {
-  Student,
-  StudentFormValues,
-  UpdateUser,
-  StudentData,
-} from '@/types/studentTypes';
+import type { Student, UpdateUser, StudentData } from '@/types/studentTypes';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const { base, students } = apiURL;
@@ -43,7 +38,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
     }
 
     if (args.method === 'POST' && args.body) {
-      newArgs.body = { ...args.body, userId };
+      newArgs.body = { ...args.body, tutorId: userId };
     }
   }
 
@@ -57,7 +52,7 @@ export const studentsApi = createApi({
   endpoints: (build) => ({
     getStudents: build.query<Student[], string | void>({
       query: (userId) =>
-        `${students}.json?orderBy="userId"&equalTo="${userId}"`,
+        `${students}.json?orderBy="tutorId"&equalTo="${userId}"`,
       transformResponse: (response: Record<string, StudentData> | null) =>
         response
           ? Object.entries(response).map(([id, value]) => ({ id, ...value }))
@@ -71,7 +66,7 @@ export const studentsApi = createApi({
           : [{ type: 'Students', id: 'LIST' }],
     }),
 
-    addStudent: build.mutation<Student, StudentFormValues>({
+    addStudent: build.mutation<Student, StudentData>({
       query: (student) => ({
         url: `${students}.json`,
         method: 'POST',
