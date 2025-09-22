@@ -10,3 +10,4 @@ export { default as CustomSpinner } from './CustomSpinner/CustomSpinner';
 export { default as StudentCard } from './StudentCard/StudentCard';
 export { default as StudentForm } from './StudentForm/StudentForm';
 export { default as LessonFormModal } from './LessonFormModal/LessonFormModal';
+export { default as LessonCard } from './LessonCard/LessonCard';

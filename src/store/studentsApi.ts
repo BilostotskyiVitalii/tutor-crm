@@ -24,7 +24,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
 
   if (typeof args === 'string') {
     newArgs = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
-    if (args.includes('students.json') && args.includes('orderBy')) {
+    if (args.includes(`${students}.json`) && args.includes('orderBy')) {
       newArgs += `&equalTo="${userId}"`;
     }
   } else if ('url' in args) {
@@ -33,7 +33,7 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
       url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
     };
 
-    if (args.url.includes('students.json') && args.url.includes('orderBy')) {
+    if (args.url.includes(`${students}.json`) && args.url.includes('orderBy')) {
       newArgs.url += `&equalTo="${userId}"`;
     }
 

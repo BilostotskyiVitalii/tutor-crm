@@ -72,7 +72,7 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
       <LessonFormModal
         isModalOpen={isModalOpen}
         onClose={onClose}
-        defaultStudent={student.id}
+        defaultStudents={[student.id]}
       />
     </>
   );

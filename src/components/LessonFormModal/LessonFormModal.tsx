@@ -1,87 +1,102 @@
 import { type FC, useEffect } from 'react';
-import { Modal, Form, Input, DatePicker, Select, Button } from 'antd';
-import type { Lesson } from '@/types/lessonTypes';
+import { Modal, Form, Input, DatePicker, Select, notification } from 'antd';
+import dayjs from 'dayjs';
+import type { Lesson, LessonFormValues } from '@/types/lessonTypes';
 import {
   useCreateLessonMutation,
   useUpdateLessonMutation,
 } from '@/store/lessonsApi';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import { useAppSelector } from '@/hooks/reduxHooks';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
+
+const { RangePicker } = DatePicker;
 
 interface LessonFormModalProps {
-  visible: boolean;
+  isModalOpen: boolean;
   onClose: () => void;
-  lesson?: Lesson;
-}
-
-interface LessonFormValues {
-  title: string;
-  type: 'individual' | 'group';
-  studentIds: string[];
-  start: Date;
-  end: Date;
-  notes?: string;
+  editedLesson?: Lesson | null;
+  defaultStudents?: string[];
 }
 
 const LessonFormModal: FC<LessonFormModalProps> = ({
-  visible,
+  isModalOpen,
   onClose,
-  lesson,
+  editedLesson,
+  defaultStudents,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
   const tutorId = useAppSelector((state) => state.user.id);
   const { data: students = [] } = useGetStudentsQuery(tutorId ?? '');
   const [createLesson] = useCreateLessonMutation();
   const [updateLesson] = useUpdateLessonMutation();
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    if (lesson) {
+    if (editedLesson) {
       form.setFieldsValue({
-        title: lesson.title,
-        studentIds: lesson.studentIds,
-        start: lesson.start ? new Date(lesson.start) : undefined,
-        end: lesson.end ? new Date(lesson.end) : undefined,
-        notes: lesson.notes,
+        studentIds: editedLesson.studentIds,
+        date: [dayjs(editedLesson.start), dayjs(editedLesson.end)],
+        notes: editedLesson.notes ?? '',
       });
     } else {
       form.resetFields();
     }
-  }, [lesson, form]);
+  }, [editedLesson, form]);
 
-  const handleFinish = async (values: LessonFormValues) => {
-    const payload: Omit<Lesson, 'id' | 'tutorId'> = {
-      ...values,
-      start: values.start.toISOString(),
-      end: values.end.toISOString(),
-    };
+  useEffect(() => {
+    if (defaultStudents) {
+      form.setFieldsValue({
+        studentIds: defaultStudents,
+      });
+    } else {
+      form.resetFields();
+    }
+  }, [defaultStudents, form]);
 
+  const handleFinish = async () => {
     try {
-      if (lesson) {
-        await updateLesson({ id: lesson.id, data: payload }).unwrap();
+      const values: LessonFormValues = await form.validateFields();
+
+      const reqValues = {
+        ...values,
+        date: null,
+        start: values.date[0].valueOf(),
+        end: values.date[1].valueOf(),
+      };
+
+      if (editedLesson) {
+        await updateLesson({ id: editedLesson.id, data: reqValues }).unwrap();
+        notification.success({ message: 'Lesson updated!' });
       } else {
-        await createLesson(payload).unwrap();
+        await createLesson(reqValues).unwrap();
+        notification.success({ message: 'Lesson created!' });
       }
       onClose();
+      form.resetFields();
     } catch (err) {
-      console.error(err);
+      handleError(err, 'Student form error');
     }
+  };
+
+  const handleCancel = () => {
+    onClose();
+    form.resetFields();
   };
 
   return (
     <Modal
-      open={visible}
-      onCancel={onClose}
-      title={lesson ? 'Edit Lesson' : 'Create Lesson'}
-      footer={null}
+      title={editedLesson ? 'Edit Lesson' : 'Create Lesson'}
+      open={isModalOpen}
+      onCancel={handleCancel}
+      onOk={handleFinish}
+      okText={editedLesson ? 'Update' : 'Create'}
+      cancelText="Cancel"
     >
-      <Form form={form} layout="vertical" onFinish={handleFinish}>
-        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
-
+      <Form form={form} layout="vertical">
         <Form.Item
           name="studentIds"
-          label="Students"
+          label="Students:"
           rules={[{ required: true }]}
         >
           <Select
@@ -91,22 +106,15 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
           />
         </Form.Item>
 
-        <Form.Item name="start" label="Start" rules={[{ required: true }]}>
-          <DatePicker showTime />
+        <Form.Item name="date" label="Date:" rules={[{ required: true }]}>
+          <RangePicker
+            showTime={{ format: 'HH:mm' }}
+            format="DD.MM.YYYY HH:mm"
+          />
         </Form.Item>
 
-        <Form.Item name="end" label="End" rules={[{ required: true }]}>
-          <DatePicker showTime />
-        </Form.Item>
-
-        <Form.Item name="notes" label="Notes">
-          <Input.TextArea rows={3} />
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            {lesson ? 'Update' : 'Create'}
-          </Button>
+        <Form.Item name="notes" label="Notes:">
+          <Input.TextArea rows={3} placeholder="Note some info here" />
         </Form.Item>
       </Form>
     </Modal>
