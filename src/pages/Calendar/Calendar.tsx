@@ -1,36 +1,43 @@
-import { LessonFormModal } from '@/components';
+import { useState, type FC } from 'react';
+import { Button } from 'antd';
+import { LessonCard, LessonFormModal } from '@/components';
 import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetLessonsQuery } from '@/store/lessonsApi';
-import { Button } from 'antd';
-import { useState, type FC } from 'react';
+import type { Lesson } from '@/types/lessonTypes';
 
 const Calendar: FC = () => {
-  const tutorId = useAppSelector((state) => state.user.id);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const tutorId = useAppSelector((state) => state.user.id);
   const { data: lessons } = useGetLessonsQuery(tutorId ?? '');
+  const [editedLesson, setEditedLesson] = useState<Lesson | null>(null);
 
   function onClose() {
+    setEditedLesson(null);
     setIsModalOpen(false);
   }
 
   function onOpen() {
+    setEditedLesson(null);
     setIsModalOpen(true);
   }
+
+  const showEdit = (lesson: Lesson) => {
+    setEditedLesson(lesson);
+    setIsModalOpen(true);
+  };
 
   return (
     <>
       <h1 className="pageTitle">Calendar</h1>
       <Button onClick={onOpen}>Add lesson</Button>
       {lessons?.map((lesson) => {
-        return (
-          <div key={lesson.id}>
-            <h2>{lesson.title}</h2>
-            <div>{lesson.notes}</div>
-            <div>{lesson.start}</div>
-          </div>
-        );
+        return <LessonCard key={lesson.id} lesson={lesson} onEdit={showEdit} />;
       })}
-      <LessonFormModal isModalOpen={isModalOpen} onClose={onClose} />
+      <LessonFormModal
+        isModalOpen={isModalOpen}
+        onClose={onClose}
+        editedLesson={editedLesson}
+      />
     </>
   );
 };

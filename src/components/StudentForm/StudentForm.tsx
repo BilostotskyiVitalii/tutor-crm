@@ -86,7 +86,7 @@ const StudentForm: FC<StudentFormProps> = ({
     }
   };
 
-  const selectСurrency = (
+  const selectCurrency = (
     <Select defaultValue="UAH" style={{ width: 100 }}>
       <Option value="UAH">UAH ₴</Option>
       <Option value="USD">USD $</Option>
@@ -132,11 +132,11 @@ const StudentForm: FC<StudentFormProps> = ({
           name="cost"
           rules={[{ required: true, message: 'Enter cost/hour' }]}
         >
-          <InputNumber placeholder="500" min={0} addonAfter={selectСurrency} />
+          <InputNumber placeholder="500" min={0} addonAfter={selectCurrency} />
         </Form.Item>
 
         <Form.Item label="Notes:" name="notes">
-          <TextArea placeholder="Note some info here" />
+          <TextArea rows={3} placeholder="Note some info here" />
         </Form.Item>
       </Form>
     </Modal>

@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { RootState } from '@/store';
 import type {
+  CreateLessonValues,
   Lesson,
   LessonData,
-  LessonFormValues,
   UpdateLesson,
 } from '@/types/lessonTypes';
 import { apiURL } from '@/constants/apiUrl';
@@ -35,7 +35,6 @@ const baseQueryWithAuth: typeof rawBaseQuery = async (
       url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
     };
 
-    // Для POST автоматически добавляем tutorId
     if (args.method === 'POST' && args.body) {
       newArgs.body = { ...args.body, tutorId: tutorId };
     }
@@ -73,11 +72,11 @@ export const lessonsApi = createApi({
       providesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
     }),
 
-    createLesson: builder.mutation<Lesson, LessonFormValues>({
+    createLesson: builder.mutation<Lesson, CreateLessonValues>({
       query: (lesson) => ({
         url: `${lessons}.json`,
         method: 'POST',
-        body: lesson, // tutorId автоматически подставляется в baseQuery
+        body: lesson,
       }),
       invalidatesTags: ['Lessons'],
     }),

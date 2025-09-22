@@ -1,21 +1,25 @@
+import type { Dayjs } from 'dayjs';
+
 export interface Lesson {
   id: string;
-  type: 'individual' | 'group';
   tutorId: string;
-  studentId?: string;
-  groupId?: string;
-  studentIds?: string[];
-  start: string;
-  end: string;
-  title?: string;
-  notes?: string;
+  groupId: string;
+  studentIds: string[];
+  start: number;
+  end: number;
+  notes: string;
 }
 
 export type LessonData = Omit<Lesson, 'id'>;
 
-export type LessonFormValues = Omit<Lesson, 'id' | 'tutorId'>;
+export interface LessonFormValues
+  extends Omit<Lesson, 'id' | 'tutorId' | 'start' | 'end'> {
+  date: Dayjs[];
+}
+
+export type CreateLessonValues = Omit<Lesson, 'id' | 'tutorId'>;
 
 export type UpdateLesson = {
   id: string;
-  data: Partial<Lesson>;
+  data: Partial<CreateLessonValues>;
 };
