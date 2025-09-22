@@ -6,6 +6,7 @@ import {
   SettingFilled,
   HomeOutlined,
   ScheduleOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, type MenuProps } from 'antd';
 
@@ -18,12 +19,14 @@ const SiderComponent: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { Sider } = Layout;
-  const { dashboard, students, calendar, settings, analytics } = navigationUrls;
+  const { dashboard, students, calendar, settings, analytics, groups } =
+    navigationUrls;
 
   const siderItems: MenuProps['items'] = [
     { title: 'Dashboard', icon: HomeOutlined, path: dashboard },
     { title: 'Calendar', icon: ScheduleOutlined, path: calendar },
-    { title: 'Students', icon: TeamOutlined, path: students },
+    { title: 'Students', icon: UserOutlined, path: students },
+    { title: 'Groups', icon: TeamOutlined, path: groups },
     { title: 'Analytics', icon: BarChartOutlined, path: analytics },
     { title: 'Settings', icon: SettingFilled, path: settings },
   ].map((item) => ({

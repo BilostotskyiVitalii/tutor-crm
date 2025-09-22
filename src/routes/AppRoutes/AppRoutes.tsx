@@ -6,6 +6,7 @@ import {
   Analytics,
   Calendar,
   Dashboard,
+  GroupsPage,
   Settings,
   StudentPage,
   Students,
@@ -15,8 +16,16 @@ import { navigationUrls } from '@/constants/navigationUrls';
 import styles from './AppRoutes.module.scss';
 
 const { Content } = Layout;
-const { dashboard, students, student, calendar, settings, analytics, index } =
-  navigationUrls;
+const {
+  dashboard,
+  students,
+  student,
+  calendar,
+  settings,
+  analytics,
+  index,
+  groups,
+} = navigationUrls;
 
 const AppRoutes: FC = () => {
   const routes = [
@@ -26,6 +35,7 @@ const AppRoutes: FC = () => {
     { path: analytics, element: <Analytics /> },
     { path: settings, element: <Settings /> },
     { path: student, element: <StudentPage /> },
+    { path: groups, element: <GroupsPage /> },
   ];
 
   return (
