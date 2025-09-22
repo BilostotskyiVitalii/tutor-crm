@@ -1,24 +1,31 @@
+import type { Dayjs } from 'dayjs';
+
 export interface Student {
   id: string;
-  userId: string;
+  tutorId: string;
   name: string;
   email: string;
-  age: number;
+  birthdate: number | '';
+  cost: number;
+  notes: string;
 }
 
-export type StudentFormValues = Omit<Student, 'id' | 'userId'>;
+export interface StudentFormValues
+  extends Omit<Student, 'id' | 'userId' | 'birthdate'> {
+  birthdate: Dayjs | null;
+}
 
 export type StudentData = Omit<Student, 'id'>;
 
 export type UpdateUser = {
   id: string;
-  data: Partial<Student>;
+  data: Partial<StudentData>;
 };
 
 export interface StudentsGroup {
   id: string;
-  tutorId: string;
   name: string;
-  notes?: string;
+  tutorId: string;
   studentIds: string[];
+  notes?: string;
 }

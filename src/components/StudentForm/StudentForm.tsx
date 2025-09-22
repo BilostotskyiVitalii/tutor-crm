@@ -1,18 +1,32 @@
-import { useAppSelector } from '@/hooks/reduxHooks';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { useEffect, type FC } from 'react';
+import {
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  notification,
+  Select,
+} from 'antd';
+import dayjs from 'dayjs';
+import type {
+  Student,
+  StudentData,
+  StudentFormValues,
+} from '@/types/studentTypes';
 import {
   useAddStudentMutation,
   useUpdateStudentMutation,
 } from '@/store/studentsApi';
-import type { IStudent, IStudentFormValues } from '@/types/studentTypes';
-import { Form, Input, InputNumber, Modal, notification } from 'antd';
-import { useEffect, type FC } from 'react';
+
+const { Option } = Select;
+const { TextArea } = Input;
 
 interface StudentFormProps {
   isModalOpen: boolean;
   onClose: () => void;
   isEditMode: boolean;
-  editedStudent?: IStudent | null;
+  editedStudent?: Student | null;
 }
 
 const StudentForm: FC<StudentFormProps> = ({
@@ -21,16 +35,19 @@ const StudentForm: FC<StudentFormProps> = ({
   isEditMode,
   editedStudent,
 }) => {
-  const [form] = Form.useForm<IStudentFormValues>();
+  const [form] = Form.useForm<StudentFormValues>();
   const [addStudent] = useAddStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
-  const id = useAppSelector((state) => state.user.id);
-  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     if (isModalOpen) {
       if (isEditMode && editedStudent) {
-        form.setFieldsValue(editedStudent);
+        form.setFieldsValue({
+          ...editedStudent,
+          birthdate: editedStudent.birthdate
+            ? dayjs(editedStudent.birthdate)
+            : null,
+        });
       } else {
         form.resetFields();
       }
@@ -44,27 +61,38 @@ const StudentForm: FC<StudentFormProps> = ({
 
   const handleOk = async () => {
     try {
-      const values = await form.validateFields();
-
-      if (!id) {
-        notification.error({ message: 'Student wasn’t created!' });
-        return;
-      }
+      const values: StudentFormValues = await form.validateFields();
+      const normalizeValues: StudentData = {
+        ...values,
+        birthdate: values.birthdate ? values.birthdate.valueOf() : '',
+        notes: values.notes ?? '',
+      };
 
       if (isEditMode && editedStudent) {
-        await updateStudent({ id: editedStudent.id, data: values }).unwrap();
+        await updateStudent({
+          id: editedStudent.id,
+          data: normalizeValues,
+        }).unwrap();
         notification.success({ message: 'Student updated!' });
       } else {
-        await addStudent(values).unwrap();
+        await addStudent(normalizeValues).unwrap();
         notification.success({ message: 'Student created!' });
       }
 
       onClose();
       form.resetFields();
-    } catch (error) {
-      handleError(error, 'Student form error');
+    } catch {
+      notification.error({ message: 'Student form error!' });
     }
   };
+
+  const selectСurrency = (
+    <Select defaultValue="UAH" style={{ width: 100 }}>
+      <Option value="UAH">UAH ₴</Option>
+      <Option value="USD">USD $</Option>
+      <Option value="EUR">EUR €</Option>
+    </Select>
+  );
 
   return (
     <Modal
@@ -77,36 +105,38 @@ const StudentForm: FC<StudentFormProps> = ({
     >
       <Form form={form} layout="vertical" name="student_form">
         <Form.Item
-          label="Name"
+          label="Name:"
           name="name"
-          rules={[{ required: true, message: 'Enter student name' }]}
+          rules={[{ required: true, message: 'Enter name' }]}
         >
           <Input placeholder="John Snow" />
         </Form.Item>
 
         <Form.Item
-          label="Email"
+          label="Email:"
           name="email"
           rules={[
             { required: true, message: 'Enter email' },
             { type: 'email', message: 'Wrong email format' },
           ]}
         >
-          <Input placeholder="john@example.com" />
+          <Input placeholder="john@mail.com" />
+        </Form.Item>
+
+        <Form.Item label="Birthdate:" name="birthdate">
+          <DatePicker format="DD/MM/YYYY" />
         </Form.Item>
 
         <Form.Item
-          label="Age"
-          name="age"
-          rules={[{ required: true, message: 'Enter age' }]}
+          label="Cost/hour:"
+          name="cost"
+          rules={[{ required: true, message: 'Enter cost/hour' }]}
         >
-          <InputNumber
-            type="number"
-            placeholder="14"
-            min={14}
-            max={100}
-            style={{ width: '100%' }}
-          />
+          <InputNumber placeholder="500" min={0} addonAfter={selectСurrency} />
+        </Form.Item>
+
+        <Form.Item label="Notes:" name="notes">
+          <TextArea placeholder="Note some info here" />
         </Form.Item>
       </Form>
     </Modal>

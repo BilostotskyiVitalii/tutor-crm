@@ -26,10 +26,11 @@ const Calendar: FC = () => {
           <div key={lesson.id}>
             <h2>{lesson.title}</h2>
             <div>{lesson.notes}</div>
+            <div>{lesson.start}</div>
           </div>
         );
       })}
-      <LessonFormModal visible={isModalOpen} onClose={onClose} />
+      <LessonFormModal isModalOpen={isModalOpen} onClose={onClose} />
     </>
   );
 };
