@@ -1,9 +1,12 @@
+import { builtinModules } from 'module';
+
 import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import prettier from 'eslint-plugin-prettier';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import tseslint from 'typescript-eslint';
 
 export default [
   js.configs.recommended,
@@ -23,6 +26,7 @@ export default [
       'react-hooks': reactHooks,
       'jsx-a11y': jsxA11y,
       prettier,
+      'simple-import-sort': simpleImportSort,
     },
     rules: {
       eqeqeq: ['error', 'always'],
@@ -43,6 +47,22 @@ export default [
       'react/self-closing-comp': 'warn',
       'react/jsx-no-useless-fragment': 'warn',
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            ['^react', '^@types/react'],
+            ['^node:', `^(${builtinModules.join('|')})(/|$)`],
+            ['^@?\\w'],
+            ['^@/'],
+            ['^\\.\\.(?!/?$)', '^\\.\\./?$'],
+            ['^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+            ['^.+\\.s?css$'],
+            ['^.+\\.(png|jpg|jpeg|gif|svg)$'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
     },
     settings: {
       react: { version: 'detect' },

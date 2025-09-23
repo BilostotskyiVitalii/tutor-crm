@@ -1,11 +1,12 @@
-import { createElement, useState, type FC } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { createElement, type FC, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import {
   BarChartOutlined,
-  TeamOutlined,
-  SettingFilled,
   HomeOutlined,
   ScheduleOutlined,
+  SettingFilled,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { Layout, Menu, type MenuProps } from 'antd';
@@ -19,12 +20,12 @@ const SiderComponent: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { Sider } = Layout;
-  const { dashboard, students, calendar, settings, analytics, groups } =
+  const { dashboard, students, schedule, settings, analytics, groups } =
     navigationUrls;
 
   const siderItems: MenuProps['items'] = [
     { title: 'Dashboard', icon: HomeOutlined, path: dashboard },
-    { title: 'Calendar', icon: ScheduleOutlined, path: calendar },
+    { title: 'Schedule', icon: ScheduleOutlined, path: schedule },
     { title: 'Students', icon: UserOutlined, path: students },
     { title: 'Groups', icon: TeamOutlined, path: groups },
     { title: 'Analytics', icon: BarChartOutlined, path: analytics },

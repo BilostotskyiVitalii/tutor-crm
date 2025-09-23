@@ -1,5 +1,5 @@
-import { Button, Flex, Space, Spin } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, Flex, Space, Spin } from 'antd';
 
 const GroupsPage = () => {
   function showCreate() {}
