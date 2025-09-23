@@ -1,12 +1,14 @@
-import { useState, type FC } from 'react';
-import { Button, Flex, Space, Spin } from 'antd';
+import { type FC, useState } from 'react';
+
 import { PlusOutlined } from '@ant-design/icons';
+import { Button, Flex, Space, Spin } from 'antd';
+
 import { LessonCard, LessonFormModal } from '@/components';
 import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetLessonsQuery } from '@/store/lessonsApi';
 import type { Lesson } from '@/types/lessonTypes';
 
-const Calendar: FC = () => {
+const SchedulePage: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const tutorId = useAppSelector((state) => state.user.id);
   const { data: lessons, isLoading, error } = useGetLessonsQuery(tutorId ?? '');
@@ -31,9 +33,9 @@ const Calendar: FC = () => {
     <>
       <Flex vertical gap="large">
         <Space direction="vertical" size="large">
-          <h1>Students</h1>
+          <h1>Schedule</h1>
           <Button type="primary" icon={<PlusOutlined />} onClick={onOpen}>
-            New student
+            New lesson
           </Button>
         </Space>
 
@@ -54,4 +56,4 @@ const Calendar: FC = () => {
   );
 };
 
-export default Calendar;
+export default SchedulePage;

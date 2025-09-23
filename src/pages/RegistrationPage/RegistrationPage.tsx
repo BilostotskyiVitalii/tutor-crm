@@ -1,10 +1,12 @@
 import type { FC } from 'react';
-import { Button, Form, Input, type FormProps } from 'antd';
-import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+
+import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Form, type FormProps, Input } from 'antd';
+
 import { navigationUrls } from '@/constants/navigationUrls';
-import type { IRegField } from '@/types/authFieldsTypes';
 import { useRegister } from '@/hooks/useRegister';
+import type { IRegField } from '@/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();

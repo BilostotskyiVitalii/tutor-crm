@@ -7,7 +7,7 @@ export const navigationUrls = {
   students: '/students',
   groups: '/groups',
   student: '/students/:id',
-  calendar: '/calendar',
+  schedule: '/schedule',
   analytics: '/analytics',
   forgotPassword: '/forgot-password',
 } as const;

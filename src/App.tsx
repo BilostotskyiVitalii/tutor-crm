@@ -1,12 +1,11 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
 import { WorkPlaceComponent } from '@/components';
-import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
-
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
+import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 
 const App: FC = () => {
   useAuthProfile();

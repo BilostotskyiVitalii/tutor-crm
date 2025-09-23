@@ -1,17 +1,18 @@
 import { type FC } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
+
 import { Layout } from 'antd';
 
+import { navigationUrls } from '@/constants/navigationUrls';
 import {
   Analytics,
-  Calendar,
   Dashboard,
   GroupsPage,
+  SchedulePage,
   Settings,
   StudentPage,
   Students,
 } from '@/pages';
-import { navigationUrls } from '@/constants/navigationUrls';
 
 import styles from './AppRoutes.module.scss';
 
@@ -20,7 +21,7 @@ const {
   dashboard,
   students,
   student,
-  calendar,
+  schedule,
   settings,
   analytics,
   index,
@@ -31,7 +32,7 @@ const AppRoutes: FC = () => {
   const routes = [
     { path: dashboard, element: <Dashboard /> },
     { path: students, element: <Students /> },
-    { path: calendar, element: <Calendar /> },
+    { path: schedule, element: <SchedulePage /> },
     { path: analytics, element: <Analytics /> },
     { path: settings, element: <Settings /> },
     { path: student, element: <StudentPage /> },
