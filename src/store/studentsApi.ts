@@ -1,7 +1,8 @@
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
 import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
-import type { Student, UpdateUser, StudentData } from '@/types/studentTypes';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Student, StudentData, UpdateUser } from '@/types/studentTypes';
 
 const { base, students } = apiURL;
 

@@ -1,18 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {
-  persistStore,
-  persistReducer,
   FLUSH,
-  REHYDRATE,
   PAUSE,
   PERSIST,
+  persistReducer,
+  persistStore,
   PURGE,
   REGISTER,
+  REHYDRATE,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import userReducer from '@/store/userSlice';
-import { studentsApi } from '@/store/studentsApi';
+
 import { lessonsApi } from '@/store/lessonsApi';
+import { studentsApi } from '@/store/studentsApi';
+import userReducer from '@/store/userSlice';
 
 const persistConfig = {
   key: 'root',

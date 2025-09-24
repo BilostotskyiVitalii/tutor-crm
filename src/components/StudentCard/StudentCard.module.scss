@@ -1,5 +1,9 @@
 .card {
   width: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 180px;
 }
 
 .delete:hover {
