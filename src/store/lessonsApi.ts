@@ -1,63 +1,22 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
-import type {
-  CreateLessonValues,
-  Lesson,
-  LessonData,
-  UpdateLesson,
-} from '@/types/lessonTypes';
+import { baseQueryWithAuth } from '@/store/baseQueryWithAuth';
+import type { Lesson, LessonData, UpdateLesson } from '@/types/lessonTypes';
 
-const { base, lessons } = apiURL;
-
-const rawBaseQuery = fetchBaseQuery({ baseUrl: base });
-
-const baseQueryWithAuth: typeof rawBaseQuery = async (
-  args,
-  api,
-  extraOptions,
-) => {
-  const state = api.getState() as RootState;
-  const token = state.user.token;
-  const tutorId = state.user.id;
-
-  let newArgs = args;
-
-  if (!token) {
-    return rawBaseQuery(args, api, extraOptions);
-  }
-
-  if (typeof args === 'string') {
-    newArgs = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
-  } else if ('url' in args) {
-    newArgs = {
-      ...args,
-      url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
-    };
-
-    if (args.method === 'POST' && args.body) {
-      newArgs.body = { ...args.body, tutorId: tutorId };
-    }
-  }
-
-  return rawBaseQuery(newArgs, api, extraOptions);
-};
+const { lessons } = apiURL;
 
 export const lessonsApi = createApi({
   reducerPath: 'lessonsApi',
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Lessons'],
   endpoints: (builder) => ({
-    getLessons: builder.query<Lesson[], string | void>({
-      query: (tutorId) =>
-        `${lessons}.json?orderBy="tutorId"&equalTo="${tutorId}"`,
+    getLessons: builder.query<Lesson[], string>({
+      query: (uid) => `${lessons}/${uid}.json`,
       transformResponse: (response: Record<string, LessonData> | null) =>
         response
-          ? Object.entries(response).map(([key, lesson]) => ({
-              id: key,
-              ...lesson,
-            }))
+          ? Object.entries(response).map(([id, val]) => ({ id, ...val }))
           : [],
       providesTags: (result) =>
         result
@@ -68,43 +27,67 @@ export const lessonsApi = createApi({
           : [{ type: 'Lessons', id: 'LIST' }],
     }),
 
-    getLesson: builder.query<Lesson, string>({
-      query: (id) => `${lessons}/${id}.json`,
-      providesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
-    }),
+    addLesson: builder.mutation<Lesson, LessonData>({
+      queryFn: async (data, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${lessons}/${uid}.json`,
+          method: 'POST',
+          body: data,
+        });
 
-    createLesson: builder.mutation<Lesson, CreateLessonValues>({
-      query: (lesson) => ({
-        url: `${lessons}.json`,
-        method: 'POST',
-        body: lesson,
-      }),
-      invalidatesTags: ['Lessons'],
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        const id = (result.data as { name: string }).name;
+        return { data: { id, ...data } as Lesson };
+      },
+      invalidatesTags: [{ type: 'Lessons', id: 'LIST' }],
     }),
 
     updateLesson: builder.mutation<Lesson, UpdateLesson>({
-      query: ({ id, data }) => ({
-        url: `${lessons}/${id}.json`,
-        method: 'PATCH',
-        body: data,
-      }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'Lessons', id }],
+      queryFn: async ({ id, data }, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${lessons}/${uid}/${id}.json`,
+          method: 'PATCH',
+          body: data,
+        });
+        if (result.error) {
+          return { error: result.error };
+        }
+        return { data: { id, ...data } as Lesson };
+      },
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: 'Lessons', id },
+        { type: 'Lessons', id: 'LIST' },
+      ],
     }),
 
     deleteLesson: builder.mutation<void, string>({
-      query: (id) => ({
-        url: `${lessons}/${id}.json`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Lessons'],
+      queryFn: async (id, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${lessons}/${uid}/${id}.json`,
+          method: 'DELETE',
+        });
+        if (result.error) {
+          return { error: result.error };
+        }
+        return { data: undefined };
+      },
+      invalidatesTags: (_result, _error, id) => [
+        { type: 'Lessons', id },
+        { type: 'Lessons', id: 'LIST' },
+      ],
     }),
   }),
 });
 
 export const {
   useGetLessonsQuery,
-  useGetLessonQuery,
-  useCreateLessonMutation,
+  useAddLessonMutation,
   useUpdateLessonMutation,
   useDeleteLessonMutation,
 } = lessonsApi;

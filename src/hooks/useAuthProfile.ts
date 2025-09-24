@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
+
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { getDatabase, ref, get, set, serverTimestamp } from 'firebase/database';
+import { get, getDatabase, ref, serverTimestamp, set } from 'firebase/database';
+
 import { useAppDispatch } from '@/hooks/reduxHooks';
-import { setUser, removeUser, setLoading } from '@/store/userSlice';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { removeUser, setLoading, setUser } from '@/store/userSlice';
 
 export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +20,7 @@ export const useAuthProfile = () => {
       if (user) {
         try {
           const token = await user.getIdToken();
+          const refreshToken = user.refreshToken;
           const userRef = ref(db, 'users/' + user.uid);
           const snapshot = await get(userRef);
           const dbData = snapshot.exists() ? snapshot.val() : {};
@@ -36,6 +39,7 @@ export const useAuthProfile = () => {
               id: user.uid,
               email: user.email,
               token,
+              refreshToken,
               nickName: dbData.nickName ?? user.displayName ?? null,
               createdAt: dbData.createdAt ?? serverTimestamp(),
               avatar: dbData.avatar ?? user.photoURL ?? null,

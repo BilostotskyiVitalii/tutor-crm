@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+
 import { navigationUrls } from '@/constants/navigationUrls';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { setUser } from '@/store/userSlice';
 
 export const useGoogleLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -10,13 +14,29 @@ export const useGoogleLogin = () => {
   const navigate = useNavigate();
   const auth = getAuth();
   const { handleError } = useErrorHandler();
+  const dispatch = useAppDispatch();
 
   const loginWithGoogle = async () => {
     setLoading(true);
     setError(null);
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      const token = await user.getIdToken();
+      const refreshToken = user.refreshToken;
+      dispatch(
+        setUser({
+          id: user.uid,
+          email: user.email,
+          token,
+          refreshToken,
+          nickName: user.displayName ?? null,
+          createdAt: null,
+          avatar: user.photoURL ?? null,
+        }),
+      );
+
       navigate(navigationUrls.index);
     } catch (err: unknown) {
       const errMessage = handleError(err, 'Login Error');

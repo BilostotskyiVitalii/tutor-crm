@@ -1,14 +1,16 @@
 import { type FC, useEffect } from 'react';
-import { Modal, Form, Input, DatePicker, Select, notification } from 'antd';
+
+import { DatePicker, Form, Input, Modal, notification, Select } from 'antd';
 import dayjs from 'dayjs';
-import type { Lesson, LessonFormValues } from '@/types/lessonTypes';
+
+import { useAppSelector } from '@/hooks/reduxHooks';
+import { useErrorHandler } from '@/hooks/useErrorHandler';
 import {
-  useCreateLessonMutation,
+  useAddLessonMutation,
   useUpdateLessonMutation,
 } from '@/store/lessonsApi';
 import { useGetStudentsQuery } from '@/store/studentsApi';
-import { useAppSelector } from '@/hooks/reduxHooks';
-import { useErrorHandler } from '@/hooks/useErrorHandler';
+import type { Lesson, LessonFormValues } from '@/types/lessonTypes';
 
 const { RangePicker } = DatePicker;
 
@@ -28,7 +30,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   const [form] = Form.useForm<LessonFormValues>();
   const tutorId = useAppSelector((state) => state.user.id);
   const { data: students = [] } = useGetStudentsQuery(tutorId ?? '');
-  const [createLesson] = useCreateLessonMutation();
+  const [addLesson] = useAddLessonMutation();
   const [updateLesson] = useUpdateLessonMutation();
   const { handleError } = useErrorHandler();
 
@@ -69,7 +71,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
         await updateLesson({ id: editedLesson.id, data: reqValues }).unwrap();
         notification.success({ message: 'Lesson updated!' });
       } else {
-        await createLesson(reqValues).unwrap();
+        await addLesson(reqValues).unwrap();
         notification.success({ message: 'Lesson created!' });
       }
       onClose();

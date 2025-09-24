@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+
 import { navigationUrls } from '@/constants/navigationUrls';
-import type { ILoginField } from '@/types/authFieldsTypes';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { setUser } from '@/store/userSlice';
+import type { LoginField } from '@/types/authFieldsTypes';
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
@@ -11,12 +15,29 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const auth = getAuth();
   const { handleError } = useErrorHandler();
+  const dispatch = useAppDispatch();
 
-  const login = async ({ email, password }: ILoginField) => {
+  const login = async ({ email, password }: LoginField) => {
     setLoading(true);
     setError(null);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      const user = auth.currentUser;
+      if (user) {
+        const token = await user.getIdToken();
+        const refreshToken = user.refreshToken;
+        dispatch(
+          setUser({
+            id: user.uid,
+            email: user.email,
+            token,
+            refreshToken,
+            nickName: user.displayName ?? null,
+            createdAt: null,
+            avatar: user.photoURL ?? null,
+          }),
+        );
+      }
       navigate(navigationUrls.index);
     } catch (err: unknown) {
       const errMessage = handleError(err, 'Login Error');

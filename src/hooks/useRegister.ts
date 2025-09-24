@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { getDatabase, ref, serverTimestamp, set } from 'firebase/database';
+
 import { navigationUrls } from '@/constants/navigationUrls';
-import type { IRegField } from '@/types/authFieldsTypes';
+import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
+import { setUser } from '@/store/userSlice';
+import type { IRegField } from '@/types/authFieldsTypes';
 
 export const useRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -13,11 +17,11 @@ export const useRegister = () => {
   const auth = getAuth();
   const db = getDatabase();
   const { handleError } = useErrorHandler();
+  const dispatch = useAppDispatch();
 
   const register = async ({ email, password, nickName }: IRegField) => {
     setLoading(true);
     setError(null);
-
     try {
       const { user } = await createUserWithEmailAndPassword(
         auth,
@@ -26,10 +30,24 @@ export const useRegister = () => {
       );
 
       await set(ref(db, 'users/' + user.uid), {
-        nickName: nickName,
+        nickName,
         email: user.email,
         createdAt: serverTimestamp(),
       });
+
+      const token = await user.getIdToken();
+      const refreshToken = user.refreshToken;
+      dispatch(
+        setUser({
+          id: user.uid,
+          email: user.email,
+          token,
+          refreshToken,
+          nickName,
+          createdAt: Date.now(),
+          avatar: null,
+        }),
+      );
 
       navigate(navigationUrls.index);
     } catch (err: unknown) {
