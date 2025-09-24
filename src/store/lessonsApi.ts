@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+
+import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
 import type {
   CreateLessonValues,
@@ -6,7 +8,6 @@ import type {
   LessonData,
   UpdateLesson,
 } from '@/types/lessonTypes';
-import { apiURL } from '@/constants/apiUrl';
 
 const { base, lessons } = apiURL;
 

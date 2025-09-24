@@ -1,11 +1,14 @@
-import { useState, type FC } from 'react';
+import { type FC, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Avatar, Card, notification, Popconfirm } from 'antd';
+
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { useDeleteStudentMutation } from '@/store/studentsApi';
-import { navigationUrls } from '@/constants/navigationUrls';
-import type { Student } from '@/types/studentTypes';
+import { Avatar, Card, notification, Popconfirm } from 'antd';
+
 import { LessonFormModal } from '@/components';
+import { navigationUrls } from '@/constants/navigationUrls';
+import { useDeleteStudentMutation } from '@/store/studentsApi';
+import type { Student } from '@/types/studentTypes';
+
 import styles from './StudentCard.module.scss';
 
 const { Meta } = Card;
@@ -66,7 +69,12 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
               <span>{student.name}</span>
             </Link>
           }
-          description={student.email}
+          description={
+            <>
+              <p>{student.notes}</p>
+              <strong>{student.cost}</strong>
+            </>
+          }
         />
       </Card>
       <LessonFormModal

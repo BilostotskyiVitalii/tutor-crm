@@ -1,5 +1,6 @@
-import type { IUserProfile } from '@/types/userTypes';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+
+import type { IUserProfile } from '@/types/userTypes';
 
 interface UserState extends IUserProfile {
   loading: boolean;
