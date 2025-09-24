@@ -3,6 +3,6 @@ export interface LoginField {
   password: string;
 }
 
-export interface IRegField extends LoginField {
+export interface RegField extends LoginField {
   nickName: string;
 }

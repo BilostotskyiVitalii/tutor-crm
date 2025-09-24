@@ -8,7 +8,7 @@ import { navigationUrls } from '@/constants/navigationUrls';
 import { useAppDispatch } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { setUser } from '@/store/userSlice';
-import type { IRegField } from '@/types/authFieldsTypes';
+import type { RegField } from '@/types/authFieldsTypes';
 
 export const useRegister = () => {
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ export const useRegister = () => {
   const { handleError } = useErrorHandler();
   const dispatch = useAppDispatch();
 
-  const register = async ({ email, password, nickName }: IRegField) => {
+  const register = async ({ email, password, nickName }: RegField) => {
     setLoading(true);
     setError(null);
     try {

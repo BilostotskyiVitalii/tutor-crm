@@ -1,0 +1,106 @@
+import { type FC, useEffect } from 'react';
+
+import { Form, Input, Modal, notification, Select } from 'antd';
+
+import { useAppSelector } from '@/hooks/reduxHooks';
+import { useAddGroupMutation, useUpdateGroupMutation } from '@/store/groupsApi';
+import { useGetStudentsQuery } from '@/store/studentsApi';
+import type { Group, GroupData } from '@/types/groupTypes';
+
+const { TextArea } = Input;
+
+interface GroupFormProps {
+  isModalOpen: boolean;
+  onClose: () => void;
+  editedGroup?: Group | null;
+}
+
+const GroupForm: FC<GroupFormProps> = ({
+  onClose,
+  isModalOpen,
+  editedGroup,
+}) => {
+  const [form] = Form.useForm<GroupData>();
+  const tutorId = useAppSelector((state) => state.user.id);
+  const { data: students = [] } = useGetStudentsQuery(tutorId ?? '');
+  const [addGroup] = useAddGroupMutation();
+  const [updateGroup] = useUpdateGroupMutation();
+
+  useEffect(() => {
+    if (isModalOpen) {
+      if (editedGroup) {
+        form.setFieldsValue({
+          ...editedGroup,
+        });
+      } else {
+        form.resetFields();
+      }
+    }
+  }, [isModalOpen, editedGroup, form]);
+
+  const handleCancel = () => {
+    onClose();
+    form.resetFields();
+  };
+
+  const handleOk = async () => {
+    try {
+      const values: GroupData = await form.validateFields();
+
+      if (editedGroup) {
+        await updateGroup({
+          id: editedGroup.id,
+          data: values,
+        }).unwrap();
+        notification.success({ message: 'Group updated!' });
+      } else {
+        await addGroup(values).unwrap();
+        notification.success({ message: 'Group created!' });
+      }
+
+      onClose();
+      form.resetFields();
+    } catch {
+      notification.error({ message: 'Group form error!' });
+    }
+  };
+
+  return (
+    <Modal
+      title={editedGroup ? 'Update Group' : 'New Group'}
+      open={isModalOpen}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      okText={editedGroup ? 'Update' : 'Create'}
+      cancelText="Cancel"
+    >
+      <Form form={form} layout="vertical" name="group_form">
+        <Form.Item
+          label="Title:"
+          name="title"
+          rules={[{ required: true, message: 'Enter title' }]}
+        >
+          <Input placeholder="Best group ever" />
+        </Form.Item>
+
+        <Form.Item
+          name="studentIds"
+          label="Students:"
+          rules={[{ required: true }]}
+        >
+          <Select
+            mode="multiple"
+            placeholder="Select students"
+            options={students.map((s) => ({ label: s.name, value: s.id }))}
+          />
+        </Form.Item>
+
+        <Form.Item label="Notes:" name="notes">
+          <TextArea rows={3} placeholder="Note some info here" />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+
+export default GroupForm;

@@ -1,5 +1,6 @@
 export { default as CustomSpinner } from './CustomSpinner/CustomSpinner';
 export { default as FooterComponent } from './FooterComponent/FooterComponent';
+export { default as GroupCard } from './GroupCard/GroupCard';
 export { default as HeaderComponent } from './HeaderComponent/HeaderComponent';
 export { default as LessonCard } from './LessonCard/LessonCard';
 export { default as LessonFormModal } from './LessonFormModal/LessonFormModal';
