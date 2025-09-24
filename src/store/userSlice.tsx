@@ -1,8 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { IUserProfile } from '@/types/userTypes';
+import type { UserProfile } from '@/types/userTypes';
 
-interface UserState extends IUserProfile {
+interface UserState extends UserProfile {
   loading: boolean;
 }
 
@@ -14,13 +14,14 @@ const initialState: UserState = {
   createdAt: null,
   avatar: null,
   loading: true,
+  refreshToken: null,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<IUserProfile>) {
+    setUser(state, action: PayloadAction<UserProfile>) {
       state.id = action.payload.id;
       state.email = action.payload.email;
       state.token = action.payload.token;
@@ -28,6 +29,7 @@ const userSlice = createSlice({
       state.createdAt = action.payload.createdAt ?? null;
       state.avatar = action.payload.avatar ?? null;
       state.loading = false;
+      state.refreshToken = action.payload.refreshToken ?? null;
     },
     removeUser(state) {
       state.id = null;
@@ -37,6 +39,7 @@ const userSlice = createSlice({
       state.createdAt = null;
       state.avatar = null;
       state.loading = false;
+      state.refreshToken = null;
     },
     setLoading(state, action: PayloadAction<boolean>) {
       state.loading = action.payload;

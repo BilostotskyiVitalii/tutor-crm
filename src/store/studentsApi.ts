@@ -1,62 +1,22 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { apiURL } from '@/constants/apiUrl';
 import type { RootState } from '@/store';
+import { baseQueryWithAuth } from '@/store/baseQueryWithAuth';
 import type { Student, StudentData, UpdateUser } from '@/types/studentTypes';
 
-const { base, students } = apiURL;
-
-const rawBaseQuery = fetchBaseQuery({ baseUrl: base });
-
-const baseQueryWithAuth: typeof rawBaseQuery = async (
-  args,
-  api,
-  extraOptions,
-) => {
-  const state = api.getState() as RootState;
-  const token = state.user.token;
-  const userId = state.user.id;
-
-  let newArgs = args;
-
-  if (!token) {
-    return rawBaseQuery(args, api, extraOptions);
-  }
-
-  if (typeof args === 'string') {
-    newArgs = `${args}${args.includes('?') ? '&' : '?'}auth=${token}`;
-    if (args.includes(`${students}.json`) && args.includes('orderBy')) {
-      newArgs += `&equalTo="${userId}"`;
-    }
-  } else if ('url' in args) {
-    newArgs = {
-      ...args,
-      url: `${args.url}${args.url.includes('?') ? '&' : '?'}auth=${token}`,
-    };
-
-    if (args.url.includes(`${students}.json`) && args.url.includes('orderBy')) {
-      newArgs.url += `&equalTo="${userId}"`;
-    }
-
-    if (args.method === 'POST' && args.body) {
-      newArgs.body = { ...args.body, tutorId: userId };
-    }
-  }
-
-  return rawBaseQuery(newArgs, api, extraOptions);
-};
+const { students } = apiURL;
 
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
   baseQuery: baseQueryWithAuth,
   tagTypes: ['Students'],
-  endpoints: (build) => ({
-    getStudents: build.query<Student[], string | void>({
-      query: (userId) =>
-        `${students}.json?orderBy="tutorId"&equalTo="${userId}"`,
+  endpoints: (builder) => ({
+    getStudents: builder.query<Student[], string>({
+      query: (uid) => `${students}/${uid}.json`,
       transformResponse: (response: Record<string, StudentData> | null) =>
         response
-          ? Object.entries(response).map(([id, value]) => ({ id, ...value }))
+          ? Object.entries(response).map(([id, val]) => ({ id, ...val }))
           : [],
       providesTags: (result) =>
         result
@@ -67,32 +27,56 @@ export const studentsApi = createApi({
           : [{ type: 'Students', id: 'LIST' }],
     }),
 
-    addStudent: build.mutation<Student, StudentData>({
-      query: (student) => ({
-        url: `${students}.json`,
-        method: 'POST',
-        body: student,
-      }),
+    addStudent: builder.mutation<Student, StudentData>({
+      queryFn: async (data, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${students}/${uid}.json`,
+          method: 'POST',
+          body: data,
+        });
+
+        if (result.error) {
+          return { error: result.error };
+        }
+
+        const id = (result.data as { name: string }).name;
+        return { data: { id, ...data } as Student };
+      },
       invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
 
-    updateStudent: build.mutation<Student, UpdateUser>({
-      query: ({ id, data }) => ({
-        url: `${students}/${id}.json`,
-        method: 'PATCH',
-        body: data,
-      }),
+    updateStudent: builder.mutation<Student, UpdateUser>({
+      queryFn: async ({ id, data }, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${students}/${uid}/${id}.json`,
+          method: 'PATCH',
+          body: data,
+        });
+        if (result.error) {
+          return { error: result.error };
+        }
+        return { data: { id, ...data } as Student };
+      },
       invalidatesTags: (_result, _error, { id }) => [
         { type: 'Students', id },
         { type: 'Students', id: 'LIST' },
       ],
     }),
 
-    deleteStudent: build.mutation<{ success: boolean }, string>({
-      query: (id) => ({
-        url: `${students}/${id}.json`,
-        method: 'DELETE',
-      }),
+    deleteStudent: builder.mutation<void, string>({
+      queryFn: async (id, api, _extraOptions, baseQuery) => {
+        const uid = (api.getState() as RootState).user.id!;
+        const result = await baseQuery({
+          url: `${students}/${uid}/${id}.json`,
+          method: 'DELETE',
+        });
+        if (result.error) {
+          return { error: result.error };
+        }
+        return { data: undefined };
+      },
       invalidatesTags: (_result, _error, id) => [
         { type: 'Students', id },
         { type: 'Students', id: 'LIST' },
