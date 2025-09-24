@@ -19,10 +19,3 @@ export type UpdateUser = {
   id: string;
   data: Partial<StudentData>;
 };
-
-export interface StudentsGroup {
-  id: string;
-  name: string;
-  studentIds: string[];
-  notes?: string;
-}

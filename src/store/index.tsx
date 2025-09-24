@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { groupsApi } from '@/store/groupsApi';
 import { lessonsApi } from '@/store/lessonsApi';
 import { studentsApi } from '@/store/studentsApi';
 import userReducer from '@/store/userSlice';
@@ -27,13 +28,18 @@ export const store = configureStore({
     user: persistedReducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [lessonsApi.reducerPath]: lessonsApi.reducer,
+    [groupsApi.reducerPath]: groupsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(studentsApi.middleware, lessonsApi.middleware),
+    }).concat(
+      studentsApi.middleware,
+      lessonsApi.middleware,
+      groupsApi.middleware,
+    ),
 });
 
 export const persistor = persistStore(store);

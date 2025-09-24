@@ -1,4 +1,5 @@
-import { useEffect, type FC } from 'react';
+import { type FC, useEffect } from 'react';
+
 import {
   DatePicker,
   Form,
@@ -9,15 +10,16 @@ import {
   Select,
 } from 'antd';
 import dayjs from 'dayjs';
+
+import {
+  useAddStudentMutation,
+  useUpdateStudentMutation,
+} from '@/store/studentsApi';
 import type {
   Student,
   StudentData,
   StudentFormValues,
 } from '@/types/studentTypes';
-import {
-  useAddStudentMutation,
-  useUpdateStudentMutation,
-} from '@/store/studentsApi';
 
 const { Option } = Select;
 const { TextArea } = Input;

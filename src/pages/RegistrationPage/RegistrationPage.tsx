@@ -6,12 +6,12 @@ import { Button, Form, type FormProps, Input } from 'antd';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useRegister } from '@/hooks/useRegister';
-import type { IRegField } from '@/types/authFieldsTypes';
+import type { RegField } from '@/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();
 
-  const handleRegister: FormProps<IRegField>['onFinish'] = register;
+  const handleRegister: FormProps<RegField>['onFinish'] = register;
 
   return (
     <section className="auth-backdrop">

@@ -1,10 +1,12 @@
-import { StudentCard, StudentForm } from '@/components';
-import { Button, Flex, Space, Spin } from 'antd';
+import { type FC, useState } from 'react';
+
 import { PlusOutlined } from '@ant-design/icons';
-import { useState, type FC } from 'react';
+import { Button, Flex, Space, Spin } from 'antd';
+
+import { StudentCard, StudentForm } from '@/components';
+import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Student } from '@/types/studentTypes';
-import { useAppSelector } from '@/hooks/reduxHooks';
 
 const Students: FC = () => {
   const tutorId = useAppSelector((state) => state.user.id);
