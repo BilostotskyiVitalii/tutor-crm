@@ -126,7 +126,7 @@ const StudentForm: FC<StudentFormProps> = ({
         </Form.Item>
 
         <Form.Item label="Birthdate:" name="birthdate">
-          <DatePicker format="DD/MM/YYYY" />
+          <DatePicker format="DD.MM.YYYY" />
         </Form.Item>
 
         <Form.Item
