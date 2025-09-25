@@ -1,19 +1,20 @@
 import { type FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Flex, Form, Input, type FormProps } from 'antd';
+
 import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
 import { navigationUrls } from '@/constants/navigationUrls';
-import type { ILoginField } from '@/types/authFieldsTypes';
-import { useLogin } from '@/hooks/useLogin';
 import { useGoogleLogin } from '@/hooks/useGoogleLogin';
+import { useLogin } from '@/hooks/useLogin';
+import type { LoginField } from '@/types/authFieldsTypes';
 
 import styles from './LoginPage.module.scss';
 
 const LoginPage: FC = () => {
   const { login, loading } = useLogin();
   const { loginWithGoogle } = useGoogleLogin();
-  const handleLogin: FormProps<ILoginField>['onFinish'] = login;
+  const handleLogin: FormProps<LoginField>['onFinish'] = login;
 
   return (
     <section className="auth-backdrop">

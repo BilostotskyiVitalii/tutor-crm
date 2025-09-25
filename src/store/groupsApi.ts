@@ -1,86 +1,76 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 
-import { apiURL } from '@/constants/apiUrl';
-import type { RootState } from '@/store';
-import { baseQueryWithAuth } from '@/store/baseQueryWithAuth';
+import { db } from '@/firebase';
 import type { Group, GroupData, UpdateGroup } from '@/types/groupTypes';
-
-const { groups } = apiURL;
+import { getCurrentUid } from '@/utils/getCurrentUid';
 
 export const groupsApi = createApi({
   reducerPath: 'groupsApi',
-  baseQuery: baseQueryWithAuth,
+  baseQuery: fakeBaseQuery(),
   tagTypes: ['Groups'],
   endpoints: (builder) => ({
-    getGroups: builder.query<Group[], string>({
-      query: (uid) => `${groups}/${uid}.json`,
-      transformResponse: (response: Record<string, GroupData> | null) =>
-        response
-          ? Object.entries(response).map(([id, val]) => ({ id, ...val }))
-          : [],
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'Groups' as const, id })),
-              { type: 'Groups', id: 'LIST' },
-            ]
-          : [{ type: 'Groups', id: 'LIST' }],
+    getGroups: builder.query<Group[], void>({
+      async queryFn() {
+        try {
+          const uid = getCurrentUid();
+          const snapshot = await getDocs(collection(db, `users/${uid}/groups`));
+          const groups: Group[] = snapshot.docs.map((docSnap) => ({
+            id: docSnap.id,
+            ...docSnap.data(),
+          })) as Group[];
+          return { data: groups };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
+        }
+      },
+      providesTags: ['Groups'],
     }),
 
-    addGroup: builder.mutation<Group, GroupData>({
-      queryFn: async (data, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${groups}/${uid}.json`,
-          method: 'POST',
-          body: data,
-        });
-
-        if (result.error) {
-          return { error: result.error };
+    addGroup: builder.mutation<void, GroupData>({
+      async queryFn(newGroup) {
+        try {
+          const uid = getCurrentUid();
+          await addDoc(collection(db, `users/${uid}/groups`), newGroup);
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-
-        const id = (result.data as { name: string }).name;
-        return { data: { id, ...data } as Group };
       },
-      invalidatesTags: [{ type: 'Groups', id: 'LIST' }],
+      invalidatesTags: ['Groups'],
     }),
 
-    updateGroup: builder.mutation<Group, UpdateGroup>({
-      queryFn: async ({ id, data }, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${groups}/${uid}/${id}.json`,
-          method: 'PATCH',
-          body: data,
-        });
-        if (result.error) {
-          return { error: result.error };
+    updateGroup: builder.mutation<void, UpdateGroup>({
+      async queryFn({ id, data }) {
+        try {
+          const uid = getCurrentUid();
+          await updateDoc(doc(db, `users/${uid}/groups/${id}`), data);
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-        return { data: { id, ...data } as Group };
       },
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: 'Groups', id },
-        { type: 'Groups', id: 'LIST' },
-      ],
+      invalidatesTags: ['Groups'],
     }),
 
     deleteGroup: builder.mutation<void, string>({
-      queryFn: async (id, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${groups}/${uid}/${id}.json`,
-          method: 'DELETE',
-        });
-        if (result.error) {
-          return { error: result.error };
+      async queryFn(id) {
+        try {
+          const uid = getCurrentUid();
+          await deleteDoc(doc(db, `users/${uid}/groups/${id}`));
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-        return { data: undefined };
       },
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'Groups', id },
-        { type: 'Groups', id: 'LIST' },
-      ],
+      invalidatesTags: ['Groups'],
     }),
   }),
 });

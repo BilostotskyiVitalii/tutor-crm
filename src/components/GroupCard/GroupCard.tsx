@@ -6,7 +6,6 @@ import { Avatar, Card, notification, Popconfirm, Tooltip } from 'antd';
 
 import { LessonFormModal } from '@/components';
 import { navigationUrls } from '@/constants/navigationUrls';
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useDeleteGroupMutation } from '@/store/groupsApi';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Group } from '@/types/groupTypes';
@@ -21,8 +20,7 @@ interface GroupCardProps {
 const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
-  const tutorId = useAppSelector((state) => state.user.id);
-  const { data: students } = useGetStudentsQuery(tutorId ?? '');
+  const { data: students } = useGetStudentsQuery();
 
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),

@@ -4,14 +4,12 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
 import { LessonCard, LessonFormModal } from '@/components';
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetLessonsQuery } from '@/store/lessonsApi';
 import type { Lesson } from '@/types/lessonTypes';
 
 const SchedulePage: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const tutorId = useAppSelector((state) => state.user.id);
-  const { data: lessons, isLoading, error } = useGetLessonsQuery(tutorId ?? '');
+  const { data: lessons, isLoading, isError } = useGetLessonsQuery();
   const [editedLesson, setEditedLesson] = useState<Lesson | null>(null);
 
   function onClose() {
@@ -40,7 +38,7 @@ const SchedulePage: FC = () => {
         </Space>
 
         <Flex wrap gap="large">
-          {error && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
+          {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
           {isLoading && <Spin size="large" />}
           {lessons?.map((lesson) => (
             <LessonCard key={lesson.id} lesson={lesson} onEdit={showEdit} />
