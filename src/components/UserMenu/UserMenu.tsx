@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import { studentsApi } from '@/store/studentsApi';
 import { removeUser } from '@/store/userSlice';
+import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
 
 import styles from './UserMenu.module.scss';
 
@@ -36,6 +37,7 @@ const UserMenu: FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const avatar = useAppSelector((state) => state.user.avatar);
+  const userName = useAppSelector((state) => state.user.nickName);
   const auth = getAuth();
   const { handleError } = useErrorHandler();
 
@@ -62,7 +64,7 @@ const UserMenu: FC = () => {
       onOpenChange={handleOpenChange}
     >
       <Avatar
-        className={`${styles.avatar} ${isOpen ? styles.openMenu : ''}`}
+        className={`${styles.avatar} ${styles[getAvatarColorClass(userName ?? '')]} ${isOpen ? styles.openMenu : ''}`}
         src={avatar ?? undefined}
         icon={<UserOutlined />}
         onError={() => true}

@@ -9,6 +9,7 @@ import { navigationUrls } from '@/constants/navigationUrls';
 import { useDeleteGroupMutation } from '@/store/groupsApi';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Group } from '@/types/groupTypes';
+import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
 
 import styles from './GroupCard.module.scss';
 
@@ -75,7 +76,12 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
           >
             {filteredStudents?.map((student) => (
               <Tooltip key={student.id} title={student.name} placement="top">
-                <Avatar src={student.avatarUrl} />
+                <Avatar
+                  src={student.avatarUrl}
+                  className={`${styles.avatar} ${styles[getAvatarColorClass(student.name)]}`}
+                >
+                  {student.name[0]}
+                </Avatar>
               </Tooltip>
             ))}
           </Avatar.Group>
