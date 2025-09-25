@@ -1,5 +1,6 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
+import { UploadOutlined } from '@ant-design/icons';
 import {
   DatePicker,
   Form,
@@ -9,6 +10,9 @@ import {
   notification,
   Select,
 } from 'antd';
+import { Upload } from 'antd';
+import type { UploadFile } from 'antd/es/upload/interface';
+import ImgCrop from 'antd-img-crop';
 import dayjs from 'dayjs';
 
 import {
@@ -20,6 +24,7 @@ import type {
   StudentData,
   StudentFormValues,
 } from '@/types/studentTypes';
+import { uploadAvatar } from '@/utils/uploadAvatar';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -40,6 +45,7 @@ const StudentForm: FC<StudentFormProps> = ({
   const [form] = Form.useForm<StudentFormValues>();
   const [addStudent] = useAddStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   useEffect(() => {
     if (isModalOpen) {
@@ -70,6 +76,20 @@ const StudentForm: FC<StudentFormProps> = ({
         notes: values.notes ?? '',
       };
 
+      let avatarUrl: string | undefined;
+
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj as File;
+        const studentId =
+          isEditMode && editedStudent ? editedStudent.id : crypto.randomUUID();
+        avatarUrl = await uploadAvatar(
+          file,
+          studentId,
+          editedStudent?.avatarUrl,
+        );
+        normalizeValues.avatarUrl = avatarUrl;
+      }
+
       if (isEditMode && editedStudent) {
         await updateStudent({
           id: editedStudent.id,
@@ -83,9 +103,25 @@ const StudentForm: FC<StudentFormProps> = ({
 
       onClose();
       form.resetFields();
+      setFileList([]);
     } catch {
       notification.error({ message: 'Student form error!' });
     }
+  };
+
+  const onPreview = async (file: UploadFile) => {
+    let src = file.url as string;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj as File);
+        reader.onload = () => resolve(reader.result as string);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
   };
 
   const selectCurrency = (
@@ -135,6 +171,28 @@ const StudentForm: FC<StudentFormProps> = ({
           rules={[{ required: true, message: 'Enter cost/hour' }]}
         >
           <InputNumber placeholder="500" min={0} addonAfter={selectCurrency} />
+        </Form.Item>
+
+        <Form.Item label="Avatar:">
+          <ImgCrop rotationSlider modalTitle="Crop your avatar">
+            <Upload
+              fileList={fileList}
+              customRequest={({ onSuccess }) => {
+                setTimeout(() => {
+                  onSuccess?.('ok');
+                }, 0);
+              }}
+              onChange={({ fileList }) => setFileList(fileList)}
+              onPreview={onPreview}
+              maxCount={1}
+              listType="picture-card"
+            >
+              <div>
+                <UploadOutlined />
+                <div>Upload</div>
+              </div>
+            </Upload>
+          </ImgCrop>
         </Form.Item>
 
         <Form.Item label="Notes:" name="notes">

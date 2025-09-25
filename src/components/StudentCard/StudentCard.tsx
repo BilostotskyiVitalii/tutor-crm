@@ -58,12 +58,7 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
         ]}
       >
         <Meta
-          avatar={
-            <Avatar
-              size={64}
-              src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student.id}`}
-            />
-          }
+          avatar={<Avatar size={86} src={student.avatarUrl} />}
           title={
             <Link to={`${navigationUrls.students}/${student.id}`}>
               <span>{student.name}</span>

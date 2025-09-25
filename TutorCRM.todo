@@ -93,6 +93,17 @@
           "done": false,
           "start": 1758269690310
         }
+      },
+      {
+        "key": 1758809075758,
+        "children": [],
+        "todo": {
+          "content": "Possibility to add avatars",
+          "id": 1758809075758,
+          "level": "default",
+          "done": false,
+          "start": 1758809075758
+        }
       }
     ],
     "expandKeys": [
@@ -134,6 +145,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758382229355"
+    "version": "1758809094825"
   }
 }
