@@ -75,9 +75,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
           >
             {filteredStudents?.map((student) => (
               <Tooltip key={student.id} title={student.name} placement="top">
-                <Avatar
-                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student.id}`}
-                />
+                <Avatar src={student.avatarUrl} />
               </Tooltip>
             ))}
           </Avatar.Group>

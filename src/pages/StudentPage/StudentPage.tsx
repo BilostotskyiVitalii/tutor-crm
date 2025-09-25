@@ -13,10 +13,7 @@ const StudentPage: FC = () => {
   return (
     <>
       <h1>{student?.name}</h1>
-      <Avatar
-        size={64}
-        src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student?.id}`}
-      />
+      <Avatar size={120} src={student?.avatarUrl} />
       <p>{student?.email}</p>
       <p>{student?.id}</p>
     </>

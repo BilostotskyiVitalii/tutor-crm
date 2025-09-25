@@ -7,6 +7,7 @@ export interface Student {
   birthdate: number | '';
   cost: number;
   notes: string;
+  avatarUrl?: string;
 }
 
 export interface StudentFormValues extends Omit<Student, 'id' | 'birthdate'> {
