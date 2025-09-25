@@ -39,7 +39,6 @@ export const useAuthProfile = () => {
         try {
           const token = await user.getIdToken();
           const refreshToken = user.refreshToken;
-
           const userRef = doc(db, 'users', user.uid);
           const snapshot = await getDoc(userRef);
           const dbData = snapshot.exists() ? snapshot.data() : {};

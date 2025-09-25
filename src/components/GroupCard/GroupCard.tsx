@@ -94,6 +94,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
         isModalOpen={isModalOpen}
         onClose={onClose}
         defaultStudents={[...group.studentIds]}
+        defaultGroup={group}
       />
     </>
   );
