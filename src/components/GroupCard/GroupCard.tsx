@@ -13,8 +13,6 @@ import type { Group } from '@/types/groupTypes';
 
 import styles from './GroupCard.module.scss';
 
-const { Meta } = Card;
-
 interface GroupCardProps {
   group: Group;
   onEdit: (lesson: Group) => void;
@@ -24,11 +22,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
   const tutorId = useAppSelector((state) => state.user.id);
-  const {
-    data: students,
-    isLoading,
-    error,
-  } = useGetStudentsQuery(tutorId ?? '');
+  const { data: students } = useGetStudentsQuery(tutorId ?? '');
 
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),
@@ -69,40 +63,39 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit }) => {
           </Popconfirm>,
         ]}
       >
-        <Meta
-          avatar={
-            <Avatar.Group
-              size={64}
-              max={{
-                count: 3,
-                style: {
-                  color: '#f56a00',
-                  backgroundColor: '#fde3cf',
-                  cursor: 'pointer',
-                },
-              }}
-            >
-              {filteredStudents?.map((student) => (
-                <Tooltip key={student.id} title={student.name} placement="top">
-                  <Avatar
-                    src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student.id}`}
-                  />
-                </Tooltip>
-              ))}
-            </Avatar.Group>
-          }
-          title={
+        <div className={styles.cardContent}>
+          <Avatar.Group
+            size={80}
+            max={{
+              count: 3,
+              style: {
+                color: '#f56a00',
+                backgroundColor: '#fde3cf',
+                cursor: 'pointer',
+              },
+            }}
+          >
+            {filteredStudents?.map((student) => (
+              <Tooltip key={student.id} title={student.name} placement="top">
+                <Avatar
+                  src={`https://api.dicebear.com/7.x/miniavs/svg?seed=${student.id}`}
+                />
+              </Tooltip>
+            ))}
+          </Avatar.Group>
+
+          <div className={styles.groupInfo}>
             <Link to={`${navigationUrls.groups}/${group.id}`}>
-              <span>{group.title}</span>
+              <h3 className={styles.groupTitle}>{group.title}</h3>
             </Link>
-          }
-          description={<p>{group.notes}</p>}
-        />
+            <p className={styles.groupDescription}>{group.notes}</p>
+          </div>
+        </div>
       </Card>
       <LessonFormModal
         isModalOpen={isModalOpen}
         onClose={onClose}
-        defaultStudents={group.studentIds}
+        defaultStudents={[...group.studentIds]}
       />
     </>
   );

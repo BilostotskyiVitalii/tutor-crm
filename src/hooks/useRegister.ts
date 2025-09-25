@@ -37,6 +37,7 @@ export const useRegister = () => {
 
       const token = await user.getIdToken();
       const refreshToken = user.refreshToken;
+
       dispatch(
         setUser({
           id: user.uid,
