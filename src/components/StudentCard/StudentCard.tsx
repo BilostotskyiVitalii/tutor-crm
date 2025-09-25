@@ -8,6 +8,7 @@ import { LessonFormModal } from '@/components';
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useDeleteStudentMutation } from '@/store/studentsApi';
 import type { Student } from '@/types/studentTypes';
+import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
 
 import styles from './StudentCard.module.scss';
 
@@ -58,7 +59,15 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
         ]}
       >
         <Meta
-          avatar={<Avatar size={86} src={student.avatarUrl} />}
+          avatar={
+            <Avatar
+              size={70}
+              src={student.avatarUrl}
+              className={`${styles.avatar} ${styles[getAvatarColorClass(student.name)]}`}
+            >
+              {student.name[0]}
+            </Avatar>
+          }
           title={
             <Link to={`${navigationUrls.students}/${student.id}`}>
               <span>{student.name}</span>
