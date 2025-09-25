@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-import { getDatabase, ref, serverTimestamp, set } from 'firebase/database';
+import { doc, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import { useAppDispatch } from '@/hooks/reduxHooks';
@@ -15,7 +15,7 @@ export const useRegister = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const auth = getAuth();
-  const db = getDatabase();
+  const db = getFirestore();
   const { handleError } = useErrorHandler();
   const dispatch = useAppDispatch();
 
@@ -29,7 +29,7 @@ export const useRegister = () => {
         password,
       );
 
-      await set(ref(db, 'users/' + user.uid), {
+      await setDoc(doc(db, 'users', user.uid), {
         nickName,
         email: user.email,
         createdAt: serverTimestamp(),

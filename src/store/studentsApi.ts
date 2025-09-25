@@ -1,86 +1,78 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
+import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  updateDoc,
+} from 'firebase/firestore';
 
-import { apiURL } from '@/constants/apiUrl';
-import type { RootState } from '@/store';
-import { baseQueryWithAuth } from '@/store/baseQueryWithAuth';
+import { db } from '@/firebase';
 import type { Student, StudentData, UpdateUser } from '@/types/studentTypes';
-
-const { students } = apiURL;
+import { getCurrentUid } from '@/utils/getCurrentUid';
 
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
-  baseQuery: baseQueryWithAuth,
+  baseQuery: fakeBaseQuery(),
   tagTypes: ['Students'],
   endpoints: (builder) => ({
-    getStudents: builder.query<Student[], string>({
-      query: (uid) => `${students}/${uid}.json`,
-      transformResponse: (response: Record<string, StudentData> | null) =>
-        response
-          ? Object.entries(response).map(([id, val]) => ({ id, ...val }))
-          : [],
-      providesTags: (result) =>
-        result
-          ? [
-              ...result.map(({ id }) => ({ type: 'Students' as const, id })),
-              { type: 'Students', id: 'LIST' },
-            ]
-          : [{ type: 'Students', id: 'LIST' }],
+    getStudents: builder.query<Student[], void>({
+      async queryFn() {
+        try {
+          const uid = getCurrentUid();
+          const snapshot = await getDocs(
+            collection(db, `users/${uid}/students`),
+          );
+          const students: Student[] = snapshot.docs.map((docSnap) => ({
+            id: docSnap.id,
+            ...docSnap.data(),
+          })) as Student[];
+          return { data: students };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
+        }
+      },
+      providesTags: ['Students'],
     }),
 
-    addStudent: builder.mutation<Student, StudentData>({
-      queryFn: async (data, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${students}/${uid}.json`,
-          method: 'POST',
-          body: data,
-        });
-
-        if (result.error) {
-          return { error: result.error };
+    addStudent: builder.mutation<void, StudentData>({
+      async queryFn(newStudent) {
+        try {
+          const uid = getCurrentUid();
+          await addDoc(collection(db, `users/${uid}/students`), newStudent);
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-
-        const id = (result.data as { name: string }).name;
-        return { data: { id, ...data } as Student };
       },
-      invalidatesTags: [{ type: 'Students', id: 'LIST' }],
+      invalidatesTags: ['Students'],
     }),
 
-    updateStudent: builder.mutation<Student, UpdateUser>({
-      queryFn: async ({ id, data }, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${students}/${uid}/${id}.json`,
-          method: 'PATCH',
-          body: data,
-        });
-        if (result.error) {
-          return { error: result.error };
+    updateStudent: builder.mutation<void, UpdateUser>({
+      async queryFn({ id, data }) {
+        try {
+          const uid = getCurrentUid();
+          await updateDoc(doc(db, `users/${uid}/students/${id}`), data);
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-        return { data: { id, ...data } as Student };
       },
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: 'Students', id },
-        { type: 'Students', id: 'LIST' },
-      ],
+      invalidatesTags: ['Students'],
     }),
 
     deleteStudent: builder.mutation<void, string>({
-      queryFn: async (id, api, _extraOptions, baseQuery) => {
-        const uid = (api.getState() as RootState).user.id!;
-        const result = await baseQuery({
-          url: `${students}/${uid}/${id}.json`,
-          method: 'DELETE',
-        });
-        if (result.error) {
-          return { error: result.error };
+      async queryFn(id) {
+        try {
+          const uid = getCurrentUid();
+          await deleteDoc(doc(db, `users/${uid}/students/${id}`));
+          return { data: undefined };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
         }
-        return { data: undefined };
       },
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'Students', id },
-        { type: 'Students', id: 'LIST' },
-      ],
+      invalidatesTags: ['Students'],
     }),
   }),
 });

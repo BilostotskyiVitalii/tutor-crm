@@ -1,12 +1,14 @@
-import { useState, type FC } from 'react';
-import { Avatar, Dropdown, type MenuProps } from 'antd';
+import { type FC, useState } from 'react';
+
 import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { getAuth, signOut } from 'firebase/auth';
 
-import { removeUser } from '@/store/userSlice';
+import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
 import { useAppDispatch, useAppSelector } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
-import UserMenuCard from '@/components/UserMenuCard/UserMenuCard';
+import { studentsApi } from '@/store/studentsApi';
+import { removeUser } from '@/store/userSlice';
 
 import styles from './UserMenu.module.scss';
 
@@ -46,6 +48,7 @@ const UserMenu: FC = () => {
       try {
         await signOut(auth);
         dispatch(removeUser());
+        dispatch(studentsApi.util.resetApiState());
       } catch (error) {
         handleError(error, 'logout Error');
       }

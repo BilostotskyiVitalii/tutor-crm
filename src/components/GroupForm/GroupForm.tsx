@@ -2,7 +2,6 @@ import { type FC, useEffect } from 'react';
 
 import { Form, Input, Modal, notification, Select } from 'antd';
 
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useAddGroupMutation, useUpdateGroupMutation } from '@/store/groupsApi';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Group, GroupData } from '@/types/groupTypes';
@@ -21,8 +20,7 @@ const GroupForm: FC<GroupFormProps> = ({
   editedGroup,
 }) => {
   const [form] = Form.useForm<GroupData>();
-  const tutorId = useAppSelector((state) => state.user.id);
-  const { data: students = [] } = useGetStudentsQuery(tutorId ?? '');
+  const { data: students = [] } = useGetStudentsQuery();
   const [addGroup] = useAddGroupMutation();
   const [updateGroup] = useUpdateGroupMutation();
 

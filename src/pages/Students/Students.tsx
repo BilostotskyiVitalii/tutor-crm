@@ -4,17 +4,11 @@ import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
 import { StudentCard, StudentForm } from '@/components';
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Student } from '@/types/studentTypes';
 
 const Students: FC = () => {
-  const tutorId = useAppSelector((state) => state.user.id);
-  const {
-    data: students,
-    isLoading,
-    error,
-  } = useGetStudentsQuery(tutorId ?? '');
+  const { data: students, isLoading, isError } = useGetStudentsQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedStudent, setEditedStudent] = useState<Student | null>(null);
 
@@ -44,7 +38,7 @@ const Students: FC = () => {
         </Space>
 
         <Flex wrap gap="large">
-          {error && <p style={{ color: 'red' }}>Failed to load students</p>}
+          {isError && <p style={{ color: 'red' }}>'Failed to load students'</p>}
           {isLoading && <Spin size="large" />}
           {students?.map((student) => (
             <StudentCard key={student.id} student={student} onEdit={showEdit} />

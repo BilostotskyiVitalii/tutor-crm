@@ -3,7 +3,6 @@ import { type FC, useEffect } from 'react';
 import { DatePicker, Form, Input, Modal, notification, Select } from 'antd';
 import dayjs from 'dayjs';
 
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useErrorHandler } from '@/hooks/useErrorHandler';
 import {
   useAddLessonMutation,
@@ -28,8 +27,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   defaultStudents,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
-  const tutorId = useAppSelector((state) => state.user.id);
-  const { data: students = [] } = useGetStudentsQuery(tutorId ?? '');
+  const { data: students = [] } = useGetStudentsQuery();
   const [addLesson] = useAddLessonMutation();
   const [updateLesson] = useUpdateLessonMutation();
   const { handleError } = useErrorHandler();

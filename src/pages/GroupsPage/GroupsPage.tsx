@@ -5,15 +5,13 @@ import { Button, Flex, Space, Spin } from 'antd';
 
 import { GroupCard } from '@/components';
 import GroupForm from '@/components/GroupForm/GroupForm';
-import { useAppSelector } from '@/hooks/reduxHooks';
 import { useGetGroupsQuery } from '@/store/groupsApi';
 import type { Group } from '@/types/groupTypes';
 
 const GroupsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedGroup, setEditedGroup] = useState<Group | null>(null);
-  const tutorId = useAppSelector((state) => state.user.id);
-  const { data: groups, isLoading, error } = useGetGroupsQuery(tutorId ?? '');
+  const { data: groups, isLoading, isError } = useGetGroupsQuery();
 
   function showCreate() {
     setIsModalOpen(true);
@@ -40,7 +38,7 @@ const GroupsPage = () => {
       </Space>
 
       <Flex wrap gap="large">
-        {error && <p style={{ color: 'red' }}>Failed to load group</p>}
+        {isError && <p style={{ color: 'red' }}>Failed to load group</p>}
         {isLoading && <Spin size="large" />}
         {groups?.map((group) => (
           <GroupCard key={group.id} group={group} onEdit={onEditEdit} />
