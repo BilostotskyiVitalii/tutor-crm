@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-const Dashboard: FC = () => {
+const DashboardPage: FC = () => {
   return (
     <div>
       <h1 className="pageTitle">Dashboard</h1>
@@ -93,4 +93,4 @@ const Dashboard: FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;
