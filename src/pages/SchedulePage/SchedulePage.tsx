@@ -3,9 +3,10 @@ import { type FC, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
-import { LessonCard, LessonFormModal } from '@/components';
-import { useGetLessonsQuery } from '@/store/lessonsApi';
-import type { Lesson } from '@/types/lessonTypes';
+import LessonCard from '@/features/lessons/LessonCard/LessonCard';
+import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal';
+import { useGetLessonsQuery } from '@/features/lessons/lessonsApi';
+import type { Lesson } from '@/features/lessons/lessonTypes';
 
 const SchedulePage: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);

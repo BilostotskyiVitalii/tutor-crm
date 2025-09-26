@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 
 import { Avatar } from 'antd';
 
-import { useGetStudentsQuery } from '@/store/studentsApi';
-import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
+import { useGetStudentsQuery } from '@/features/students/studentsApi';
+import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './StudentIdPage.module.scss';
 

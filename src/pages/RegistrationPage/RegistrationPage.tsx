@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Form, type FormProps, Input } from 'antd';
 
-import { navigationUrls } from '@/constants/navigationUrls';
-import { useRegister } from '@/hooks/useRegister';
-import type { RegField } from '@/types/authFieldsTypes';
+import { useRegister } from '@/features/user/hooks/useRegister';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
+import type { RegField } from '@/shared/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();

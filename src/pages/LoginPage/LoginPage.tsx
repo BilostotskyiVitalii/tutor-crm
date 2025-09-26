@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
-import { navigationUrls } from '@/constants/navigationUrls';
-import { useGoogleLogin } from '@/hooks/useGoogleLogin';
-import { useLogin } from '@/hooks/useLogin';
-import type { LoginField } from '@/types/authFieldsTypes';
+import { useGoogleLogin } from '@/features/user/hooks/useGoogleLogin';
+import { useLogin } from '@/features/user/hooks/useLogin';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
+import type { LoginField } from '@/shared/types/authFieldsTypes';
 
 import styles from './LoginPage.module.scss';
 

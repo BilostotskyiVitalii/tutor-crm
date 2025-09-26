@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Layout } from 'antd';
 
-import { navigationUrls } from '@/constants/navigationUrls';
 import {
   AnalyticsPage,
   DashboardPage,
@@ -13,6 +12,7 @@ import {
   StudentIdPage,
   StudentsPage,
 } from '@/pages';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 import styles from './AppRoutes.module.scss';
 
