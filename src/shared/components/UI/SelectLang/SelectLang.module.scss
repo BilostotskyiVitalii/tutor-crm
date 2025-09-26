@@ -1,0 +1,63 @@
+@use '@/shared/styles/variables.scss' as *;
+
+.wrapper {
+  position: relative;
+  user-select: none;
+}
+
+.title {
+  display: flex;
+  gap: 8px;
+  line-height: 1rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+}
+
+.titleLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arrow {
+  transition: 0.2s;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+.arrowClose {
+  transform: rotate(0deg);
+}
+
+.optionsList {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: black;
+  margin-top: 4px;
+  border-radius: 6px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.option {
+  line-height: 1rem;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.2s;
+  &:hover {
+    background-color: $header-hover-color;
+  }
+}
+
+.optionSelected {
+  background-color: #67509fbb;
+}

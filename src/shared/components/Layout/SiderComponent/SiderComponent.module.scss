@@ -1,0 +1,13 @@
+@use '@/shared/styles/variables.scss' as *;
+
+.sider {
+  overflow: auto;
+  height: calc(100vh - $header-height);
+  position: sticky;
+  inset-inline-start: 0;
+  top: $header-height;
+  bottom: 0;
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  border-top: 1px solid $default-border-color;
+}

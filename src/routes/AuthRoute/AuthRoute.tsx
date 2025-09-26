@@ -1,9 +1,10 @@
 import type { FC, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
-import { navigationUrls } from '@/constants/navigationUrls';
-import { CustomSpinner } from '@/components';
-import type { IAuthRouteProps } from '@/types/routeTypes';
-import { useAppSelector } from '@/hooks/reduxHooks';
+
+import type { IAuthRouteProps } from '@/routes/routeTypes';
+import CustomSpinner from '@/shared/components/UI/CustomSpinner/CustomSpinner';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
+import { useAppSelector } from '@/store/reduxHooks';
 
 export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
   children,

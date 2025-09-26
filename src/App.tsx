@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { WorkPlaceComponent } from '@/components';
-import { navigationUrls } from '@/constants/navigationUrls';
-import { useAuthProfile } from '@/hooks/useAuthProfile';
+import { useAuthProfile } from '@/features/user/hooks/useAuthProfile';
 import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
+import WorkPlaceComponent from '@/shared/components/Layout/WorkPlaceComponent/WorkPlaceComponent';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 const App: FC = () => {
   useAuthProfile();

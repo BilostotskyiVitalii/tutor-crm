@@ -1,0 +1,29 @@
+@use '@/shared/styles/variables.scss' as *;
+@use '@/shared/styles/avatarColors' as *;
+
+.avatar {
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 4px $header-hover-color;
+  }
+}
+
+.openMenu {
+  box-shadow: 0 0 0 4px $header-hover-color;
+}
+
+.noHover {
+  cursor: default !important;
+  pointer-events: none;
+  background: transparent !important;
+}
+
+.logout {
+  color: red !important;
+}
+
+.userMenuCardWrapper {
+  width: 200px;
+}
