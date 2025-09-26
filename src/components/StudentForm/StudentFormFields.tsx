@@ -1,6 +1,6 @@
 import { DatePicker, Flex, Form, Input, InputNumber, Select } from 'antd';
 
-import { validationRules } from '@/constants/validation';
+import { studentFormRules } from '@/constants/validation';
 import { langLevels } from '@/constants/varaibles';
 
 import CurrencySelect from './CurrencySelect';
@@ -10,19 +10,15 @@ const { TextArea } = Input;
 const StudentFormFields = () => {
   return (
     <>
-      <Form.Item
-        name="name"
-        label="Name:"
-        rules={[{ required: true, message: 'Enter name' }]}
-      >
+      <Form.Item name="name" label="Name:" rules={studentFormRules.name}>
         <Input placeholder="John Snow" />
       </Form.Item>
 
-      <Form.Item name="email" label="Email:" rules={validationRules.email}>
+      <Form.Item name="email" label="Email:" rules={studentFormRules.email}>
         <Input placeholder="student@mail.com" />
       </Form.Item>
 
-      <Form.Item label="Phone:" name="phone" rules={validationRules.phone}>
+      <Form.Item label="Phone:" name="phone" rules={studentFormRules.phone}>
         <Input placeholder="+380667462269" />
       </Form.Item>
 
@@ -39,7 +35,7 @@ const StudentFormFields = () => {
           name="currentLevel"
           label="Current level:"
           style={{ flex: 1 }}
-          rules={[{ required: true, message: 'Choose student level' }]}
+          rules={studentFormRules.level}
         >
           <Select options={langLevels} />
         </Form.Item>
@@ -48,7 +44,7 @@ const StudentFormFields = () => {
           name="cost"
           label="Cost:"
           style={{ flex: 1 }}
-          rules={[{ required: true, message: 'Enter cost/hour' }]}
+          rules={studentFormRules.cost}
         >
           <InputNumber
             placeholder="500"

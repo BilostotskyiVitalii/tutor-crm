@@ -12,17 +12,12 @@ const Students: FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedStudent, setEditedStudent] = useState<Student | null>(null);
 
-  const showCreate = () => {
-    setEditedStudent(null);
-    setIsModalOpen(true);
-  };
-
-  const showEdit = (student: Student) => {
+  const openModal = (student: Student | null = null) => {
     setEditedStudent(student);
     setIsModalOpen(true);
   };
 
-  const hideModal = () => {
+  const closeModal = () => {
     setIsModalOpen(false);
     setEditedStudent(null);
   };
@@ -32,25 +27,32 @@ const Students: FC = () => {
       <Flex vertical gap="large">
         <Space direction="vertical" size="large">
           <h1>Students</h1>
-          <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => openModal(null)}
+          >
             New student
           </Button>
         </Space>
 
         <Flex wrap gap="large">
-          {isError && <p style={{ color: 'red' }}>'Failed to load students'</p>}
+          {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
           {isLoading && <Spin size="large" />}
           {students?.map((student) => (
-            <StudentCard key={student.id} student={student} onEdit={showEdit} />
+            <StudentCard
+              key={student.id}
+              student={student}
+              onEdit={() => openModal(student)}
+            />
           ))}
         </Flex>
       </Flex>
 
       <StudentForm
         isModalOpen={isModalOpen}
-        onClose={hideModal}
+        onClose={closeModal}
         editedStudent={editedStudent}
-        isEditMode={!!editedStudent}
       />
     </>
   );

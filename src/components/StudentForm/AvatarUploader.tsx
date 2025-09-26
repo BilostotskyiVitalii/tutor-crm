@@ -3,12 +3,12 @@ import { Form, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import ImgCrop from 'antd-img-crop';
 
-interface Props {
+interface AvatarUploaderProps {
   fileList: UploadFile[];
   setFileList: (list: UploadFile[]) => void;
 }
 
-const AvatarUploader = ({ fileList, setFileList }: Props) => {
+const AvatarUploader = ({ fileList, setFileList }: AvatarUploaderProps) => {
   return (
     <Form.Item>
       <ImgCrop rotationSlider modalTitle="Crop your avatar">

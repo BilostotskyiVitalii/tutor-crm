@@ -29,3 +29,9 @@ export type UpdateUser = {
   id: string;
   data: Partial<StudentData>;
 };
+
+export interface StudentFormProps {
+  isModalOpen: boolean;
+  onClose: () => void;
+  editedStudent?: Student | null;
+}

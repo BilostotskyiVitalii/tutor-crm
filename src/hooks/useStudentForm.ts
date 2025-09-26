@@ -9,25 +9,17 @@ import {
   useUpdateStudentMutation,
 } from '@/store/studentsApi';
 import type {
-  Student,
   StudentData,
+  StudentFormProps,
   StudentFormValues,
 } from '@/types/studentTypes';
 import { uploadAvatar } from '@/utils/uploadAvatar';
 
-interface UseStudentFormProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  isEditMode: boolean;
-  editedStudent?: Student | null;
-}
-
 export const useStudentForm = ({
   isModalOpen,
   onClose,
-  isEditMode,
   editedStudent,
-}: UseStudentFormProps) => {
+}: StudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
   const [addStudent] = useAddStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
@@ -35,7 +27,7 @@ export const useStudentForm = ({
 
   useEffect(() => {
     if (isModalOpen) {
-      if (isEditMode && editedStudent) {
+      if (editedStudent) {
         form.setFieldsValue({
           ...editedStudent,
           birthdate: editedStudent.birthdate
@@ -46,7 +38,7 @@ export const useStudentForm = ({
         form.resetFields();
       }
     }
-  }, [isModalOpen, isEditMode, editedStudent, form]);
+  }, [isModalOpen, editedStudent, form]);
 
   const handleCancel = () => {
     onClose();
@@ -62,13 +54,14 @@ export const useStudentForm = ({
         contact: values.contact ?? '',
         birthdate: values.birthdate ? values.birthdate.valueOf() : '',
         notes: values.notes ?? '',
-        status: isEditMode && editedStudent ? editedStudent.status : 'active',
+        status: editedStudent ? editedStudent.status : 'active',
       };
 
       if (fileList.length > 0) {
         const file = fileList[0].originFileObj as File;
-        const studentId =
-          isEditMode && editedStudent ? editedStudent.id : crypto.randomUUID();
+        const studentId = editedStudent
+          ? editedStudent.id
+          : crypto.randomUUID();
         normalizeValues.avatarUrl = await uploadAvatar(
           file,
           studentId,
@@ -76,7 +69,7 @@ export const useStudentForm = ({
         );
       }
 
-      if (isEditMode && editedStudent) {
+      if (editedStudent) {
         await updateStudent({
           id: editedStudent.id,
           data: normalizeValues,
