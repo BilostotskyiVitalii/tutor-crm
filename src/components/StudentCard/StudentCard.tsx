@@ -1,13 +1,29 @@
 import { type FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Card, notification, Popconfirm } from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  MoreOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
+import {
+  Avatar,
+  Badge,
+  Card,
+  Dropdown,
+  type MenuProps,
+  notification,
+  Popconfirm,
+} from 'antd';
 
 import { LessonFormModal } from '@/components';
 import { navigationUrls } from '@/constants/navigationUrls';
-import { useDeleteStudentMutation } from '@/store/studentsApi';
-import type { Student } from '@/types/studentTypes';
+import {
+  useDeleteStudentMutation,
+  useUpdateStudentMutation,
+} from '@/store/studentsApi';
+import type { Student, StudentStatus } from '@/types/studentTypes';
 import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
 
 import styles from './StudentCard.module.scss';
@@ -22,6 +38,7 @@ interface StudentCardProps {
 const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [updateStudent] = useUpdateStudentMutation();
 
   async function removeHandler() {
     try {
@@ -40,47 +57,116 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
     setIsModalOpen(false);
   }
 
+  async function handleStatusChange(newStatus: StudentStatus) {
+    try {
+      await updateStudent({
+        id: student.id,
+        data: { status: newStatus },
+      }).unwrap();
+      notification.success({
+        message: 'Status updated!',
+      });
+    } catch {
+      notification.error({
+        message: 'Failed to update status',
+      });
+    }
+  }
+
+  const menuItems: MenuProps['items'] = [
+    {
+      key: 'active',
+      label: 'Active',
+      disabled: student.status === 'active',
+      onClick: () => handleStatusChange('active'),
+    },
+    {
+      key: 'paused',
+      label: 'Pause',
+      disabled: student.status === 'paused',
+      onClick: () => handleStatusChange('paused'),
+    },
+    {
+      key: 'archive',
+      label: 'Archived',
+      disabled: student.status === 'archived',
+      onClick: () => handleStatusChange('archived'),
+    },
+    { type: 'divider' },
+    {
+      key: 'delete',
+      label: (
+        <Popconfirm
+          title="Delete this student?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={removeHandler}
+        >
+          <span>Delete</span>
+        </Popconfirm>
+      ),
+      danger: true,
+      icon: <DeleteOutlined />,
+    },
+  ];
+
+  const getRibbonProps = (status: StudentStatus) => {
+    switch (status) {
+      case 'active':
+        return { text: 'Active', color: 'green' };
+      case 'paused':
+        return { text: 'Paused', color: 'orange' };
+      case 'archived':
+        return { text: 'Archived', color: 'gray' };
+      default:
+        return { text: '', color: 'gray' };
+    }
+  };
+
+  const ribbonProps = getRibbonProps(student.status);
+
   return (
     <>
-      <Card
-        loading={isDeleting}
-        className={styles.card}
-        actions={[
-          <PlusOutlined key="add" onClick={() => setIsModalOpen(true)} />,
-          <EditOutlined key="edit" onClick={() => onEdit(student)} />,
-          <Popconfirm
-            title="Delete this student?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={removeHandler}
-          >
-            <DeleteOutlined key="delete" className={styles.delete} />
-          </Popconfirm>,
-        ]}
-      >
-        <Meta
-          avatar={
-            <Avatar
-              size={70}
-              src={student.avatarUrl}
-              className={`${styles.avatar} ${styles[getAvatarColorClass(student.name)]}`}
+      <Badge.Ribbon text={ribbonProps.text} color={ribbonProps.color}>
+        <Card
+          loading={isDeleting}
+          className={styles.card}
+          actions={[
+            <PlusOutlined key="add" onClick={() => setIsModalOpen(true)} />,
+            <EditOutlined key="edit" onClick={() => onEdit(student)} />,
+            <Dropdown
+              menu={{ items: menuItems }}
+              trigger={['click']}
+              placement="top"
             >
-              {student.name[0]}
-            </Avatar>
-          }
-          title={
-            <Link to={`${navigationUrls.students}/${student.id}`}>
-              <span>{student.name}</span>
-            </Link>
-          }
-          description={
-            <>
-              <p>{student.notes}</p>
-              <strong>{student.cost}</strong>
-            </>
-          }
-        />
-      </Card>
+              <MoreOutlined key="more" className={styles.more} />
+            </Dropdown>,
+          ]}
+        >
+          <Meta
+            avatar={
+              <Avatar
+                size={70}
+                src={student.avatarUrl}
+                className={`${styles.avatar} ${styles[getAvatarColorClass(student.name)]}`}
+              >
+                {student.name[0]}
+              </Avatar>
+            }
+            title={
+              <Link to={`${navigationUrls.students}/${student.id}`}>
+                <span>{student.name}</span>
+              </Link>
+            }
+            description={
+              <>
+                <p>{student.notes}</p>
+                <strong>{student.cost}</strong>
+              </>
+            }
+          />
+        </Card>
+      </Badge.Ribbon>
       <LessonFormModal
         isModalOpen={isModalOpen}
         onClose={onClose}

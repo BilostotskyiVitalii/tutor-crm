@@ -1,3 +1,5 @@
+@use 'sass:list';
+
 $avatar-colors:
   #f56a00, #7265e6, #ffbf00, #00a2ae, #52c41a, #eb2f96, #1890ff, #fa541c;
 
@@ -5,8 +7,8 @@ $avatar-colors:
   border: none !important;
 }
 
-@for $i from 1 through length($avatar-colors) {
+@for $i from 1 through list.length($avatar-colors) {
   .avatar-color-#{$i - 1} {
-    background-color: nth($avatar-colors, $i);
+    background-color: list.nth($avatar-colors, $i);
   }
 }

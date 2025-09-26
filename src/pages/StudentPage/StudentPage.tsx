@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 import { Avatar } from 'antd';
 
 import { useGetStudentsQuery } from '@/store/studentsApi';
+import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
+
+import styles from './StudentPage.module.scss';
 
 const StudentPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -13,7 +16,13 @@ const StudentPage: FC = () => {
   return (
     <>
       <h1>{student?.name}</h1>
-      <Avatar size={120} src={student?.avatarUrl} />
+      <Avatar
+        size={120}
+        src={student?.avatarUrl}
+        className={`${styles.avatar} ${styles[getAvatarColorClass(student?.name ?? '')]}`}
+      >
+        {student?.name[0]}
+      </Avatar>
       <p>{student?.email}</p>
       <p>{student?.id}</p>
     </>

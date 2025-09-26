@@ -5,6 +5,8 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  serverTimestamp,
+  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -24,10 +26,17 @@ export const studentsApi = createApi({
           const snapshot = await getDocs(
             collection(db, `users/${uid}/students`),
           );
-          const students: Student[] = snapshot.docs.map((docSnap) => ({
-            id: docSnap.id,
-            ...docSnap.data(),
-          })) as Student[];
+
+          const students: Student[] = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data();
+            return {
+              id: docSnap.id,
+              ...data,
+              createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
+              updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
+            };
+          }) as Student[];
+
           return { data: students };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -40,7 +49,11 @@ export const studentsApi = createApi({
       async queryFn(newStudent) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `users/${uid}/students`), newStudent);
+          await addDoc(collection(db, `users/${uid}/students`), {
+            ...newStudent,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -53,7 +66,10 @@ export const studentsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `users/${uid}/students/${id}`), data);
+          await updateDoc(doc(db, `users/${uid}/students/${id}`), {
+            ...data,
+            updatedAt: serverTimestamp(),
+          });
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
