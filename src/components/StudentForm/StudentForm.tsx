@@ -3,6 +3,7 @@ import { type FC, useEffect, useState } from 'react';
 import { UploadOutlined } from '@ant-design/icons';
 import {
   DatePicker,
+  Flex,
   Form,
   Input,
   InputNumber,
@@ -15,6 +16,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import ImgCrop from 'antd-img-crop';
 import dayjs from 'dayjs';
 
+import { langLevels } from '@/constants/varaibles';
 import {
   useAddStudentMutation,
   useUpdateStudentMutation,
@@ -72,8 +74,11 @@ const StudentForm: FC<StudentFormProps> = ({
       const values: StudentFormValues = await form.validateFields();
       const normalizeValues: StudentData = {
         ...values,
+        phone: values.phone ?? '',
+        contact: values.contact ?? '',
         birthdate: values.birthdate ? values.birthdate.valueOf() : '',
         notes: values.notes ?? '',
+        status: isEditMode && editedStudent ? editedStudent.status : 'active',
       };
 
       let avatarUrl: string | undefined;
@@ -109,23 +114,8 @@ const StudentForm: FC<StudentFormProps> = ({
     }
   };
 
-  const onPreview = async (file: UploadFile) => {
-    let src = file.url as string;
-    if (!src) {
-      src = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file.originFileObj as File);
-        reader.onload = () => resolve(reader.result as string);
-      });
-    }
-    const image = new Image();
-    image.src = src;
-    const imgWindow = window.open(src);
-    imgWindow?.document.write(image.outerHTML);
-  };
-
   const selectCurrency = (
-    <Select defaultValue="UAH" style={{ width: 100 }}>
+    <Select defaultValue="UAH">
       <Option value="UAH">UAH ₴</Option>
       <Option value="USD">USD $</Option>
       <Option value="EUR">EUR €</Option>
@@ -143,37 +133,70 @@ const StudentForm: FC<StudentFormProps> = ({
     >
       <Form form={form} layout="vertical" name="student_form">
         <Form.Item
-          label="Name:"
           name="name"
+          label="Name:"
           rules={[{ required: true, message: 'Enter name' }]}
         >
           <Input placeholder="John Snow" />
         </Form.Item>
 
         <Form.Item
-          label="Email:"
           name="email"
+          label="Email:"
           rules={[
-            { required: true, message: 'Enter email' },
+            { required: true, message: 'Будь ласка, введіть email' },
             { type: 'email', message: 'Wrong email format' },
           ]}
         >
-          <Input placeholder="john@mail.com" />
-        </Form.Item>
-
-        <Form.Item label="Birthdate:" name="birthdate">
-          <DatePicker format="DD.MM.YYYY" />
+          <Input placeholder="student@mail.com" />
         </Form.Item>
 
         <Form.Item
-          label="Cost/hour:"
-          name="cost"
-          rules={[{ required: true, message: 'Enter cost/hour' }]}
+          label="Phone:"
+          name="phone"
+          rules={[
+            {
+              pattern: /^\+\d{7,15}$/,
+              message: 'Phone number must start with + and contain 7–15 digits',
+            },
+          ]}
         >
-          <InputNumber placeholder="500" min={0} addonAfter={selectCurrency} />
+          <Input placeholder="+380667462269" />
         </Form.Item>
 
-        <Form.Item label="Avatar:">
+        <Form.Item name="contact" label="Contact:">
+          <Input placeholder="Link to insta, telegram, facebook etc..." />
+        </Form.Item>
+
+        <Form.Item name="birthdate" label="Birthdate:">
+          <DatePicker format="DD.MM.YYYY" placeholder="DD.MM.YYYY" />
+        </Form.Item>
+
+        <Flex justify="space-between" gap={24}>
+          <Form.Item
+            name="currentLevel"
+            label="Current level:"
+            style={{ flex: 1 }}
+            rules={[{ required: true, message: 'Chose student level' }]}
+          >
+            <Select options={langLevels} />
+          </Form.Item>
+
+          <Form.Item
+            name="cost"
+            label="Cost:"
+            style={{ flex: 1 }}
+            rules={[{ required: true, message: 'Enter cost/hour' }]}
+          >
+            <InputNumber
+              placeholder="500"
+              min={0}
+              addonAfter={selectCurrency}
+            />
+          </Form.Item>
+        </Flex>
+
+        <Form.Item>
           <ImgCrop rotationSlider modalTitle="Crop your avatar">
             <Upload
               fileList={fileList}
@@ -183,20 +206,20 @@ const StudentForm: FC<StudentFormProps> = ({
                 }, 0);
               }}
               onChange={({ fileList }) => setFileList(fileList)}
-              onPreview={onPreview}
+              showUploadList={{ showPreviewIcon: false }}
               maxCount={1}
               listType="picture-card"
             >
               <div>
                 <UploadOutlined />
-                <div>Upload</div>
+                <div>Upload avatar</div>
               </div>
             </Upload>
           </ImgCrop>
         </Form.Item>
 
-        <Form.Item label="Notes:" name="notes">
-          <TextArea rows={3} placeholder="Note some info here" />
+        <Form.Item name="notes" label="Notes:">
+          <TextArea rows={2} placeholder="Preparing for english exam" />
         </Form.Item>
       </Form>
     </Modal>
