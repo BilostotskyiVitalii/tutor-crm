@@ -6,9 +6,9 @@ import { Avatar } from 'antd';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import { getAvatarColorClass } from '@/utils/getAvatarColorClass';
 
-import styles from './StudentPage.module.scss';
+import styles from './StudentIdPage.module.scss';
 
-const StudentPage: FC = () => {
+const StudentIdPage: FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: students } = useGetStudentsQuery();
   const student = students?.find((s) => s.id === id);
@@ -29,4 +29,4 @@ const StudentPage: FC = () => {
   );
 };
 
-export default StudentPage;
+export default StudentIdPage;

@@ -5,13 +5,13 @@ import { Layout } from 'antd';
 
 import { navigationUrls } from '@/constants/navigationUrls';
 import {
-  Analytics,
-  Dashboard,
+  AnalyticsPage,
+  DashboardPage,
   GroupsPage,
   SchedulePage,
-  Settings,
-  StudentPage,
-  Students,
+  SettingsPage,
+  StudentIdPage,
+  StudentsPage,
 } from '@/pages';
 
 import styles from './AppRoutes.module.scss';
@@ -30,12 +30,12 @@ const {
 
 const AppRoutes: FC = () => {
   const routes = [
-    { path: dashboard, element: <Dashboard /> },
-    { path: students, element: <Students /> },
+    { path: dashboard, element: <DashboardPage /> },
+    { path: students, element: <StudentsPage /> },
     { path: schedule, element: <SchedulePage /> },
-    { path: analytics, element: <Analytics /> },
-    { path: settings, element: <Settings /> },
-    { path: student, element: <StudentPage /> },
+    { path: analytics, element: <AnalyticsPage /> },
+    { path: settings, element: <SettingsPage /> },
+    { path: student, element: <StudentIdPage /> },
     { path: groups, element: <GroupsPage /> },
   ];
 

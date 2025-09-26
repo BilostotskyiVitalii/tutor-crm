@@ -7,7 +7,7 @@ import { StudentCard, StudentForm } from '@/components';
 import { useGetStudentsQuery } from '@/store/studentsApi';
 import type { Student } from '@/types/studentTypes';
 
-const Students: FC = () => {
+const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedStudent, setEditedStudent] = useState<Student | null>(null);
@@ -58,4 +58,4 @@ const Students: FC = () => {
   );
 };
 
-export default Students;
+export default StudentsPage;
