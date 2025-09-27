@@ -12,17 +12,17 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 
-import { useGetGroupsQuery } from '@/features/groups/groupsApi';
-import type { Group } from '@/features/groups/groupTypes';
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import type { Group } from '@/features/groups/types/groupTypes';
 import {
   useAddLessonMutation,
   useUpdateLessonMutation,
-} from '@/features/lessons/lessonsApi';
+} from '@/features/lessons/api/lessonsApi';
 import type {
   Lesson,
   LessonData,
   LessonFormValues,
-} from '@/features/lessons/lessonTypes';
+} from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 

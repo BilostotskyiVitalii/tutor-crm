@@ -11,8 +11,8 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import { groupsApi } from '@/features/groups/groupsApi';
-import { lessonsApi } from '@/features/lessons/lessonsApi';
+import { groupsApi } from '@/features/groups/api/groupsApi';
+import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
 import userReducer from '@/features/user/api/userSlice';
 

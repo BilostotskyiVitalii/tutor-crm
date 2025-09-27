@@ -12,7 +12,7 @@ import type {
   Lesson,
   LessonData,
   UpdateLesson,
-} from '@/features/lessons/lessonTypes';
+} from '@/features/lessons/types/lessonTypes';
 import { db } from '@/firebase';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 

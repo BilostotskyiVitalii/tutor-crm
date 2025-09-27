@@ -17,7 +17,7 @@ import {
   Popconfirm,
 } from 'antd';
 
-import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal';
+import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 import {
   useDeleteStudentMutation,
   useUpdateStudentMutation,

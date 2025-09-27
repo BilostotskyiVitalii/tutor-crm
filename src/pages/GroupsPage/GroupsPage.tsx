@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
-import GroupCard from '@/features/groups/GroupCard/GroupCard';
-import GroupForm from '@/features/groups/GroupForm/GroupForm';
-import { useGetGroupsQuery } from '@/features/groups/groupsApi';
-import type { Group } from '@/features/groups/groupTypes';
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import GroupCard from '@/features/groups/components/GroupCard/GroupCard';
+import GroupForm from '@/features/groups/components/GroupForm/GroupForm';
+import type { Group } from '@/features/groups/types/groupTypes';
 
 const GroupsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
