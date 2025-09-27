@@ -12,7 +12,7 @@ import type {
   Group,
   GroupData,
   UpdateGroup,
-} from '@/features/groups/groupTypes';
+} from '@/features/groups/types/groupTypes';
 import { db } from '@/firebase';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 

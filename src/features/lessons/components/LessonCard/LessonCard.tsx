@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Button } from 'antd';
 
-import type { Lesson } from '@/features/lessons/lessonTypes';
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
 
 interface LessonCardProps {
   lesson: Lesson;

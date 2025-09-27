@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Card, notification, Popconfirm, Tooltip } from 'antd';
 
-import { useDeleteGroupMutation } from '@/features/groups/groupsApi';
-import type { Group } from '@/features/groups/groupTypes';
-import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal';
+import { useDeleteGroupMutation } from '@/features/groups/api/groupsApi';
+import type { Group } from '@/features/groups/types/groupTypes';
+import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';

@@ -10,8 +10,8 @@ import {
   Timestamp,
 } from 'firebase/firestore';
 
-import { groupsApi } from '@/features/groups/groupsApi';
-import { lessonsApi } from '@/features/lessons/lessonsApi';
+import { groupsApi } from '@/features/groups/api/groupsApi';
+import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
 import { removeUser, setLoading, setUser } from '@/features/user/api/userSlice';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';

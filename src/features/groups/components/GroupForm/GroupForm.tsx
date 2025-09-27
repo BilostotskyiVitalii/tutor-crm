@@ -5,8 +5,8 @@ import { Form, Input, Modal, notification, Select } from 'antd';
 import {
   useAddGroupMutation,
   useUpdateGroupMutation,
-} from '@/features/groups/groupsApi';
-import type { Group, GroupData } from '@/features/groups/groupTypes';
+} from '@/features/groups/api/groupsApi';
+import type { Group, GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 
 const { TextArea } = Input;
