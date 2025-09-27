@@ -5,7 +5,8 @@ import { Form, Modal } from 'antd';
 import type { StudentFormProps } from '@/features/students/studentTypes';
 import { useStudentForm } from '@/features/students/useStudentForm';
 
-import AvatarUploader from './AvatarUploader';
+import AvatarUploader from '../../../shared/components/UI/AvatarUploader';
+
 import StudentFormFields from './StudentFormFields';
 
 const StudentForm: FC<StudentFormProps> = (props) => {

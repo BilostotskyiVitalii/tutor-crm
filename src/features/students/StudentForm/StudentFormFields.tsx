@@ -1,7 +1,7 @@
 import { DatePicker, Flex, Form, Input, InputNumber, Select } from 'antd';
 
 import CurrencySelect from '@/features/students/StudentForm/CurrencySelect';
-import { studentFormRules } from '@/shared/constants/validation';
+import { studentFormRules } from '@/features/students/validationFormFields';
 import { langLevels } from '@/shared/constants/varaibles';
 
 const { TextArea } = Input;
