@@ -46,7 +46,13 @@ export const studentsApi = createApi({
           return { error: { message: (err as Error).message } };
         }
       },
-      providesTags: ['Students'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Students' as const, id })),
+              { type: 'Students', id: 'LIST' },
+            ]
+          : [{ type: 'Students', id: 'LIST' }],
     }),
 
     addStudent: builder.mutation<void, StudentData>({
@@ -63,7 +69,7 @@ export const studentsApi = createApi({
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Students'],
+      invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
 
     updateStudent: builder.mutation<void, UpdateUser>({
@@ -79,7 +85,7 @@ export const studentsApi = createApi({
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Students'],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Students', id }],
     }),
 
     deleteStudent: builder.mutation<void, string>({
@@ -92,7 +98,7 @@ export const studentsApi = createApi({
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Students'],
+      invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
   }),
 });

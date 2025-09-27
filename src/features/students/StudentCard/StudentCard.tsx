@@ -23,6 +23,7 @@ import {
   useUpdateStudentMutation,
 } from '@/features/students/studentsApi';
 import type { Student, StudentStatus } from '@/features/students/studentTypes';
+import { getRibbonProps } from '@/features/students/studentUtils';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
@@ -109,19 +110,6 @@ const StudentCard: FC<StudentCardProps> = ({ student, onEdit }) => {
       icon: <DeleteOutlined />,
     },
   ];
-
-  const getRibbonProps = (status: StudentStatus) => {
-    switch (status) {
-      case 'active':
-        return { text: 'Active', color: 'green' };
-      case 'paused':
-        return { text: 'Paused', color: 'orange' };
-      case 'archived':
-        return { text: 'Archived', color: 'gray' };
-      default:
-        return { text: '', color: 'gray' };
-    }
-  };
 
   const ribbonProps = getRibbonProps(student.status);
 

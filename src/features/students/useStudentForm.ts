@@ -43,6 +43,7 @@ export const useStudentForm = ({
   const handleCancel = () => {
     onClose();
     form.resetFields();
+    setFileList([]);
   };
 
   const handleOk = async () => {
@@ -80,9 +81,7 @@ export const useStudentForm = ({
         notification.success({ message: 'Student created!' });
       }
 
-      onClose();
-      form.resetFields();
-      setFileList([]);
+      handleCancel();
     } catch {
       notification.error({ message: 'Student form error!' });
     }
