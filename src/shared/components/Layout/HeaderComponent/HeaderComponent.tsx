@@ -2,7 +2,7 @@ import { type FC } from 'react';
 
 import { Layout, Space } from 'antd';
 
-import UserMenu from '@/features/user/UserMenu/UserMenu';
+import UserMenu from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
 

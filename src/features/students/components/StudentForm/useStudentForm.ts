@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import {
   useAddStudentMutation,
   useUpdateStudentMutation,
-} from '@/features/students/API/studentsApi';
+} from '@/features/students/api/studentsApi';
 import type {
   StudentData,
   StudentFormProps,

@@ -4,9 +4,9 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { getAuth, signOut } from 'firebase/auth';
 
-import { studentsApi } from '@/features/students/API/studentsApi';
-import UserMenuCard from '@/features/user/UserMenuCard/UserMenuCard';
-import { removeUser } from '@/features/user/userSlice';
+import { studentsApi } from '@/features/students/api/studentsApi';
+import { removeUser } from '@/features/user/api/userSlice';
+import UserMenuCard from '@/features/user/components/UserMenuCard/UserMenuCard';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';

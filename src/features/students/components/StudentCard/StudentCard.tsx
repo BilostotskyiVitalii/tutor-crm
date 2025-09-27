@@ -21,7 +21,7 @@ import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal'
 import {
   useDeleteStudentMutation,
   useUpdateStudentMutation,
-} from '@/features/students/API/studentsApi';
+} from '@/features/students/api/studentsApi';
 import type {
   Student,
   StudentStatus,

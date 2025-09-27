@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import { doc, getFirestore, serverTimestamp, setDoc } from 'firebase/firestore';
 
-import { setUser } from '@/features/user/userSlice';
+import { setUser } from '@/features/user/api/userSlice';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { RegField } from '@/shared/types/authFieldsTypes';

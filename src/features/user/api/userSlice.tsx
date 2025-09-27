@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
-import type { UserProfile } from '@/features/user/userTypes';
+import type { UserProfile } from '@/features/user/types/userTypes';
 
 interface UserState extends UserProfile {
   loading: boolean;
