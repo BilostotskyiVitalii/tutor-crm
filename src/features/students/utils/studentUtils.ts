@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@/features/students/studentTypes';
+import type { StudentStatus } from '@/features/students/types/studentTypes';
 
 export const getRibbonProps = (status: StudentStatus) => {
   switch (status) {

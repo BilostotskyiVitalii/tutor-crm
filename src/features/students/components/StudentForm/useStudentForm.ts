@@ -7,12 +7,12 @@ import dayjs from 'dayjs';
 import {
   useAddStudentMutation,
   useUpdateStudentMutation,
-} from '@/features/students/studentsApi';
+} from '@/features/students/API/studentsApi';
 import type {
   StudentData,
   StudentFormProps,
   StudentFormValues,
-} from '@/features/students/studentTypes';
+} from '@/features/students/types/studentTypes';
 import { uploadAvatar } from '@/shared/utils/uploadAvatar';
 
 export const useStudentForm = ({

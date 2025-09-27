@@ -4,7 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, type MenuProps } from 'antd';
 import { getAuth, signOut } from 'firebase/auth';
 
-import { studentsApi } from '@/features/students/studentsApi';
+import { studentsApi } from '@/features/students/API/studentsApi';
 import UserMenuCard from '@/features/user/UserMenuCard/UserMenuCard';
 import { removeUser } from '@/features/user/userSlice';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';

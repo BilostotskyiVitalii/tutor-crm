@@ -12,7 +12,7 @@ import {
 
 import { groupsApi } from '@/features/groups/groupsApi';
 import { lessonsApi } from '@/features/lessons/lessonsApi';
-import { studentsApi } from '@/features/students/studentsApi';
+import { studentsApi } from '@/features/students/API/studentsApi';
 import { removeUser, setLoading, setUser } from '@/features/user/userSlice';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { useAppDispatch } from '@/store/reduxHooks';

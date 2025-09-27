@@ -13,7 +13,7 @@ import storage from 'redux-persist/lib/storage';
 
 import { groupsApi } from '@/features/groups/groupsApi';
 import { lessonsApi } from '@/features/lessons/lessonsApi';
-import { studentsApi } from '@/features/students/studentsApi';
+import { studentsApi } from '@/features/students/API/studentsApi';
 import userReducer from '@/features/user/userSlice';
 
 const persistConfig = {

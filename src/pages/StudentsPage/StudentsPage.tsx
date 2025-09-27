@@ -3,10 +3,10 @@ import { type FC, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
-import StudentCard from '@/features/students/StudentCard/StudentCard';
-import StudentForm from '@/features/students/StudentForm/StudentForm';
-import { useGetStudentsQuery } from '@/features/students/studentsApi';
-import type { Student } from '@/features/students/studentTypes';
+import { useGetStudentsQuery } from '@/features/students/API/studentsApi';
+import StudentCard from '@/features/students/components/StudentCard/StudentCard';
+import StudentForm from '@/features/students/components/StudentForm/StudentForm';
+import type { Student } from '@/features/students/types/studentTypes';
 
 const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
