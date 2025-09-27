@@ -2,12 +2,10 @@ import { type FC } from 'react';
 
 import { Form, Modal } from 'antd';
 
-import type { StudentFormProps } from '@/features/students/studentTypes';
-import { useStudentForm } from '@/features/students/useStudentForm';
-
-import AvatarUploader from '../../../shared/components/UI/AvatarUploader';
-
-import StudentFormFields from './StudentFormFields';
+import StudentFormFields from '@/features/students/components/StudentForm/StudentFormFields';
+import { useStudentForm } from '@/features/students/components/StudentForm/useStudentForm';
+import type { StudentFormProps } from '@/features/students/types/studentTypes';
+import AvatarUploader from '@/shared/components/UI/AvatarUploader';
 
 const StudentForm: FC<StudentFormProps> = (props) => {
   const { form, handleOk, handleCancel, fileList, setFileList } =

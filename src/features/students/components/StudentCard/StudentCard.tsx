@@ -21,9 +21,12 @@ import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal'
 import {
   useDeleteStudentMutation,
   useUpdateStudentMutation,
-} from '@/features/students/studentsApi';
-import type { Student, StudentStatus } from '@/features/students/studentTypes';
-import { getRibbonProps } from '@/features/students/studentUtils';
+} from '@/features/students/API/studentsApi';
+import type {
+  Student,
+  StudentStatus,
+} from '@/features/students/types/studentTypes';
+import { getRibbonProps } from '@/features/students/utils/studentUtils';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 

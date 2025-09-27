@@ -7,7 +7,7 @@ import { Avatar, Card, notification, Popconfirm, Tooltip } from 'antd';
 import { useDeleteGroupMutation } from '@/features/groups/groupsApi';
 import type { Group } from '@/features/groups/groupTypes';
 import LessonFormModal from '@/features/lessons/LessonFormModal/LessonFormModal';
-import { useGetStudentsQuery } from '@/features/students/studentsApi';
+import { useGetStudentsQuery } from '@/features/students/API/studentsApi';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 

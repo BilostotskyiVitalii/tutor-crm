@@ -14,7 +14,7 @@ import type {
   Student,
   StudentData,
   UpdateUser,
-} from '@/features/students/studentTypes';
+} from '@/features/students/types/studentTypes';
 import { db } from '@/firebase';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
