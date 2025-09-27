@@ -7,7 +7,7 @@ import {
   useUpdateGroupMutation,
 } from '@/features/groups/groupsApi';
 import type { Group, GroupData } from '@/features/groups/groupTypes';
-import { useGetStudentsQuery } from '@/features/students/API/studentsApi';
+import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 
 const { TextArea } = Input;
 

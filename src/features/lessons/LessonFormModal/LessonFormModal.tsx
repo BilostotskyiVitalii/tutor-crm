@@ -23,7 +23,7 @@ import type {
   LessonData,
   LessonFormValues,
 } from '@/features/lessons/lessonTypes';
-import { useGetStudentsQuery } from '@/features/students/API/studentsApi';
+import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { RangePicker } = DatePicker;

@@ -3,7 +3,7 @@ import { type FC, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
-import { useGetStudentsQuery } from '@/features/students/API/studentsApi';
+import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import StudentCard from '@/features/students/components/StudentCard/StudentCard';
 import StudentForm from '@/features/students/components/StudentForm/StudentForm';
 import type { Student } from '@/features/students/types/studentTypes';
