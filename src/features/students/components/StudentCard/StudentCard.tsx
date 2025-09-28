@@ -5,7 +5,7 @@ import { EditOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Card, Dropdown } from 'antd';
 
 import { getStudentMenuItems } from '@/features/students/components/StudentCard/getStudentMenuItems';
-import { useStudentActions } from '@/features/students/components/StudentCard/useStudentActions';
+import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
 import { getRibbonProps } from '@/features/students/utils/studentUtils';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
@@ -26,7 +26,7 @@ const StudentCard: FC<StudentCardProps> = ({
   onEdit,
   onAddLesson,
 }) => {
-  const { removeStudent, updateStatus, isDeleting } = useStudentActions(
+  const { removeStudent, updateStudentStatus, isDeleting } = useStudentActions(
     student.id,
   );
 
@@ -34,9 +34,9 @@ const StudentCard: FC<StudentCardProps> = ({
     () =>
       getStudentMenuItems(student, {
         onDelete: removeStudent,
-        onChangeStatus: updateStatus,
+        onChangeStatus: updateStudentStatus,
       }),
-    [student, removeStudent, updateStatus],
+    [student, removeStudent, updateStudentStatus],
   );
 
   const cardActions = [
