@@ -3,25 +3,28 @@ import { type FC, useState } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
 
+import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import StudentCard from '@/features/students/components/StudentCard/StudentCard';
 import StudentForm from '@/features/students/components/StudentForm/StudentForm';
-import type { Student } from '@/features/students/types/studentTypes';
+import type {
+  ModalState,
+  Student,
+} from '@/features/students/types/studentTypes';
 
 const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedStudent, setEditedStudent] = useState<Student | null>(null);
+  const [modalState, setModalState] = useState<ModalState>(null);
 
-  const openModal = (student: Student | null = null) => {
-    setEditedStudent(student);
-    setIsModalOpen(true);
+  const openStudentModal = (student: Student | null = null) => {
+    setModalState({ type: 'student', student });
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEditedStudent(null);
+  const openLessonModal = (student: Student) => {
+    setModalState({ type: 'lesson', student });
   };
+
+  const closeModal = () => setModalState(null);
 
   return (
     <>
@@ -31,7 +34,7 @@ const StudentsPage: FC = () => {
           <Button
             type="primary"
             icon={<PlusOutlined />}
-            onClick={() => openModal(null)}
+            onClick={() => openStudentModal()}
           >
             New student
           </Button>
@@ -44,17 +47,28 @@ const StudentsPage: FC = () => {
             <StudentCard
               key={student.id}
               student={student}
-              onEdit={() => openModal(student)}
+              onEdit={() => openStudentModal(student)}
+              onAddLesson={() => openLessonModal(student)}
             />
           ))}
         </Flex>
       </Flex>
 
-      <StudentForm
-        isModalOpen={isModalOpen}
-        onClose={closeModal}
-        editedStudent={editedStudent}
-      />
+      {modalState?.type === 'student' && (
+        <StudentForm
+          isModalOpen
+          onClose={closeModal}
+          editedStudent={modalState.student}
+        />
+      )}
+
+      {modalState?.type === 'lesson' && (
+        <LessonFormModal
+          isModalOpen
+          onClose={closeModal}
+          defaultStudents={[modalState.student.id]}
+        />
+      )}
     </>
   );
 };
