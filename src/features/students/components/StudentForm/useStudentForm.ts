@@ -4,10 +4,7 @@ import { Form, notification } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
 
-import {
-  useAddStudentMutation,
-  useUpdateStudentMutation,
-} from '@/features/students/api/studentsApi';
+import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type {
   StudentData,
   StudentFormProps,
@@ -21,22 +18,21 @@ export const useStudentForm = ({
   editedStudent,
 }: StudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
-  const [addStudent] = useAddStudentMutation();
-  const [updateStudent] = useUpdateStudentMutation();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const { createStudent, updateStudentData } = useStudentActions(
+    editedStudent?.id,
+  );
 
   useEffect(() => {
-    if (isModalOpen) {
-      if (editedStudent) {
-        form.setFieldsValue({
-          ...editedStudent,
-          birthdate: editedStudent.birthdate
-            ? dayjs(editedStudent.birthdate)
-            : null,
-        });
-      } else {
-        form.resetFields();
-      }
+    if (isModalOpen && editedStudent) {
+      form.setFieldsValue({
+        ...editedStudent,
+        birthdate: editedStudent.birthdate
+          ? dayjs(editedStudent.birthdate)
+          : null,
+      });
+    } else {
+      form.resetFields();
     }
   }, [isModalOpen, editedStudent, form]);
 
@@ -71,14 +67,9 @@ export const useStudentForm = ({
       }
 
       if (editedStudent) {
-        await updateStudent({
-          id: editedStudent.id,
-          data: normalizeValues,
-        }).unwrap();
-        notification.success({ message: 'Student updated!' });
+        await updateStudentData(normalizeValues);
       } else {
-        await addStudent(normalizeValues).unwrap();
-        notification.success({ message: 'Student created!' });
+        await createStudent(normalizeValues);
       }
 
       handleCancel();
