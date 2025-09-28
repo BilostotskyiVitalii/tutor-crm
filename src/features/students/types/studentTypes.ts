@@ -35,3 +35,8 @@ export interface StudentFormProps {
   onClose: () => void;
   editedStudent?: Student | null;
 }
+
+export type ModalState =
+  | { type: 'student'; student: Student | null }
+  | { type: 'lesson'; student: Student }
+  | null;
