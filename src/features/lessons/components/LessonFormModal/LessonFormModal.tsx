@@ -13,28 +13,19 @@ import {
 import dayjs from 'dayjs';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
-import type { Group } from '@/features/groups/types/groupTypes';
 import {
   useAddLessonMutation,
   useUpdateLessonMutation,
 } from '@/features/lessons/api/lessonsApi';
 import type {
-  Lesson,
   LessonData,
+  LessonFormModalProps,
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { RangePicker } = DatePicker;
-
-interface LessonFormModalProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  editedLesson?: Lesson | null;
-  defaultStudents?: string[];
-  defaultGroup?: Group | null;
-}
 
 const LessonFormModal: FC<LessonFormModalProps> = ({
   isModalOpen,
