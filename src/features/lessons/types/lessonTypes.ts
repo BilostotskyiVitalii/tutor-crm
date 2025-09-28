@@ -1,5 +1,7 @@
 import type { Dayjs } from 'dayjs';
 
+import type { Group } from '@/features/groups/types/groupTypes';
+
 export interface Lesson {
   id: string;
   groupId: string;
@@ -19,3 +21,11 @@ export type UpdateLesson = {
   id: string;
   data: Partial<LessonData>;
 };
+
+export interface LessonFormModalProps {
+  isModalOpen: boolean;
+  onClose: () => void;
+  editedLesson?: Lesson | null;
+  defaultStudents?: string[];
+  defaultGroup?: Group | null;
+}
