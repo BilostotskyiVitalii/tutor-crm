@@ -1,12 +1,13 @@
 import { type FC, useState } from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Space, Spin } from 'antd';
+import { Button, Empty, Flex, Spin, Table } from 'antd';
 
 import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import StudentCard from '@/features/students/components/StudentCard/StudentCard';
 import StudentForm from '@/features/students/components/StudentForm/StudentForm';
+import { useStudentColumns } from '@/features/students/hooks/useStudentColumns';
 import type {
   ModalState,
   Student,
@@ -26,33 +27,53 @@ const StudentsPage: FC = () => {
 
   const closeModal = () => setModalState(null);
 
+  const columns = useStudentColumns({
+    onEdit: openStudentModal,
+    onAddLesson: openLessonModal,
+  });
+
   return (
     <>
-      <Flex vertical gap="large">
-        <Space direction="vertical" size="large">
-          <h1>Students</h1>
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => openStudentModal()}
-          >
-            New student
-          </Button>
-        </Space>
+      <div style={{ marginBottom: 16 }}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => openStudentModal()}
+        >
+          New student
+        </Button>
+      </div>
 
-        <Flex wrap gap="large">
-          {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
-          {isLoading && <Spin size="large" />}
-          {students?.map((student) => (
-            <StudentCard
-              key={student.id}
-              student={student}
-              onEdit={() => openStudentModal(student)}
-              onAddLesson={() => openLessonModal(student)}
-            />
-          ))}
-        </Flex>
-      </Flex>
+      {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
+      {isLoading && <Spin size="large" />}
+
+      {students && (
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={students}
+          pagination={{ pageSize: 30, position: ['bottomCenter'] }}
+          loading={isLoading}
+          size="large"
+          locale={{ emptyText: <Empty description="No students found" /> }}
+        />
+      )}
+
+      {/* {students && (
+        <section>
+          <Flex wrap gap="large">
+            {students?.map((student) => (
+              <StudentCard
+                key={student.id}
+                student={student}
+                onEdit={() => openStudentModal(student)}
+                onAddLesson={() => openLessonModal(student)}
+              />
+            ))}
+          </Flex>
+          {students?.length === 0 && <Empty description="No students found" />}
+        </section>
+      )} */}
 
       {modalState?.type === 'student' && (
         <StudentForm
