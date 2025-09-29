@@ -1,4 +1,5 @@
 import type { Dayjs } from 'dayjs';
+import type { Timestamp } from 'firebase/firestore';
 
 export type StudentStatus = 'active' | 'paused' | 'archived';
 
@@ -6,19 +7,22 @@ export interface Student {
   id: string;
   name: string;
   email: string;
-  phone: string;
-  contact: string;
-  birthdate: number | '';
+  phone: string | null;
+  contact: string | null;
+  birthdate: number | null;
   currentLevel: string;
   cost: number;
-  notes: string;
+  notes: string | null;
   avatarUrl?: string;
   status: StudentStatus;
   createdAt: number;
   updatedAt: number;
 }
 
-export type StudentData = Omit<Student, 'id' | 'createdAt' | 'updatedAt'>;
+export interface StudentData
+  extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
+  birthdate: Timestamp | null;
+}
 
 export interface StudentFormValues
   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {

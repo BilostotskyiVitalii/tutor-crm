@@ -36,6 +36,7 @@ export const studentsApi = createApi({
             return {
               id: docSnap.id,
               ...data,
+              birthdate: (data.birthdate as Timestamp)?.toMillis?.() ?? null,
               createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
               updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
             };

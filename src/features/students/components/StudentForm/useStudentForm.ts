@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Form, notification } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
+import { Timestamp } from 'firebase/firestore';
 
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type {
@@ -44,14 +45,16 @@ export const useStudentForm = ({
 
   const handleOk = async () => {
     try {
-      const values: StudentFormValues = await form.validateFields();
+      const formValues: StudentFormValues = await form.validateFields();
       const normalizeValues: StudentData = {
-        ...values,
-        phone: values.phone ?? '',
-        contact: values.contact ?? '',
-        birthdate: values.birthdate ? values.birthdate.valueOf() : '',
-        notes: values.notes ?? '',
-        status: editedStudent ? editedStudent.status : 'active',
+        ...formValues,
+        birthdate: formValues.birthdate
+          ? Timestamp.fromMillis(formValues.birthdate.valueOf())
+          : null,
+        status: editedStudent?.status ?? 'active',
+        phone: formValues.phone || null,
+        contact: formValues.contact || null,
+        notes: formValues.notes || null,
       };
 
       if (fileList.length > 0) {
