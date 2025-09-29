@@ -1,6 +1,6 @@
 import { DatePicker, Flex, Form, Input, InputNumber, Select } from 'antd';
 
-import { studentFormRules } from '@/features/students/utils/validationFormFields';
+import { studentFormRules } from '@/features/students/components/StudentForm/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect';
 import { langLevels } from '@/shared/constants/varaibles';
 

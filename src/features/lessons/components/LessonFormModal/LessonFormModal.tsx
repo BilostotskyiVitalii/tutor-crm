@@ -123,7 +123,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
 
     if (!checked) {
       form.setFieldsValue({
-        groupId: '',
+        groupId: null,
         studentIds: [],
       });
     }
