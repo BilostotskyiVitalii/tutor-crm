@@ -6,49 +6,62 @@ import { Button, Flex, Space, Spin } from 'antd';
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import GroupCard from '@/features/groups/components/GroupCard/GroupCard';
 import GroupForm from '@/features/groups/components/GroupForm/GroupForm';
-import type { Group } from '@/features/groups/types/groupTypes';
+import type { Group, ModalState } from '@/features/groups/types/groupTypes';
+import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 
 const GroupsPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedGroup, setEditedGroup] = useState<Group | null>(null);
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
+  const [modalState, setModalState] = useState<ModalState>(null);
 
-  function showCreate() {
-    setIsModalOpen(true);
-    setEditedGroup(null);
-  }
-
-  function onClose() {
-    setIsModalOpen(false);
-    setEditedGroup(null);
-  }
-
-  const onEditEdit = (group: Group) => {
-    setEditedGroup(group);
-    setIsModalOpen(true);
+  const openGroupModal = (group: Group | null = null) => {
+    setModalState({ type: 'group', group });
   };
+
+  const openLessonModal = (group: Group) => {
+    setModalState({ type: 'lesson', group });
+  };
+
+  const closeModal = () => setModalState(null);
 
   return (
     <Flex vertical gap="large">
       <Space direction="vertical" size="large">
         <h1>Groups</h1>
-        <Button type="primary" icon={<PlusOutlined />} onClick={showCreate}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => openGroupModal()}
+        >
           New group
         </Button>
       </Space>
-
       <Flex wrap gap="large">
         {isError && <p style={{ color: 'red' }}>Failed to load group</p>}
         {isLoading && <Spin size="large" />}
         {groups?.map((group) => (
-          <GroupCard key={group.id} group={group} onEdit={onEditEdit} />
+          <GroupCard
+            key={group.id}
+            group={group}
+            onEdit={() => openGroupModal(group)}
+            onAddLesson={() => openLessonModal(group)}
+          />
         ))}
       </Flex>
-      <GroupForm
-        isModalOpen={isModalOpen}
-        onClose={onClose}
-        editedGroup={editedGroup}
-      />
+      {modalState?.type === 'group' && (
+        <GroupForm
+          isModalOpen
+          onClose={closeModal}
+          editedGroup={modalState.group}
+        />
+      )}
+      {modalState?.type === 'lesson' && (
+        <LessonFormModal
+          isModalOpen
+          onClose={closeModal}
+          defaultStudents={modalState.group.studentIds}
+          defaultGroup={modalState.group}
+        />
+      )}
     </Flex>
   );
 };

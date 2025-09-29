@@ -5,6 +5,8 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  serverTimestamp,
+  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -26,42 +28,60 @@ export const groupsApi = createApi({
         try {
           const uid = getCurrentUid();
           const snapshot = await getDocs(collection(db, `users/${uid}/groups`));
-          const groups: Group[] = snapshot.docs.map((docSnap) => ({
-            id: docSnap.id,
-            ...docSnap.data(),
-          })) as Group[];
+          const groups: Group[] = snapshot.docs.map((docSnap) => {
+            const data = docSnap.data();
+            return {
+              id: docSnap.id,
+              ...data,
+              createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
+              updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
+            };
+          }) as Group[];
           return { data: groups };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
       },
-      providesTags: ['Groups'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: 'Groups' as const, id })),
+              { type: 'Groups', id: 'LIST' },
+            ]
+          : [{ type: 'Groups', id: 'LIST' }],
     }),
 
     addGroup: builder.mutation<void, GroupData>({
       async queryFn(newGroup) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `users/${uid}/groups`), newGroup);
+          await addDoc(collection(db, `users/${uid}/groups`), {
+            ...newGroup,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          });
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Groups'],
+      invalidatesTags: [{ type: 'Groups', id: 'LIST' }],
     }),
 
     updateGroup: builder.mutation<void, UpdateGroup>({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `users/${uid}/groups/${id}`), data);
+          await updateDoc(doc(db, `users/${uid}/groups/${id}`), {
+            ...data,
+            updatedAt: serverTimestamp(),
+          });
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Groups'],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'Groups', id }],
     }),
 
     deleteGroup: builder.mutation<void, string>({
@@ -74,7 +94,7 @@ export const groupsApi = createApi({
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: ['Groups'],
+      invalidatesTags: (_result, _error, id) => [{ type: 'Groups', id }],
     }),
   }),
 });
