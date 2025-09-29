@@ -28,14 +28,12 @@ const GroupForm: FC<GroupFormProps> = ({
   const [updateGroup] = useUpdateGroupMutation();
 
   useEffect(() => {
-    if (isModalOpen) {
-      if (editedGroup) {
-        form.setFieldsValue({
-          ...editedGroup,
-        });
-      } else {
-        form.resetFields();
-      }
+    if (isModalOpen && editedGroup) {
+      form.setFieldsValue({
+        ...editedGroup,
+      });
+    } else {
+      form.resetFields();
     }
   }, [isModalOpen, editedGroup, form]);
 
@@ -46,21 +44,20 @@ const GroupForm: FC<GroupFormProps> = ({
 
   const handleOk = async () => {
     try {
-      const values: GroupData = await form.validateFields();
+      const formValues: GroupData = await form.validateFields();
 
       if (editedGroup) {
         await updateGroup({
           id: editedGroup.id,
-          data: values,
+          data: formValues,
         }).unwrap();
         notification.success({ message: 'Group updated!' });
       } else {
-        await addGroup(values).unwrap();
+        await addGroup(formValues).unwrap();
         notification.success({ message: 'Group created!' });
       }
 
-      onClose();
-      form.resetFields();
+      handleCancel();
     } catch {
       notification.error({ message: 'Group form error!' });
     }
