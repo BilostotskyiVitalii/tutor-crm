@@ -11,6 +11,7 @@ import {
   Switch,
 } from 'antd';
 import dayjs from 'dayjs';
+import { Timestamp } from 'firebase/firestore';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import {
@@ -48,7 +49,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
         studentIds: editedLesson.studentIds,
         groupId: editedLesson.groupId,
         date: [dayjs(editedLesson.start), dayjs(editedLesson.end)],
-        notes: editedLesson.notes ?? '',
+        notes: editedLesson.notes || null,
       });
       setIsGroup(!!editedLesson.groupId);
     } else {
@@ -80,14 +81,13 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
 
   const handleFinish = async () => {
     try {
-      const values: LessonFormValues = await form.validateFields();
-
+      const formValues: LessonFormValues = await form.validateFields();
       const reqValues: LessonData = {
-        studentIds: values.studentIds,
-        groupId: values.groupId ?? '',
-        start: values.date[0].valueOf(),
-        end: values.date[1].valueOf(),
-        notes: values.notes ?? '',
+        studentIds: formValues.studentIds,
+        groupId: formValues.groupId || null,
+        start: Timestamp.fromMillis(formValues.date[0].valueOf()),
+        end: Timestamp.fromMillis(formValues.date[1].valueOf()),
+        notes: formValues.notes || null,
       };
 
       if (editedLesson) {
