@@ -1,23 +1,12 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import {
-  DatePicker,
-  Form,
-  Input,
-  Modal,
-  notification,
-  Select,
-  Switch,
-} from 'antd';
+import { DatePicker, Form, Input, Modal, Select, Switch } from 'antd';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
-import {
-  useAddLessonMutation,
-  useUpdateLessonMutation,
-} from '@/features/lessons/api/lessonsApi';
+import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type {
   LessonData,
   LessonFormModalProps,
@@ -38,10 +27,10 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   const [form] = Form.useForm<LessonFormValues>();
   const { data: students = [] } = useGetStudentsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
-  const [addLesson] = useAddLessonMutation();
-  const [updateLesson] = useUpdateLessonMutation();
+  const { updateLessonData, createLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
   const [isGroup, setIsGroup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (editedLesson) {
@@ -80,6 +69,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   }, [defaultStudents, form]);
 
   const handleFinish = async () => {
+    setIsLoading(true);
     try {
       const formValues: LessonFormValues = await form.validateFields();
       const reqValues: LessonData = {
@@ -91,16 +81,16 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       };
 
       if (editedLesson) {
-        await updateLesson({ id: editedLesson.id, data: reqValues }).unwrap();
-        notification.success({ message: 'Lesson updated!' });
+        await updateLessonData(editedLesson.id, reqValues);
       } else {
-        await addLesson(reqValues).unwrap();
-        notification.success({ message: 'Lesson created!' });
+        await createLesson(reqValues);
       }
       onClose();
       form.resetFields();
     } catch (err) {
       handleError(err, 'Lesson form error');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,6 +127,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       onOk={handleFinish}
       okText={editedLesson ? 'Update' : 'Create'}
       cancelText="Cancel"
+      confirmLoading={isLoading}
     >
       <Form form={form} layout="vertical">
         <Form.Item
