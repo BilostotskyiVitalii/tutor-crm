@@ -1,0 +1,15 @@
+.studentsMobile {
+  display: none;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.studentsDesktop {
+  display: block;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
