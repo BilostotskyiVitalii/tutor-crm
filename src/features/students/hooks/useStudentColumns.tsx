@@ -21,6 +21,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       title: 'Avatar',
       dataIndex: 'avatarUrl',
       key: 'avatarUrl',
+      width: 80,
       render: (avatarUrl: string | null, student) => (
         <Avatar
           src={avatarUrl ?? undefined}
@@ -35,6 +36,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 200,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, student) => (
         <Link to={`/students/${student.id}`}>{text}</Link>
@@ -44,6 +46,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      width: 150,
       filters: [
         { text: 'Active', value: 'active' },
         { text: 'Paused', value: 'paused' },
@@ -56,6 +59,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       title: 'Level',
       dataIndex: 'currentLevel',
       key: 'currentLevel',
+      width: 150,
       sorter: (a, b) => a.currentLevel.localeCompare(b.currentLevel),
       render: (val) => val,
     },
@@ -63,6 +67,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       title: 'Price',
       dataIndex: 'cost',
       key: 'cost',
+      width: 150,
       sorter: (a, b) => (a.cost ?? 0) - (b.cost ?? 0),
       render: (val) => (val !== null ? `₴ ${val}` : '-'),
     },
