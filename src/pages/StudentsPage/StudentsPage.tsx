@@ -13,6 +13,8 @@ import type {
   Student,
 } from '@/features/students/types/studentTypes';
 
+import styles from './StudentsPage.module.scss';
+
 const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
   const [modalState, setModalState] = useState<ModalState>(null);
@@ -49,6 +51,7 @@ const StudentsPage: FC = () => {
 
       {students && (
         <Table
+          className={styles.studentsDesktop}
           rowKey="id"
           columns={columns}
           dataSource={students}
@@ -58,8 +61,8 @@ const StudentsPage: FC = () => {
         />
       )}
 
-      {/* {students && (
-        <section>
+      {students && (
+        <section className={styles.studentsMobile}>
           <Flex wrap gap="large">
             {students?.map((student) => (
               <StudentCard
@@ -72,7 +75,7 @@ const StudentsPage: FC = () => {
           </Flex>
           {students?.length === 0 && <Empty description="No students found" />}
         </section>
-      )} */}
+      )}
 
       {modalState?.type === 'student' && (
         <StudentForm
