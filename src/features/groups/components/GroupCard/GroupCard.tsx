@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Card, notification, Popconfirm, Tooltip } from 'antd';
 
-import { useDeleteGroupMutation } from '@/features/groups/api/groupsApi';
+import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
@@ -19,8 +19,8 @@ interface GroupCardProps {
 }
 
 const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
-  const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
   const { data: students } = useGetStudentsQuery();
+  const { removeGroup, isDeleting } = useGroupActions();
 
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),
@@ -28,7 +28,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
 
   async function removeHandler() {
     try {
-      await deleteGroup(group.id).unwrap();
+      await removeGroup(group.id);
       notification.success({
         message: 'Group deleted!',
       });
