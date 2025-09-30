@@ -58,6 +58,7 @@ const StudentsPage: FC = () => {
           pagination={{ pageSize: 30, position: ['bottomCenter'] }}
           loading={isLoading}
           locale={{ emptyText: <Empty description="No students found" /> }}
+          size="small"
         />
       )}
 
