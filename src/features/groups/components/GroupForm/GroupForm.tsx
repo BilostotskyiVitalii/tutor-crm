@@ -1,13 +1,11 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useState } from 'react';
 
-import { Form, Input, Modal, notification, Select } from 'antd';
+import { Form, Input, Modal, Select } from 'antd';
 
-import {
-  useAddGroupMutation,
-  useUpdateGroupMutation,
-} from '@/features/groups/api/groupsApi';
+import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group, GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { TextArea } = Input;
 
@@ -24,8 +22,9 @@ const GroupForm: FC<GroupFormProps> = ({
 }) => {
   const [form] = Form.useForm<GroupData>();
   const { data: students = [] } = useGetStudentsQuery();
-  const [addGroup] = useAddGroupMutation();
-  const [updateGroup] = useUpdateGroupMutation();
+  const { createGroup, updateGroupData } = useGroupActions();
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleError } = useErrorHandler();
 
   useEffect(() => {
     if (isModalOpen && editedGroup) {
@@ -44,22 +43,20 @@ const GroupForm: FC<GroupFormProps> = ({
 
   const handleOk = async () => {
     try {
+      setIsLoading(true);
       const formValues: GroupData = await form.validateFields();
 
       if (editedGroup) {
-        await updateGroup({
-          id: editedGroup.id,
-          data: formValues,
-        }).unwrap();
-        notification.success({ message: 'Group updated!' });
+        await updateGroupData(editedGroup.id, formValues);
       } else {
-        await addGroup(formValues).unwrap();
-        notification.success({ message: 'Group created!' });
+        await createGroup(formValues);
       }
 
       handleCancel();
-    } catch {
-      notification.error({ message: 'Group form error!' });
+    } catch (err) {
+      handleError(err, 'Group form error!');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,6 +68,7 @@ const GroupForm: FC<GroupFormProps> = ({
       onCancel={handleCancel}
       okText={editedGroup ? 'Update' : 'Create'}
       cancelText="Cancel"
+      confirmLoading={isLoading}
     >
       <Form form={form} layout="vertical" name="group_form">
         <Form.Item

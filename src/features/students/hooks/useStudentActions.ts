@@ -12,6 +12,7 @@ import type {
   StudentStatus,
 } from '@/features/students/types/studentTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+
 export function useStudentActions() {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
