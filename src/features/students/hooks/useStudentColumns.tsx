@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { Avatar, Button, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
-import { useDeleteStudentMutation } from '@/features/students/api/studentsApi';
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
+import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
@@ -14,19 +14,20 @@ interface Props {
 }
 
 export function useStudentColumns({ onEdit, onAddLesson }: Props) {
-  const [deleteStudent] = useDeleteStudentMutation();
+  const { removeStudent } = useStudentActions();
 
   const columns: ColumnsType<Student> = [
     {
       title: 'Avatar',
-      dataIndex: 'avatar',
-      key: 'avatar',
-      render: (avatar: string | null, student) => (
+      dataIndex: 'avatarUrl',
+      key: 'avatarUrl',
+      render: (avatarUrl: string | null, student) => (
         <Avatar
-          src={avatar ?? undefined}
+          src={avatarUrl ?? undefined}
           className={`avatar ${getAvatarColorClass(student.name)}`}
+          size={50}
         >
-          {!avatar && student.name?.[0]}
+          {!avatarUrl && student.name?.[0]}
         </Avatar>
       ),
     },
@@ -63,7 +64,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       dataIndex: 'cost',
       key: 'cost',
       sorter: (a, b) => (a.cost ?? 0) - (b.cost ?? 0),
-      render: (val) => (val !== null ? `$${val.toFixed(2)}` : '-'),
+      render: (val) => (val !== null ? `₴ ${val}` : '-'),
     },
     {
       title: 'Actions',
@@ -80,7 +81,7 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
             title="Delete student?"
             okText="Yes"
             cancelText="No"
-            onConfirm={() => deleteStudent(student.id)}
+            onConfirm={() => removeStudent(student.id)}
           >
             <Button size="small" danger>
               Delete

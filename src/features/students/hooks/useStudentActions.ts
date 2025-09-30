@@ -11,67 +11,62 @@ import type {
   StudentData,
   StudentStatus,
 } from '@/features/students/types/studentTypes';
-
-export function useStudentActions(studentId?: string) {
+import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+export function useStudentActions() {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
   const [addStudent] = useAddStudentMutation();
+  const { handleError } = useErrorHandler();
 
   const createStudent = useCallback(
     async (data: StudentData) => {
       try {
         await addStudent(data).unwrap();
         notification.success({ message: 'Student created!' });
-      } catch {
-        notification.error({ message: 'Failed to create student' });
+      } catch (err) {
+        handleError(err, 'Failed to create student');
       }
     },
-    [addStudent],
+    [addStudent, handleError],
   );
 
   const updateStudentData = useCallback(
-    async (data: StudentData) => {
-      if (!studentId) {
-        return;
-      }
+    async (id: string, data: StudentData) => {
       try {
-        await updateStudent({ id: studentId, data }).unwrap();
+        await updateStudent({ id, data }).unwrap();
         notification.success({ message: 'Student updated!' });
-      } catch {
-        notification.error({ message: 'Failed to update student' });
+      } catch (err) {
+        handleError(err, 'Failed to update student');
       }
     },
-    [updateStudent, studentId],
+    [updateStudent, handleError],
   );
 
-  const removeStudent = useCallback(async () => {
-    if (!studentId) {
-      return;
-    }
-    try {
-      await deleteStudent(studentId).unwrap();
-      notification.success({ message: 'Student deleted!' });
-    } catch {
-      notification.error({ message: 'Failed to delete student' });
-    }
-  }, [deleteStudent, studentId]);
+  const removeStudent = useCallback(
+    async (id: string) => {
+      try {
+        await deleteStudent(id).unwrap();
+        notification.success({ message: 'Student deleted!' });
+      } catch (err) {
+        handleError(err, 'Failed to delete student');
+      }
+    },
+    [deleteStudent, handleError],
+  );
 
   const updateStudentStatus = useCallback(
-    async (newStatus: StudentStatus) => {
-      if (!studentId) {
-        return;
-      }
+    async ({ id, newStatus }: { id: string; newStatus: StudentStatus }) => {
       try {
         await updateStudent({
-          id: studentId,
+          id,
           data: { status: newStatus },
         }).unwrap();
         notification.success({ message: 'Status updated!' });
-      } catch {
-        notification.error({ message: 'Failed to update status' });
+      } catch (err) {
+        handleError(err, 'Failed to delete student status');
       }
     },
-    [updateStudent, studentId],
+    [updateStudent, handleError],
   );
 
   return {

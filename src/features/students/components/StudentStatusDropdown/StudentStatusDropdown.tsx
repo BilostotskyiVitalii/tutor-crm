@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Dropdown, Tag } from 'antd';
 
-import { useUpdateStudentMutation } from '@/features/students/api/studentsApi';
+import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type {
   Student,
   StudentStatus,
@@ -14,12 +14,9 @@ const statusColors: Record<string, string> = {
   archived: 'gray',
 };
 
-const getStatusTag = (status: string) => (
-  <Tag color={statusColors[status] || 'default'}>{status}</Tag>
-);
-
 export const StatusDropdown: FC<{ student: Student }> = ({ student }) => {
-  const [updateStudent] = useUpdateStudentMutation();
+  const { updateStudentStatus } = useStudentActions();
+
   const menu = {
     items: ['active', 'paused', 'archived'].map((s) => ({
       key: s,
@@ -30,15 +27,17 @@ export const StatusDropdown: FC<{ student: Student }> = ({ student }) => {
       ),
     })),
     onClick: ({ key }: { key: string }) =>
-      updateStudent({
-        id: student.id,
-        data: { status: key as StudentStatus },
-      }),
+      updateStudentStatus({ id: student.id, newStatus: key as StudentStatus }),
   };
 
   return (
     <Dropdown menu={menu} trigger={['click']}>
-      <div style={{ cursor: 'pointer' }}>{getStatusTag(student.status)}</div>
+      <Tag
+        style={{ cursor: 'pointer' }}
+        color={statusColors[student.status] || 'default'}
+      >
+        {student.status}
+      </Tag>
     </Dropdown>
   );
 };
