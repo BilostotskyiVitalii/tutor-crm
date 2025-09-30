@@ -8,7 +8,7 @@ import type { StudentFormProps } from '@/features/students/types/studentTypes';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader';
 
 const StudentForm: FC<StudentFormProps> = (props) => {
-  const { form, handleOk, handleCancel, fileList, setFileList } =
+  const { form, handleOk, handleCancel, fileList, setFileList, isLoading } =
     useStudentForm(props);
 
   return (
@@ -19,6 +19,7 @@ const StudentForm: FC<StudentFormProps> = (props) => {
       onCancel={handleCancel}
       okText={props.editedStudent ? 'Update' : 'Create'}
       cancelText="Cancel"
+      confirmLoading={isLoading}
     >
       <Form form={form} layout="vertical" name="student_form">
         <StudentFormFields />

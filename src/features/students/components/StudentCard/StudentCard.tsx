@@ -26,15 +26,15 @@ const StudentCard: FC<StudentCardProps> = ({
   onEdit,
   onAddLesson,
 }) => {
-  const { removeStudent, updateStudentStatus, isDeleting } = useStudentActions(
-    student.id,
-  );
+  const { removeStudent, updateStudentStatus, isDeleting } =
+    useStudentActions();
 
   const menuItems = useMemo(
     () =>
       getStudentMenuItems(student, {
-        onDelete: removeStudent,
-        onChangeStatus: updateStudentStatus,
+        onDelete: () => removeStudent(student.id),
+        onChangeStatus: (status) =>
+          updateStudentStatus({ id: student.id, newStatus: status }),
       }),
     [student, removeStudent, updateStudentStatus],
   );

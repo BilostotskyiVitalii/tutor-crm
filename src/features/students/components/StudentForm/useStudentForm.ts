@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { Form, notification } from 'antd';
+import { Form } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
@@ -11,6 +11,7 @@ import type {
   StudentFormProps,
   StudentFormValues,
 } from '@/features/students/types/studentTypes';
+import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { uploadAvatar } from '@/shared/utils/uploadAvatar';
 
 export const useStudentForm = ({
@@ -20,9 +21,9 @@ export const useStudentForm = ({
 }: StudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const { createStudent, updateStudentData } = useStudentActions(
-    editedStudent?.id,
-  );
+  const { createStudent, updateStudentData } = useStudentActions();
+  const { handleError } = useErrorHandler();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (isModalOpen && editedStudent) {
@@ -45,6 +46,7 @@ export const useStudentForm = ({
 
   const handleOk = async () => {
     try {
+      setIsLoading(true);
       const formValues: StudentFormValues = await form.validateFields();
       const normalizeValues: StudentData = {
         ...formValues,
@@ -70,16 +72,25 @@ export const useStudentForm = ({
       }
 
       if (editedStudent) {
-        await updateStudentData(normalizeValues);
+        await updateStudentData(editedStudent.id, normalizeValues);
       } else {
         await createStudent(normalizeValues);
       }
 
       handleCancel();
-    } catch {
-      notification.error({ message: 'Student form error!' });
+    } catch (err) {
+      handleError(err, 'Student form error!');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  return { form, handleOk, handleCancel, fileList, setFileList };
+  return {
+    form,
+    handleOk,
+    handleCancel,
+    fileList,
+    setFileList,
+    isLoading,
+  };
 };
