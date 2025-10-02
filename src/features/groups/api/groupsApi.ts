@@ -16,7 +16,10 @@ import type {
   UpdateGroup,
 } from '@/features/groups/types/groupTypes';
 import { db } from '@/firebase';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
+
+const { groups, users } = endpointsURL;
 
 export const groupsApi = createApi({
   reducerPath: 'groupsApi',
@@ -27,8 +30,10 @@ export const groupsApi = createApi({
       async queryFn() {
         try {
           const uid = getCurrentUid();
-          const snapshot = await getDocs(collection(db, `users/${uid}/groups`));
-          const groups: Group[] = snapshot.docs.map((docSnap) => {
+          const snapshot = await getDocs(
+            collection(db, `${users}/${uid}/${groups}`),
+          );
+          const groupsData: Group[] = snapshot.docs.map((docSnap) => {
             const data = docSnap.data();
             return {
               id: docSnap.id,
@@ -37,7 +42,7 @@ export const groupsApi = createApi({
               updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
             };
           }) as Group[];
-          return { data: groups };
+          return { data: groupsData };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
@@ -55,7 +60,7 @@ export const groupsApi = createApi({
       async queryFn(newGroup) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `users/${uid}/groups`), {
+          await addDoc(collection(db, `${users}/${uid}/${groups}`), {
             ...newGroup,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
@@ -72,7 +77,7 @@ export const groupsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `users/${uid}/groups/${id}`), {
+          await updateDoc(doc(db, `${users}/${uid}/${groups}/${id}`), {
             ...data,
             updatedAt: serverTimestamp(),
           });
@@ -88,7 +93,7 @@ export const groupsApi = createApi({
       async queryFn(id) {
         try {
           const uid = getCurrentUid();
-          await deleteDoc(doc(db, `users/${uid}/groups/${id}`));
+          await deleteDoc(doc(db, `${users}/${uid}/${groups}/${id}`));
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
