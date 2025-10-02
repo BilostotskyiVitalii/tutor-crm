@@ -5,6 +5,7 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
+import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type {
   StudentData,
@@ -17,13 +18,15 @@ import { uploadAvatar } from '@/shared/utils/uploadAvatar';
 export const useStudentForm = ({
   isModalOpen,
   onClose,
-  editedStudent,
+  editedStudentId,
 }: StudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
+  const { data: students } = useGetStudentsQuery();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
+  const editedStudent = students?.find((s) => s.id === editedStudentId);
 
   useEffect(() => {
     if (isModalOpen && editedStudent) {
@@ -36,7 +39,7 @@ export const useStudentForm = ({
     } else {
       form.resetFields();
     }
-  }, [isModalOpen, editedStudent, form]);
+  }, [isModalOpen, editedStudentId, students, editedStudent, form]);
 
   const handleCancel = () => {
     onClose();
@@ -61,12 +64,9 @@ export const useStudentForm = ({
 
       if (fileList.length > 0) {
         const file = fileList[0].originFileObj as File;
-        const studentId = editedStudent
-          ? editedStudent.id
-          : crypto.randomUUID();
         normalizeValues.avatarUrl = await uploadAvatar(
           file,
-          studentId,
+          editedStudent ? editedStudent.id : crypto.randomUUID(),
           editedStudent?.avatarUrl,
         );
       }

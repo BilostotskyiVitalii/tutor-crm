@@ -35,10 +35,10 @@ export type UpdateUser = {
 export interface StudentFormProps {
   isModalOpen: boolean;
   onClose: () => void;
-  editedStudent?: Student | null;
+  editedStudentId?: string | null;
 }
 
 export type ModalState =
-  | { type: 'student'; student: Student | null }
-  | { type: 'lesson'; student: Student }
+  | { type: 'student'; studentId: string | null }
+  | { type: 'lesson'; studentId: string }
   | null;

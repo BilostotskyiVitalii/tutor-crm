@@ -6,7 +6,7 @@ import type { Lesson } from '@/features/lessons/types/lessonTypes';
 
 interface LessonCardProps {
   lesson: Lesson;
-  onEdit: (lesson: Lesson) => void;
+  onEdit: (lessonId: string) => void;
 }
 
 const LessonCard: FC<LessonCardProps> = ({ lesson, onEdit }) => {
@@ -16,7 +16,7 @@ const LessonCard: FC<LessonCardProps> = ({ lesson, onEdit }) => {
       <div>{lesson.notes}</div>
       <div>{`Start: ${lesson.start}`}</div>
       <div>{`End: ${lesson.end}`}</div>
-      <Button onClick={() => onEdit(lesson)}>Update</Button>
+      <Button onClick={() => onEdit(lesson.id)}>Update</Button>
     </div>
   );
 };

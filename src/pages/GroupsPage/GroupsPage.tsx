@@ -6,19 +6,19 @@ import { Button, Flex, Space, Spin } from 'antd';
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import GroupCard from '@/features/groups/components/GroupCard/GroupCard';
 import GroupForm from '@/features/groups/components/GroupForm/GroupForm';
-import type { Group, ModalState } from '@/features/groups/types/groupTypes';
+import type { ModalState } from '@/features/groups/types/groupTypes';
 import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 
 const GroupsPage = () => {
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
   const [modalState, setModalState] = useState<ModalState>(null);
 
-  const openGroupModal = (group: Group | null = null) => {
-    setModalState({ type: 'group', group });
+  const openGroupModal = (groupId: string | null = null) => {
+    setModalState({ type: 'group', groupId });
   };
 
-  const openLessonModal = (group: Group) => {
-    setModalState({ type: 'lesson', group });
+  const openLessonModal = (groupId: string) => {
+    setModalState({ type: 'lesson', groupId });
   };
 
   const closeModal = () => setModalState(null);
@@ -42,8 +42,8 @@ const GroupsPage = () => {
           <GroupCard
             key={group.id}
             group={group}
-            onEdit={() => openGroupModal(group)}
-            onAddLesson={() => openLessonModal(group)}
+            onEdit={() => openGroupModal(group.id)}
+            onAddLesson={() => openLessonModal(group.id)}
           />
         ))}
       </Flex>
@@ -51,15 +51,14 @@ const GroupsPage = () => {
         <GroupForm
           isModalOpen
           onClose={closeModal}
-          editedGroup={modalState.group}
+          editedGroupId={modalState.groupId}
         />
       )}
       {modalState?.type === 'lesson' && (
         <LessonFormModal
           isModalOpen
           onClose={closeModal}
-          defaultStudents={modalState.group.studentIds}
-          defaultGroup={modalState.group}
+          defaultGroup={modalState.groupId}
         />
       )}
     </Flex>

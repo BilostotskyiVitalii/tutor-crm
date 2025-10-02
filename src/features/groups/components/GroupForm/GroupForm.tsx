@@ -2,8 +2,12 @@ import { type FC, useEffect, useState } from 'react';
 
 import { Form, Input, InputNumber, Modal, Select } from 'antd';
 
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
-import type { Group, GroupData } from '@/features/groups/types/groupTypes';
+import type {
+  GroupData,
+  GroupFormProps,
+} from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { studentFormRules } from '@/features/students/components/StudentForm/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect';
@@ -11,32 +15,28 @@ import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { TextArea } = Input;
 
-interface GroupFormProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  editedGroup?: Group | null;
-}
-
 const GroupForm: FC<GroupFormProps> = ({
   onClose,
   isModalOpen,
-  editedGroup,
+  editedGroupId,
 }) => {
   const [form] = Form.useForm<GroupData>();
   const { data: students = [] } = useGetStudentsQuery();
+  const { data: groups = [] } = useGetGroupsQuery();
   const { createGroup, updateGroupData } = useGroupActions();
   const [isLoading, setIsLoading] = useState(false);
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    if (isModalOpen && editedGroup) {
+    if (isModalOpen && editedGroupId) {
+      const group = groups.find((g) => g.id === editedGroupId);
       form.setFieldsValue({
-        ...editedGroup,
+        ...group,
       });
     } else {
       form.resetFields();
     }
-  }, [isModalOpen, editedGroup, form]);
+  }, [isModalOpen, editedGroupId, groups, form]);
 
   const handleCancel = () => {
     onClose();
@@ -48,8 +48,8 @@ const GroupForm: FC<GroupFormProps> = ({
       setIsLoading(true);
       const formValues: GroupData = await form.validateFields();
 
-      if (editedGroup) {
-        await updateGroupData(editedGroup.id, formValues);
+      if (editedGroupId) {
+        await updateGroupData(editedGroupId, formValues);
       } else {
         await createGroup(formValues);
       }
@@ -64,11 +64,11 @@ const GroupForm: FC<GroupFormProps> = ({
 
   return (
     <Modal
-      title={editedGroup ? 'Update Group' : 'New Group'}
+      title={editedGroupId ? 'Update Group' : 'New Group'}
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText={editedGroup ? 'Update' : 'Create'}
+      okText={editedGroupId ? 'Update' : 'Create'}
       cancelText="Cancel"
       confirmLoading={isLoading}
     >
