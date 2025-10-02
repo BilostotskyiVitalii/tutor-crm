@@ -14,6 +14,7 @@ import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type {
   LessonData,
@@ -30,57 +31,60 @@ const { RangePicker } = DatePicker;
 const LessonFormModal: FC<LessonFormModalProps> = ({
   isModalOpen,
   onClose,
-  editedLesson,
+  editedLessonId,
   defaultStudent,
   defaultGroup,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
   const { data: students = [] } = useGetStudentsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
+  const { data: lessons = [] } = useGetLessonsQuery();
   const { updateLessonData, createLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
   const [isGroup, setIsGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (editedLesson) {
-      form.setFieldsValue({
-        studentIds: editedLesson.studentIds,
-        groupId: editedLesson.groupId,
-        date: [dayjs(editedLesson.start), dayjs(editedLesson.end)],
-        notes: editedLesson.notes || null,
-        price: editedLesson.price,
-      });
-      setIsGroup(!!editedLesson.groupId);
-    } else {
+    if (isModalOpen) {
       form.resetFields();
     }
-  }, [editedLesson, form]);
+  }, [isModalOpen, form]);
 
   useEffect(() => {
-    if (defaultGroup) {
+    const lesson = lessons.find((l) => l.id === editedLessonId);
+    if (lesson && editedLessonId) {
       form.setFieldsValue({
-        studentIds: defaultGroup.studentIds,
-        groupId: defaultGroup.id,
-        price: defaultGroup.price,
+        studentIds: lesson.studentIds,
+        groupId: lesson.groupId,
+        date: [dayjs(lesson.start), dayjs(lesson.end)],
+        notes: lesson.notes || null,
+        price: lesson.price,
       });
-      setIsGroup(!!defaultGroup.id);
-    } else {
-      form.resetFields();
+      setIsGroup(!!lesson.groupId);
     }
-  }, [defaultGroup, form]);
+  }, [lessons, editedLessonId, form]);
+
+  useEffect(() => {
+    const group = groups.find((g) => g.id === defaultGroup);
+    if (group && defaultGroup) {
+      form.setFieldsValue({
+        studentIds: group.studentIds,
+        groupId: group.id,
+        price: group.price,
+      });
+      setIsGroup(!!group.id);
+    }
+  }, [defaultGroup, groups, form]);
 
   useEffect(() => {
     if (defaultStudent) {
+      const student = students.find((s) => s.id === defaultStudent);
       form.setFieldsValue({
         studentIds: [defaultStudent],
-        // price: defaultStudent.price,
-        // add price
+        price: student?.price,
       });
-    } else {
-      form.resetFields();
     }
-  }, [defaultStudent, form]);
+  }, [defaultStudent, students, form]);
 
   const handleFinish = async () => {
     setIsLoading(true);
@@ -95,8 +99,8 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
         price: formValues.price,
       };
 
-      if (editedLesson) {
-        await updateLessonData(editedLesson.id, reqValues);
+      if (editedLessonId) {
+        await updateLessonData(editedLessonId, reqValues);
       } else {
         await createLesson(reqValues);
       }
@@ -136,11 +140,11 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
 
   return (
     <Modal
-      title={editedLesson ? 'Edit Lesson' : 'Create Lesson'}
+      title={editedLessonId ? 'Edit Lesson' : 'Create Lesson'}
       open={isModalOpen}
       onCancel={handleCancel}
       onOk={handleFinish}
-      okText={editedLesson ? 'Update' : 'Create'}
+      okText={editedLessonId ? 'Update' : 'Create'}
       cancelText="Cancel"
       confirmLoading={isLoading}
     >

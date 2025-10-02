@@ -17,8 +17,8 @@ const { Meta } = Card;
 
 interface StudentCardProps {
   student: Student;
-  onEdit: (student: Student) => void;
-  onAddLesson: (student: Student) => void;
+  onEdit: (studentId: string) => void;
+  onAddLesson: (studentId: string) => void;
 }
 
 const { active, inactive } = StudentStatus;
@@ -42,8 +42,8 @@ const StudentCard: FC<StudentCardProps> = ({
   );
 
   const cardActions = [
-    <PlusOutlined key="add" onClick={() => onAddLesson(student)} />,
-    <EditOutlined key="edit" onClick={() => onEdit(student)} />,
+    <PlusOutlined key="add" onClick={() => onAddLesson(student.id)} />,
+    <EditOutlined key="edit" onClick={() => onEdit(student.id)} />,
     <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="top">
       <MoreOutlined key="more" className={styles.more} />
     </Dropdown>,

@@ -11,8 +11,8 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 interface Props {
-  onEdit: (student: Student) => void;
-  onAddLesson: (student: Student) => void;
+  onEdit: (studentId: string) => void;
+  onAddLesson: (studentId: string) => void;
 }
 
 const { active, inactive } = StudentStatus;
@@ -80,10 +80,10 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       key: 'actions',
       render: (_, student) => (
         <>
-          <Button size="small" onClick={() => onEdit(student)}>
+          <Button size="small" onClick={() => onEdit(student.id)}>
             Edit
           </Button>{' '}
-          <Button size="small" onClick={() => onAddLesson(student)}>
+          <Button size="small" onClick={() => onAddLesson(student.id)}>
             Add Lesson
           </Button>{' '}
           <Popconfirm

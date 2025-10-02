@@ -8,10 +8,7 @@ import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import StudentCard from '@/features/students/components/StudentCard/StudentCard';
 import StudentForm from '@/features/students/components/StudentForm/StudentForm';
 import { useStudentColumns } from '@/features/students/hooks/useStudentColumns';
-import type {
-  ModalState,
-  Student,
-} from '@/features/students/types/studentTypes';
+import type { ModalState } from '@/features/students/types/studentTypes';
 
 import styles from './StudentsPage.module.scss';
 
@@ -19,12 +16,12 @@ const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
   const [modalState, setModalState] = useState<ModalState>(null);
 
-  const openStudentModal = (student: Student | null = null) => {
-    setModalState({ type: 'student', student });
+  const openStudentModal = (studentId: string | null = null) => {
+    setModalState({ type: 'student', studentId });
   };
 
-  const openLessonModal = (student: Student) => {
-    setModalState({ type: 'lesson', student });
+  const openLessonModal = (studentId: string) => {
+    setModalState({ type: 'lesson', studentId });
   };
 
   const closeModal = () => setModalState(null);
@@ -69,8 +66,8 @@ const StudentsPage: FC = () => {
               <StudentCard
                 key={student.id}
                 student={student}
-                onEdit={() => openStudentModal(student)}
-                onAddLesson={() => openLessonModal(student)}
+                onEdit={() => openStudentModal(student.id)}
+                onAddLesson={() => openLessonModal(student.id)}
               />
             ))}
           </Flex>
@@ -82,7 +79,7 @@ const StudentsPage: FC = () => {
         <StudentForm
           isModalOpen
           onClose={closeModal}
-          editedStudent={modalState.student}
+          editedStudentId={modalState.studentId}
         />
       )}
 
@@ -90,7 +87,7 @@ const StudentsPage: FC = () => {
         <LessonFormModal
           isModalOpen
           onClose={closeModal}
-          defaultStudents={[modalState.student.id]}
+          defaultStudent={modalState.studentId}
         />
       )}
     </>

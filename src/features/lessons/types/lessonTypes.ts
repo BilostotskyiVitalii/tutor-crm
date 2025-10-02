@@ -1,8 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
-import type { Group } from '@/features/groups/types/groupTypes';
-
 export interface Lesson {
   id: string;
   groupId: string | null;
@@ -34,7 +32,9 @@ export type UpdateLesson = {
 export interface LessonFormModalProps {
   isModalOpen: boolean;
   onClose: () => void;
-  editedLesson?: Lesson | null;
-  defaultStudent?: string;
-  defaultGroup?: Group | null;
+  editedLessonId?: string | null;
+  defaultStudent?: string | null;
+  defaultGroup?: string | null;
 }
+
+export type ModalState = { type: 'lesson'; lessonId: string | null } | null;
