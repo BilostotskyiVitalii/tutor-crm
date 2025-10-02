@@ -1,8 +1,6 @@
 import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
-export type StudentStatus = 'active' | 'paused' | 'archived';
-
 export interface Student {
   id: string;
   name: string;
@@ -14,7 +12,7 @@ export interface Student {
   cost: number;
   notes: string | null;
   avatarUrl?: string;
-  status: StudentStatus;
+  isActive: boolean;
   createdAt: number;
   updatedAt: number;
 }

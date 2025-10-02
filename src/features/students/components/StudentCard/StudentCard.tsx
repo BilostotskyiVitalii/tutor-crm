@@ -5,9 +5,9 @@ import { EditOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Card, Dropdown } from 'antd';
 
 import { getStudentMenuItems } from '@/features/students/components/StudentCard/getStudentMenuItems';
+import { StudentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
-import { getRibbonProps } from '@/features/students/utils/studentUtils';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
@@ -20,6 +20,8 @@ interface StudentCardProps {
   onEdit: (student: Student) => void;
   onAddLesson: (student: Student) => void;
 }
+
+const { active, inactive } = StudentStatus;
 
 const StudentCard: FC<StudentCardProps> = ({
   student,
@@ -47,10 +49,11 @@ const StudentCard: FC<StudentCardProps> = ({
     </Dropdown>,
   ];
 
-  const ribbonProps = getRibbonProps(student.status);
-
   return (
-    <Badge.Ribbon text={ribbonProps.text} color={ribbonProps.color}>
+    <Badge.Ribbon
+      text={student.isActive ? active : inactive}
+      color={student.isActive ? 'green' : 'grey'}
+    >
       <Card loading={isDeleting} className={styles.card} actions={cardActions}>
         <Meta
           avatar={

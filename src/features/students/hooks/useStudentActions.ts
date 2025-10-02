@@ -7,10 +7,7 @@ import {
   useDeleteStudentMutation,
   useUpdateStudentMutation,
 } from '@/features/students/api/studentsApi';
-import type {
-  StudentData,
-  StudentStatus,
-} from '@/features/students/types/studentTypes';
+import type { StudentData } from '@/features/students/types/studentTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 export function useStudentActions() {
@@ -56,11 +53,11 @@ export function useStudentActions() {
   );
 
   const updateStudentStatus = useCallback(
-    async ({ id, newStatus }: { id: string; newStatus: StudentStatus }) => {
+    async ({ id, newStatus }: { id: string; newStatus: boolean }) => {
       try {
         await updateStudent({
           id,
-          data: { status: newStatus },
+          data: { isActive: newStatus },
         }).unwrap();
         notification.success({ message: 'Status updated!' });
       } catch (err) {
