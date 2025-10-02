@@ -9,7 +9,7 @@ export interface Student {
   contact: string | null;
   birthdate: number | null;
   currentLevel: string;
-  cost: number;
+  price: number;
   notes: string | null;
   avatarUrl?: string;
   isActive: boolean;

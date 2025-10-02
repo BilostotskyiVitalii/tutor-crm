@@ -69,10 +69,10 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
     },
     {
       title: 'Price',
-      dataIndex: 'cost',
-      key: 'cost',
+      dataIndex: 'price',
+      key: 'price',
       width: 150,
-      sorter: (a, b) => (a.cost ?? 0) - (b.cost ?? 0),
+      sorter: (a, b) => (a.price ?? 0) - (b.price ?? 0),
       render: (val) => (val !== null ? `₴ ${val}` : '-'),
     },
     {

@@ -53,7 +53,7 @@ export const useStudentForm = ({
         birthdate: formValues.birthdate
           ? Timestamp.fromMillis(formValues.birthdate.valueOf())
           : null,
-        status: editedStudent?.status ?? 'active',
+        isActive: editedStudent?.isActive ?? true,
         phone: formValues.phone || null,
         contact: formValues.contact || null,
         notes: formValues.notes || null,

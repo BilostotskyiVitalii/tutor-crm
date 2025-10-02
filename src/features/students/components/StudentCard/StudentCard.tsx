@@ -73,7 +73,7 @@ const StudentCard: FC<StudentCardProps> = ({
           description={
             <>
               <p>{student.currentLevel}</p>
-              <strong>{student.cost}</strong>
+              <strong>{student.price}</strong>
             </>
           }
         />

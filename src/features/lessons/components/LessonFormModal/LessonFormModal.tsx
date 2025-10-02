@@ -1,7 +1,15 @@
 import { type FC, useEffect, useState } from 'react';
 
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { DatePicker, Form, Input, Modal, Select, Switch } from 'antd';
+import {
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Switch,
+} from 'antd';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
@@ -13,6 +21,8 @@ import type {
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { studentFormRules } from '@/features/students/components/StudentForm/validationFormFields';
+import CurrencySelect from '@/shared/components/UI/CurrencySelect';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { RangePicker } = DatePicker;
@@ -21,7 +31,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   isModalOpen,
   onClose,
   editedLesson,
-  defaultStudents,
+  defaultStudent,
   defaultGroup,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
@@ -39,6 +49,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
         groupId: editedLesson.groupId,
         date: [dayjs(editedLesson.start), dayjs(editedLesson.end)],
         notes: editedLesson.notes || null,
+        price: editedLesson.price,
       });
       setIsGroup(!!editedLesson.groupId);
     } else {
@@ -51,6 +62,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       form.setFieldsValue({
         studentIds: defaultGroup.studentIds,
         groupId: defaultGroup.id,
+        price: defaultGroup.price,
       });
       setIsGroup(!!defaultGroup.id);
     } else {
@@ -59,14 +71,16 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   }, [defaultGroup, form]);
 
   useEffect(() => {
-    if (defaultStudents) {
+    if (defaultStudent) {
       form.setFieldsValue({
-        studentIds: defaultStudents,
+        studentIds: [defaultStudent],
+        // price: defaultStudent.price,
+        // add price
       });
     } else {
       form.resetFields();
     }
-  }, [defaultStudents, form]);
+  }, [defaultStudent, form]);
 
   const handleFinish = async () => {
     setIsLoading(true);
@@ -78,6 +92,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
         start: Timestamp.fromMillis(formValues.date[0].valueOf()),
         end: Timestamp.fromMillis(formValues.date[1].valueOf()),
         notes: formValues.notes || null,
+        price: formValues.price,
       };
 
       if (editedLesson) {
@@ -172,6 +187,19 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
           <RangePicker
             showTime={{ format: 'HH:mm' }}
             format="DD.MM.YYYY HH:mm"
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="price"
+          label="Price:"
+          style={{ flex: 1 }}
+          rules={studentFormRules.price}
+        >
+          <InputNumber
+            min={0}
+            placeholder="500"
+            addonAfter={<CurrencySelect />}
           />
         </Form.Item>
 

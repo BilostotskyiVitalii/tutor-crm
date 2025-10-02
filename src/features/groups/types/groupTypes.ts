@@ -3,6 +3,7 @@ export interface Group {
   title: string;
   studentIds: string[];
   notes: string | null;
+  price: number;
   createdAt: number;
   updatedAt: number;
 }
