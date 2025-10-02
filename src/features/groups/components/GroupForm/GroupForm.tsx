@@ -1,10 +1,12 @@
 import { type FC, useEffect, useState } from 'react';
 
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, InputNumber, Modal, Select } from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group, GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { studentFormRules } from '@/features/students/components/StudentForm/validationFormFields';
+import CurrencySelect from '@/shared/components/UI/CurrencySelect';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { TextArea } = Input;
@@ -88,6 +90,19 @@ const GroupForm: FC<GroupFormProps> = ({
             mode="multiple"
             placeholder="Select students"
             options={students.map((s) => ({ label: s.name, value: s.id }))}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="price"
+          label="Price:"
+          style={{ flex: 1 }}
+          rules={studentFormRules.price}
+        >
+          <InputNumber
+            min={0}
+            placeholder="500"
+            addonAfter={<CurrencySelect />}
           />
         </Form.Item>
 

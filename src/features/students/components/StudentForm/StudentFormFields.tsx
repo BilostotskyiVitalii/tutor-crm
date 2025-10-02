@@ -39,10 +39,10 @@ const StudentFormFields = () => (
       </Form.Item>
 
       <Form.Item
-        name="cost"
-        label="Cost:"
+        name="price"
+        label="Price:"
         style={{ flex: 1 }}
-        rules={studentFormRules.cost}
+        rules={studentFormRules.price}
       >
         <InputNumber
           min={0}

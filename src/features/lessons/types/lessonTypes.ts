@@ -10,6 +10,7 @@ export interface Lesson {
   start: number;
   end: number;
   notes: string | null;
+  price: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -34,6 +35,6 @@ export interface LessonFormModalProps {
   isModalOpen: boolean;
   onClose: () => void;
   editedLesson?: Lesson | null;
-  defaultStudents?: string[];
+  defaultStudent?: string;
   defaultGroup?: Group | null;
 }

@@ -12,6 +12,6 @@ export const studentFormRules: Record<string, Rule[]> = {
       message: 'Phone number must start with + and contain 7–15 digits',
     },
   ],
-  cost: [{ required: true, message: 'Enter cost/hour' }],
+  price: [{ required: true, message: 'Enter price/hour' }],
   level: [{ required: true, message: 'Choose student level' }],
 };
