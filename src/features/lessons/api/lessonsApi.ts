@@ -16,7 +16,10 @@ import type {
   UpdateLesson,
 } from '@/features/lessons/types/lessonTypes';
 import { db } from '@/firebase';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
+
+const { lessons, users } = endpointsURL;
 
 export const lessonsApi = createApi({
   reducerPath: 'lessonsApi',
@@ -28,9 +31,9 @@ export const lessonsApi = createApi({
         try {
           const uid = getCurrentUid();
           const snapshot = await getDocs(
-            collection(db, `users/${uid}/lessons`),
+            collection(db, `${users}/${uid}/${lessons}`),
           );
-          const lessons: Lesson[] = snapshot.docs.map((docSnap) => {
+          const lessonsData: Lesson[] = snapshot.docs.map((docSnap) => {
             const data = docSnap.data();
             return {
               id: docSnap.id,
@@ -41,7 +44,7 @@ export const lessonsApi = createApi({
               updatedAt: (data.updatedAt as Timestamp)?.toMillis?.(),
             };
           }) as Lesson[];
-          return { data: lessons };
+          return { data: lessonsData };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
@@ -59,7 +62,7 @@ export const lessonsApi = createApi({
       async queryFn(newLesson) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `users/${uid}/lessons`), {
+          await addDoc(collection(db, `${users}/${uid}/${lessons}`), {
             ...newLesson,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
@@ -76,7 +79,7 @@ export const lessonsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `users/${uid}/lessons/${id}`), {
+          await updateDoc(doc(db, `${users}/${uid}/${lessons}/${id}`), {
             ...data,
             updatedAt: serverTimestamp(),
           });
@@ -92,7 +95,7 @@ export const lessonsApi = createApi({
       async queryFn(id) {
         try {
           const uid = getCurrentUid();
-          await deleteDoc(doc(db, `users/${uid}/lessons/${id}`));
+          await deleteDoc(doc(db, `${users}/${uid}/${lessons}/${id}`));
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };

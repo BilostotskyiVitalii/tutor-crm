@@ -16,7 +16,10 @@ import type {
   UpdateUser,
 } from '@/features/students/types/studentTypes';
 import { db } from '@/firebase';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
+
+const { students, users } = endpointsURL;
 
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
@@ -28,10 +31,10 @@ export const studentsApi = createApi({
         try {
           const uid = getCurrentUid();
           const snapshot = await getDocs(
-            collection(db, `users/${uid}/students`),
+            collection(db, `${users}/${uid}/${students}`),
           );
 
-          const students: Student[] = snapshot.docs.map((docSnap) => {
+          const studentsData: Student[] = snapshot.docs.map((docSnap) => {
             const data = docSnap.data();
             return {
               id: docSnap.id,
@@ -42,7 +45,7 @@ export const studentsApi = createApi({
             };
           }) as Student[];
 
-          return { data: students };
+          return { data: studentsData };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
@@ -60,7 +63,7 @@ export const studentsApi = createApi({
       async queryFn(newStudent) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `users/${uid}/students`), {
+          await addDoc(collection(db, `${users}/${uid}/${students}`), {
             ...newStudent,
             createdAt: serverTimestamp(),
             updatedAt: serverTimestamp(),
@@ -77,7 +80,7 @@ export const studentsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `users/${uid}/students/${id}`), {
+          await updateDoc(doc(db, `${users}/${uid}/${students}/${id}`), {
             ...data,
             updatedAt: serverTimestamp(),
           });
@@ -93,7 +96,7 @@ export const studentsApi = createApi({
       async queryFn(id) {
         try {
           const uid = getCurrentUid();
-          await deleteDoc(doc(db, `users/${uid}/students/${id}`));
+          await deleteDoc(doc(db, `${users}/${uid}/${students}/${id}`));
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
