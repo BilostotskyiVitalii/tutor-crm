@@ -2,54 +2,6 @@
   "todotree": {
     "tree": [
       {
-        "key": 1757526187598,
-        "children": [
-          {
-            "key": 1758269749032,
-            "children": [],
-            "todo": {
-              "content": "lang select",
-              "id": 1758269749032,
-              "level": "default",
-              "done": false,
-              "start": 1758269749032
-            }
-          }
-        ],
-        "todo": {
-          "content": "Header",
-          "id": 1757526187598,
-          "level": "warning",
-          "done": false,
-          "start": 1757526187598
-        }
-      },
-      {
-        "key": 1757941524285,
-        "children": [
-          {
-            "key": 1758269473078,
-            "children": [],
-            "todo": {
-              "content": "add forgot password",
-              "id": 1758269473078,
-              "level": "default",
-              "done": true,
-              "start": 1758269473078,
-              "focus": false,
-              "end": 1758276075003
-            }
-          }
-        ],
-        "todo": {
-          "content": "LogIn/Logout",
-          "id": 1757941524285,
-          "level": "warning",
-          "done": false,
-          "start": 1757941524285
-        }
-      },
-      {
         "key": 1758269597724,
         "children": [
           {
@@ -84,25 +36,36 @@
         }
       },
       {
-        "key": 1758269690310,
-        "children": [],
-        "todo": {
-          "content": "Refactor",
-          "id": 1758269690310,
-          "level": "warning",
-          "done": false,
-          "start": 1758269690310
-        }
-      },
-      {
         "key": 1758809075758,
         "children": [],
         "todo": {
           "content": "Possibility to add avatars to users",
           "id": 1758809075758,
-          "level": "default",
+          "level": "success",
           "done": false,
           "start": 1758809075758
+        }
+      },
+      {
+        "key": 1759395328453,
+        "children": [],
+        "todo": {
+          "content": "Develop logic to delete students (how to keep info in lessons after delete)",
+          "id": 1759395328453,
+          "level": "warning",
+          "done": false,
+          "start": 1759395328453
+        }
+      },
+      {
+        "key": 1759395611884,
+        "children": [],
+        "todo": {
+          "content": "Improve multilang app",
+          "id": 1759395611884,
+          "level": "warning",
+          "done": false,
+          "start": 1759395611884
         }
       }
     ],
@@ -111,12 +74,12 @@
       1757941534491,
       1757941542663,
       1758116195498,
-      1757941524285,
-      1757526187598,
-      1758269597724,
       1757959242476,
       1758269473078,
-      1758048389348
+      1758048389348,
+      1758269597724,
+      1757941524285,
+      1757526187598
     ],
     "schema": "https://github.com/Saber2pr/vsc-ext-todolist/blob/master/src/api/type.ts#L3",
     "add_mode": "bottom",
@@ -145,6 +108,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1758835675641"
+    "version": "1759395690949"
   }
 }

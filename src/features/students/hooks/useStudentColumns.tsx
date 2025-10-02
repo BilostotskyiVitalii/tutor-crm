@@ -4,14 +4,19 @@ import { Avatar, Button, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
+import { StudentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { Student } from '@/features/students/types/studentTypes';
+import { type Student } from '@/features/students/types/studentTypes';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 interface Props {
   onEdit: (student: Student) => void;
   onAddLesson: (student: Student) => void;
 }
+
+const { active, inactive } = StudentStatus;
+const { students } = navigationUrls;
 
 export function useStudentColumns({ onEdit, onAddLesson }: Props) {
   const { removeStudent } = useStudentActions();
@@ -39,20 +44,19 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       width: 200,
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, student) => (
-        <Link to={`/students/${student.id}`}>{text}</Link>
+        <Link to={`${students}/${student.id}`}>{text}</Link>
       ),
     },
     {
       title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'isActive',
+      key: 'isActive',
       width: 150,
       filters: [
-        { text: 'Active', value: 'active' },
-        { text: 'Paused', value: 'paused' },
-        { text: 'Archived', value: 'archived' },
+        { text: active, value: true },
+        { text: inactive, value: false },
       ],
-      onFilter: (value, record) => record.status === value,
+      onFilter: (value, record) => record.isActive === value,
       render: (_, student) => <StatusDropdown student={student} />,
     },
     {

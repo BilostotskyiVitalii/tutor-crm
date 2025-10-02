@@ -2,41 +2,36 @@ import type { FC } from 'react';
 
 import { Dropdown, Tag } from 'antd';
 
+import { StudentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type {
-  Student,
-  StudentStatus,
-} from '@/features/students/types/studentTypes';
+import { type Student } from '@/features/students/types/studentTypes';
 
-const statusColors: Record<string, string> = {
-  active: 'green',
-  paused: 'orange',
-  archived: 'gray',
-};
+import styles from './StudentStatusDropdown.module.scss';
+
+const { active, inactive } = StudentStatus;
 
 export const StatusDropdown: FC<{ student: Student }> = ({ student }) => {
   const { updateStudentStatus } = useStudentActions();
 
   const menu = {
-    items: ['active', 'paused', 'archived'].map((s) => ({
-      key: s,
-      label: (
-        <span style={{ color: statusColors[s], fontWeight: '500' }}>
-          {s.charAt(0).toUpperCase() + s.slice(1)}
-        </span>
-      ),
+    items: Object.values(StudentStatus).map((menuItem) => ({
+      key: menuItem,
+      label: menuItem,
+      disabled:
+        (menuItem === StudentStatus.active && student.isActive) ||
+        (menuItem === StudentStatus.inactive && !student.isActive),
     })),
     onClick: ({ key }: { key: string }) =>
-      updateStudentStatus({ id: student.id, newStatus: key as StudentStatus }),
+      updateStudentStatus({
+        id: student.id,
+        newStatus: key === active,
+      }),
   };
 
   return (
     <Dropdown menu={menu} trigger={['click']}>
-      <Tag
-        style={{ cursor: 'pointer' }}
-        color={statusColors[student.status] || 'default'}
-      >
-        {student.status}
+      <Tag className={styles.tag} color={student.isActive ? 'green' : 'grey'}>
+        {student.isActive ? active : inactive}
       </Tag>
     </Dropdown>
   );

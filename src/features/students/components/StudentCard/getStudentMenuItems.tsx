@@ -2,15 +2,15 @@ import { DeleteOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Popconfirm } from 'antd';
 
-import type {
-  Student,
-  StudentStatus,
-} from '@/features/students/types/studentTypes';
+import { StudentStatus } from '@/features/students/constants/constants';
+import type { Student } from '@/features/students/types/studentTypes';
 
 type Handlers = {
   onDelete: () => void;
-  onChangeStatus: (status: StudentStatus) => void;
+  onChangeStatus: (status: boolean) => void;
 };
+
+const { active, inactive } = StudentStatus;
 
 export function getStudentMenuItems(
   student: Student,
@@ -18,22 +18,16 @@ export function getStudentMenuItems(
 ): MenuProps['items'] {
   return [
     {
-      key: 'active',
-      label: 'Active',
-      disabled: student.status === 'active',
-      onClick: () => onChangeStatus('active'),
+      key: active,
+      label: active,
+      disabled: student.isActive,
+      onClick: () => onChangeStatus(true),
     },
     {
-      key: 'paused',
-      label: 'Pause',
-      disabled: student.status === 'paused',
-      onClick: () => onChangeStatus('paused'),
-    },
-    {
-      key: 'archive',
-      label: 'Archived',
-      disabled: student.status === 'archived',
-      onClick: () => onChangeStatus('archived'),
+      key: inactive,
+      label: inactive,
+      disabled: !student.isActive,
+      onClick: () => onChangeStatus(false),
     },
     { type: 'divider' },
     {
