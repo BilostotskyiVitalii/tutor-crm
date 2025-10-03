@@ -51,7 +51,6 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
 
     form.resetFields();
 
-    // Если редактируем урок
     if (editedLessonId) {
       const lesson = lessons.find((l) => l.id === editedLessonId);
       if (lesson) {
@@ -67,7 +66,6 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       }
     }
 
-    // Если есть дефолтная группа
     if (defaultGroup) {
       const group = groups.find((g) => g.id === defaultGroup);
       if (group) {
@@ -81,7 +79,6 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       }
     }
 
-    // Если есть дефолтный студент
     if (defaultStudent) {
       const student = students.find((s) => s.id === defaultStudent);
       form.setFieldsValue({
@@ -105,13 +102,29 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     setIsLoading(true);
     try {
       const formValues: LessonFormValues = await form.validateFields();
-      const selectedStudents = students
-        .filter((s) => formValues.studentIds.includes(s.id))
-        .map((s) => ({
-          id: s.id,
-          name: s.name,
-          email: s.email,
-        }));
+
+      const lesson = editedLessonId
+        ? lessons.find((l) => l.id === editedLessonId)
+        : null;
+
+      const selectedStudents: { id: string; name: string; email: string }[] =
+        formValues.studentIds.map((id) => {
+          const studentFromList = students.find((s) => s.id === id);
+          if (studentFromList) {
+            const { id: sid, name, email } = studentFromList;
+            return { id: sid, name, email }; // <- только нужные поля
+          }
+
+          // Если студента нет в базе, берём его из урока
+          const studentFromLesson = lesson?.students.find((s) => s.id === id);
+          if (studentFromLesson) {
+            const { id: sid, name, email } = studentFromLesson;
+            return { id: sid, name, email };
+          }
+
+          // Если нигде нет, создаём "заглушку"
+          return { id, name: id, email: '' };
+        });
 
       const reqValues: LessonData = {
         students: selectedStudents,
@@ -161,6 +174,19 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     }
   }
 
+  const extraStudents =
+    editedLessonId && lessons
+      ? lessons
+          .find((l) => l.id === editedLessonId)
+          ?.students.filter((s) => !students.some((st) => st.id === s.id))
+          .map((s) => ({ label: s.name || s.id, value: s.id })) || []
+      : [];
+
+  const studentOptions = [
+    ...students.map((s) => ({ label: s.name, value: s.id })),
+    ...extraStudents,
+  ];
+
   return (
     <Modal
       title={editedLessonId ? 'Edit Lesson' : 'Create Lesson'}
@@ -180,7 +206,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
           <Select
             mode="multiple"
             placeholder="Select students"
-            options={students.map((s) => ({ label: s.name, value: s.id }))}
+            options={studentOptions}
             filterOption={(input, option) =>
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
