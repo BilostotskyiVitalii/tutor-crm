@@ -45,53 +45,76 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (isModalOpen) {
-      form.resetFields();
+    if (!isModalOpen) {
+      return;
     }
-  }, [isModalOpen, form]);
 
-  useEffect(() => {
-    const lesson = lessons.find((l) => l.id === editedLessonId);
-    if (lesson && editedLessonId) {
-      form.setFieldsValue({
-        studentIds: lesson.studentIds,
-        groupId: lesson.groupId,
-        date: [dayjs(lesson.start), dayjs(lesson.end)],
-        notes: lesson.notes || null,
-        price: lesson.price,
-      });
-      setIsGroup(!!lesson.groupId);
+    form.resetFields();
+
+    // Если редактируем урок
+    if (editedLessonId) {
+      const lesson = lessons.find((l) => l.id === editedLessonId);
+      if (lesson) {
+        form.setFieldsValue({
+          studentIds: lesson.students.map((s) => s.id),
+          groupId: lesson.groupId,
+          date: [dayjs(lesson.start), dayjs(lesson.end)],
+          notes: lesson.notes || null,
+          price: lesson.price,
+        });
+        setIsGroup(!!lesson.groupId);
+        return;
+      }
     }
-  }, [lessons, editedLessonId, form]);
 
-  useEffect(() => {
-    const group = groups.find((g) => g.id === defaultGroup);
-    if (group && defaultGroup) {
-      form.setFieldsValue({
-        studentIds: group.studentIds,
-        groupId: group.id,
-        price: group.price,
-      });
-      setIsGroup(!!group.id);
+    // Если есть дефолтная группа
+    if (defaultGroup) {
+      const group = groups.find((g) => g.id === defaultGroup);
+      if (group) {
+        form.setFieldsValue({
+          studentIds: group.studentIds,
+          groupId: group.id,
+          price: group.price,
+        });
+        setIsGroup(true);
+        return;
+      }
     }
-  }, [defaultGroup, groups, form]);
 
-  useEffect(() => {
+    // Если есть дефолтный студент
     if (defaultStudent) {
       const student = students.find((s) => s.id === defaultStudent);
       form.setFieldsValue({
         studentIds: [defaultStudent],
         price: student?.price,
       });
+      setIsGroup(false);
     }
-  }, [defaultStudent, students, form]);
+  }, [
+    isModalOpen,
+    editedLessonId,
+    defaultGroup,
+    defaultStudent,
+    lessons,
+    groups,
+    students,
+    form,
+  ]);
 
   const handleFinish = async () => {
     setIsLoading(true);
     try {
       const formValues: LessonFormValues = await form.validateFields();
+      const selectedStudents = students
+        .filter((s) => formValues.studentIds.includes(s.id))
+        .map((s) => ({
+          id: s.id,
+          name: s.name,
+          email: s.email,
+        }));
+
       const reqValues: LessonData = {
-        studentIds: formValues.studentIds,
+        students: selectedStudents,
         groupId: formValues.groupId || null,
         start: Timestamp.fromMillis(formValues.date[0].valueOf()),
         end: Timestamp.fromMillis(formValues.date[1].valueOf()),
@@ -161,6 +184,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
             filterOption={(input, option) =>
               (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
             }
+            loading={students.length === 0}
           />
         </Form.Item>
 
