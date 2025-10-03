@@ -194,7 +194,12 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     .filter((s) => s.isActive)
     .map((s) => ({ label: s.name, value: s.id }));
 
-  const studentOptions = [...activeStudents, ...extraStudents];
+  const allStudents = [...activeStudents, ...extraStudents];
+
+  const studentOptions = allStudents.filter(
+    (option, index, self) =>
+      index === self.findIndex((o) => o.value === option.value),
+  );
 
   return (
     <Modal
