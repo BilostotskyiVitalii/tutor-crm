@@ -4,7 +4,11 @@ import type { Timestamp } from 'firebase/firestore';
 export interface Lesson {
   id: string;
   groupId: string | null;
-  studentIds: string[];
+  students: {
+    id: string;
+    name: string;
+    email: string;
+  }[];
   start: number;
   end: number;
   notes: string | null;
@@ -22,6 +26,7 @@ export interface LessonData
 export interface LessonFormValues
   extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {
   date: Dayjs[];
+  studentIds: string[];
 }
 
 export type UpdateLesson = {
