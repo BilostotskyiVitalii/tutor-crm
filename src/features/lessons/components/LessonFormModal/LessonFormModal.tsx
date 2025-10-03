@@ -174,28 +174,30 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     }
   }
 
+  // Студенты из редактируемого урока (включаем даже неактивных)
   const extraStudents =
     editedLessonId && lessons
       ? lessons
           .find((l) => l.id === editedLessonId)
           ?.students.map((s) => {
-            // пытаемся найти полные данные в students
             const fullData = students.find((st) => st.id === s.id);
+            const isActive = fullData ? fullData.isActive : false;
             return {
-              label: fullData?.name || s.name || s.id,
+              label: isActive
+                ? fullData?.name || s.name || s.id
+                : `${fullData?.name || s.name || s.id} (inactive)`,
               value: s.id,
-              disabled: fullData ? !fullData.isActive : false,
             };
           }) || []
       : [];
 
-  // Фильтруем только активных студентов для обычного списка
+  // Активные студенты
   const activeStudents = students
     .filter((s) => s.isActive)
     .map((s) => ({ label: s.name, value: s.id }));
 
+  // Объединяем и убираем дубликаты
   const allStudents = [...activeStudents, ...extraStudents];
-
   const studentOptions = allStudents.filter(
     (option, index, self) =>
       index === self.findIndex((o) => o.value === option.value),
