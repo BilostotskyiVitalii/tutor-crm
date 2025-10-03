@@ -112,7 +112,7 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
           const studentFromList = students.find((s) => s.id === id);
           if (studentFromList) {
             const { id: sid, name, email } = studentFromList;
-            return { id: sid, name, email }; // <- только нужные поля
+            return { id: sid, name, email };
           }
 
           // Если студента нет в базе, берём его из урока
@@ -178,14 +178,23 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     editedLessonId && lessons
       ? lessons
           .find((l) => l.id === editedLessonId)
-          ?.students.filter((s) => !students.some((st) => st.id === s.id))
-          .map((s) => ({ label: s.name || s.id, value: s.id })) || []
+          ?.students.map((s) => {
+            // пытаемся найти полные данные в students
+            const fullData = students.find((st) => st.id === s.id);
+            return {
+              label: fullData?.name || s.name || s.id,
+              value: s.id,
+              disabled: fullData ? !fullData.isActive : false,
+            };
+          }) || []
       : [];
 
-  const studentOptions = [
-    ...students.map((s) => ({ label: s.name, value: s.id })),
-    ...extraStudents,
-  ];
+  // Фильтруем только активных студентов для обычного списка
+  const activeStudents = students
+    .filter((s) => s.isActive)
+    .map((s) => ({ label: s.name, value: s.id }));
+
+  const studentOptions = [...activeStudents, ...extraStudents];
 
   return (
     <Modal
