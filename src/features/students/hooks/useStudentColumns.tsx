@@ -30,7 +30,11 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       render: (avatarUrl: string | null, student) => (
         <Avatar
           src={avatarUrl ?? undefined}
-          className={`avatar ${getAvatarColorClass(student.name)}`}
+          className={`avatar ${
+            student.isActive
+              ? getAvatarColorClass(student.name)
+              : 'avatar-inactive'
+          }`}
           size={50}
         >
           {!avatarUrl && student.name?.[0]}
@@ -83,7 +87,11 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
           <Button size="small" onClick={() => onEdit(student.id)}>
             Edit
           </Button>{' '}
-          <Button size="small" onClick={() => onAddLesson(student.id)}>
+          <Button
+            size="small"
+            onClick={() => onAddLesson(student.id)}
+            disabled={!student.isActive}
+          >
             Add Lesson
           </Button>{' '}
           <Popconfirm
