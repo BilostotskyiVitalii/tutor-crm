@@ -52,10 +52,40 @@ export function useGroupActions() {
     [deleteGroup, handleError],
   );
 
+  const removeStudentFromGroups = useCallback(
+    async (
+      studentId: string,
+      allGroups: { id: string; studentIds?: string[] }[],
+    ) => {
+      try {
+        const updatePromises = allGroups
+          .map((group) => {
+            if (group.studentIds?.includes(studentId)) {
+              return updateGroup({
+                id: group.id,
+                data: {
+                  ...group,
+                  studentIds: group.studentIds.filter((id) => id !== studentId),
+                },
+              }).unwrap();
+            }
+          })
+          .filter(Boolean) as Promise<unknown>[];
+
+        await Promise.all(updatePromises);
+        notification.success({ message: 'Student removed from all groups!' });
+      } catch (err) {
+        handleError(err, 'Failed to remove student from groups');
+      }
+    },
+    [updateGroup, handleError],
+  );
+
   return {
     createGroup,
     updateGroupData,
     removeGroup,
+    removeStudentFromGroups,
     isDeleting,
   };
 }
