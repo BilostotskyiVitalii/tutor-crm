@@ -60,7 +60,7 @@ const GroupForm: FC<GroupFormProps> = ({
       const formValues: GroupData = await form.validateFields();
       const normalizedFormValues = {
         ...formValues,
-        notes: formValues.notes?.trim() === '' ? null : formValues.notes,
+        notes: formValues.notes?.trim() ? formValues.notes.trim() : null,
       };
 
       if (editedGroupId) {
