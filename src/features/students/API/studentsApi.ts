@@ -24,7 +24,7 @@ const { students, users } = endpointsURL;
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Students', 'Groups'],
+  tagTypes: ['Students'],
   endpoints: (builder) => ({
     getStudents: builder.query<Student[], void>({
       async queryFn() {
@@ -92,60 +92,17 @@ export const studentsApi = createApi({
       invalidatesTags: (_result, _error, { id }) => [{ type: 'Students', id }],
     }),
 
-    // deleteStudent: builder.mutation<void, string>({
-    //   async queryFn(id) {
-    //     try {
-    //       const uid = getCurrentUid();
-    //       await deleteDoc(doc(db, `${users}/${uid}/${students}/${id}`));
-    //       return { data: undefined };
-    //     } catch (err) {
-    //       return { error: { message: (err as Error).message } };
-    //     }
-    //   },
-    //   invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
-    // }),
     deleteStudent: builder.mutation<void, string>({
       async queryFn(id) {
         try {
           const uid = getCurrentUid();
-
-          // 1. Получаем все группы
-          const groupsSnapshot = await getDocs(
-            collection(db, `${users}/${uid}/groups`),
-          );
-
-          // 2. Обновляем группы, убирая студента
-          const batchUpdates: Promise<void>[] = [];
-          groupsSnapshot.docs.forEach((groupDoc) => {
-            const groupData = groupDoc.data() as { studentIds?: string[] };
-            if (groupData.studentIds?.includes(id)) {
-              const updatedIds = groupData.studentIds.filter(
-                (sId) => sId !== id,
-              );
-              batchUpdates.push(
-                updateDoc(doc(db, `${users}/${uid}/groups/${groupDoc.id}`), {
-                  studentIds: updatedIds,
-                  updatedAt: serverTimestamp(),
-                }),
-              );
-            }
-          });
-
-          await Promise.all(batchUpdates);
-
-          // 3. Удаляем студента
           await deleteDoc(doc(db, `${users}/${uid}/${students}/${id}`));
-
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
       },
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'Students', id },
-        { type: 'Students', id: 'LIST' },
-        { type: 'Groups', id: 'LIST' }, // обновляем список групп
-      ],
+      invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
   }),
 });

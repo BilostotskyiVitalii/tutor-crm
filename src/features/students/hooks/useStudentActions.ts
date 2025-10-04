@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 
 import { notification } from 'antd';
 
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import {
   useAddStudentMutation,
   useDeleteStudentMutation,
@@ -14,7 +16,9 @@ export function useStudentActions() {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
   const [addStudent] = useAddStudentMutation();
+  const { removeStudentFromGroups } = useGroupActions();
   const { handleError } = useErrorHandler();
+  const { data: groups = [] } = useGetGroupsQuery();
 
   const createStudent = useCallback(
     async (data: StudentData) => {
@@ -43,13 +47,14 @@ export function useStudentActions() {
   const removeStudent = useCallback(
     async (id: string) => {
       try {
+        await removeStudentFromGroups(id, groups);
         await deleteStudent(id).unwrap();
         notification.success({ message: 'Student deleted!' });
       } catch (err) {
         handleError(err, 'Failed to delete student');
       }
     },
-    [deleteStudent, handleError],
+    [deleteStudent, handleError, removeStudentFromGroups, groups],
   );
 
   const updateStudentStatus = useCallback(
