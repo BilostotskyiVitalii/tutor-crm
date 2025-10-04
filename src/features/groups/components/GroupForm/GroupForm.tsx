@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 
 import { Form, Input, InputNumber, Modal, Select } from 'antd';
 
@@ -27,16 +27,35 @@ const GroupForm: FC<GroupFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { handleError } = useErrorHandler();
 
+  const group = useMemo(
+    () => (editedGroupId ? groups.find((g) => g.id === editedGroupId) : null),
+    [editedGroupId, groups],
+  );
+
+  // вычисляем список студентов (активные + уже выбранные неактивные)
+  const studentOptions = useMemo(() => {
+    const selectedIds = group?.studentIds ?? [];
+
+    return students
+      .filter((s) => s.isActive || selectedIds.includes(s.id))
+      .map((s) => ({
+        label: (
+          <span style={{ color: s.isActive ? 'inherit' : '#999' }}>
+            {s.name}
+            {!s.isActive && ' (inactive)'}
+          </span>
+        ),
+        value: s.id,
+      }));
+  }, [students, group]);
+
   useEffect(() => {
-    if (isModalOpen && editedGroupId) {
-      const group = groups.find((g) => g.id === editedGroupId);
-      form.setFieldsValue({
-        ...group,
-      });
+    if (isModalOpen && group) {
+      form.setFieldsValue(group);
     } else {
       form.resetFields();
     }
-  }, [isModalOpen, editedGroupId, groups, form]);
+  }, [isModalOpen, group, form]);
 
   const handleCancel = () => {
     onClose();
@@ -89,7 +108,7 @@ const GroupForm: FC<GroupFormProps> = ({
           <Select
             mode="multiple"
             placeholder="Select students"
-            options={students.map((s) => ({ label: s.name, value: s.id }))}
+            options={studentOptions}
           />
         </Form.Item>
 
