@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { EditOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Card, Dropdown } from 'antd';
 
-import { getStudentMenuItems } from '@/features/students/components/StudentCard/getStudentMenuItems';
 import { StudentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
+import { getStudentMenuItems } from '@/features/students/utils/getStudentMenuItems';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
