@@ -2,8 +2,8 @@ import { type FC } from 'react';
 
 import { Form, Modal } from 'antd';
 
-import StudentFormFields from '@/features/students/components/StudentForm/StudentFormFields';
-import { useStudentForm } from '@/features/students/components/StudentForm/useStudentForm';
+import StudentFormFields from '@/features/students/components/StudentFormFields/StudentFormFields';
+import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import type { StudentFormProps } from '@/features/students/types/studentTypes';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader';
 
@@ -13,11 +13,11 @@ const StudentForm: FC<StudentFormProps> = (props) => {
 
   return (
     <Modal
-      title={props.editedStudent ? 'Update student' : 'New student'}
+      title={props.editedStudentId ? 'Update student' : 'New student'}
       open={props.isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-      okText={props.editedStudent ? 'Update' : 'Create'}
+      okText={props.editedStudentId ? 'Update' : 'Create'}
       cancelText="Cancel"
       confirmLoading={isLoading}
     >

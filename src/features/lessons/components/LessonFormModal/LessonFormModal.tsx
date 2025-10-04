@@ -13,7 +13,7 @@ import type {
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
-import { studentFormRules } from '@/features/students/components/StudentForm/validationFormFields';
+import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
