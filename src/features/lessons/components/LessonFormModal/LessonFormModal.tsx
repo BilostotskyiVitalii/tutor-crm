@@ -1,20 +1,13 @@
 import { type FC, useEffect, useState } from 'react';
 
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import {
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Select,
-  Switch,
-} from 'antd';
+import { DatePicker, Form, Input, InputNumber, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
+import LessonFormGroupSelect from '@/features/lessons/components/LessonFormModal/LessonFormGroupSelect';
+import UsersSelect from '@/features/lessons/components/LessonFormModal/LessonFormUsersSelect';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type {
   LessonData,
@@ -154,65 +147,6 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     form.resetFields();
   }
 
-  function selectGroupHandler(groupId: string) {
-    const group = groups.find((g) => g.id === groupId);
-    if (group) {
-      form.setFieldsValue({
-        studentIds: group.studentIds,
-      });
-    }
-  }
-
-  function onGroupSwitch(checked: boolean) {
-    setIsGroup(checked);
-
-    if (!checked) {
-      form.setFieldsValue({
-        groupId: null,
-        studentIds: [],
-      });
-    }
-  }
-
-  // Студенты из редактируемого урока (включаем даже неактивных)
-  const extraStudents =
-    editedLessonId && lessons
-      ? lessons
-          .find((l) => l.id === editedLessonId)
-          ?.students.map((s) => {
-            const fullData = students.find((st) => st.id === s.id);
-
-            const name = fullData?.name || s.name || s.id;
-
-            let label = name;
-
-            if (!fullData) {
-              // студента нет в глобальном списке → удалён
-              label += ' (deleted)';
-            } else if (!fullData.isActive) {
-              // студент есть, но неактивен
-              label += ' (inactive)';
-            }
-
-            return {
-              label,
-              value: s.id,
-            };
-          }) || []
-      : [];
-
-  // Активные студенты
-  const activeStudents = students
-    .filter((s) => s.isActive)
-    .map((s) => ({ label: s.name, value: s.id }));
-
-  // Объединяем и убираем дубликаты
-  const allStudents = [...activeStudents, ...extraStudents];
-  const studentOptions = allStudents.filter(
-    (option, index, self) =>
-      index === self.findIndex((o) => o.value === option.value),
-  );
-
   return (
     <Modal
       title={editedLessonId ? 'Edit Lesson' : 'Create Lesson'}
@@ -224,44 +158,13 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       confirmLoading={isLoading}
     >
       <Form form={form} layout="vertical">
-        <Form.Item
-          name="studentIds"
-          label="Students:"
-          rules={[{ required: true }]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select students"
-            options={studentOptions}
-            filterOption={(input, option) =>
-              (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            loading={students.length === 0}
-          />
-        </Form.Item>
+        <UsersSelect editedLessonId={editedLessonId} />
 
-        <Form.Item
-          name="groupId"
-          label={
-            <div>
-              <span>Group: </span>
-              <Switch
-                size="small"
-                checked={isGroup}
-                onChange={onGroupSwitch}
-                checkedChildren={<CheckOutlined />}
-                unCheckedChildren={<CloseOutlined />}
-              />
-            </div>
-          }
-        >
-          <Select
-            disabled={!isGroup}
-            placeholder="Select group"
-            options={groups.map((g) => ({ label: g.title, value: g.id }))}
-            onChange={selectGroupHandler}
-          />
-        </Form.Item>
+        <LessonFormGroupSelect
+          isGroup={isGroup}
+          setIsGroup={setIsGroup}
+          form={form}
+        />
 
         <Form.Item name="date" label="Date:" rules={[{ required: true }]}>
           <RangePicker
