@@ -5,8 +5,7 @@ import {
   type Event as RBCEvent,
 } from 'react-big-calendar';
 
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Space, Spin } from 'antd';
+import { Flex, Space, Spin } from 'antd';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
@@ -50,7 +49,6 @@ const SchedulePage: FC = () => {
 
   const closeModal = () => setModalState(null);
 
-  // ---- перетворення уроків у події календаря ----
   const calendarEvents: LessonEvent[] = useMemo(() => {
     return (
       lessons?.map((lesson) => ({
@@ -66,7 +64,6 @@ const SchedulePage: FC = () => {
     );
   }, [lessons]);
 
-  // ---- кольори для подій ----
   const eventPropGetter = (event: LessonEvent) => {
     const isGroup = Boolean(event.resource.groupId);
     return {
@@ -80,15 +77,7 @@ const SchedulePage: FC = () => {
     <Flex vertical gap="large">
       {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
       {isLoading && <Spin size="large" />}
-      <Space direction="vertical" size="large">
-        {/* <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => openLessonModal()}
-        >
-          New lesson
-        </Button> */}
-      </Space>
+      <Space direction="vertical" size="large" />
 
       <div className={styles.calendarContainer}>
         <Calendar<LessonEvent>
