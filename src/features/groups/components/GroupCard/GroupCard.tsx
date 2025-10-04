@@ -55,7 +55,7 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
     >
       <div className={styles.cardContent}>
         <Avatar.Group
-          size={80}
+          size={65}
           max={{
             count: 3,
           }}
@@ -74,9 +74,10 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
 
         <div className={styles.groupInfo}>
           <Link to={`${navigationUrls.groups}/${group.id}`}>
-            <h3 className={styles.groupTitle}>{group.title}</h3>
+            <h2 className={styles.groupTitle}>{group.title}</h2>
           </Link>
-          <p className={styles.groupDescription}>{group.notes}</p>
+          <p>{group.notes}</p>
+          <p className={styles.price}>Price: {group.price}</p>
         </div>
       </div>
     </Card>

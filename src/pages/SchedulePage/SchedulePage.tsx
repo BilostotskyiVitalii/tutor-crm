@@ -22,7 +22,6 @@ const SchedulePage: FC = () => {
     <>
       <Flex vertical gap="large">
         <Space direction="vertical" size="large">
-          <h1>Schedule</h1>
           <Button
             type="primary"
             icon={<PlusOutlined />}

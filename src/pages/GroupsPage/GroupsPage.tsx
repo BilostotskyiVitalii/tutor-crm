@@ -26,7 +26,6 @@ const GroupsPage = () => {
   return (
     <Flex vertical gap="large">
       <Space direction="vertical" size="large">
-        <h1>Groups</h1>
         <Button
           type="primary"
           icon={<PlusOutlined />}
