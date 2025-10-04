@@ -32,12 +32,17 @@ const GroupForm: FC<GroupFormProps> = ({
     [editedGroupId, groups],
   );
 
-  // вычисляем список студентов (активные + уже выбранные неактивные)
+  // вычисляем список студентов (активные + уже выбранные существующие студенты)
   const studentOptions = useMemo(() => {
     const selectedIds = group?.studentIds ?? [];
 
+    // оставляем только те id, которые реально существуют
+    const validSelectedIds = selectedIds.filter((id) =>
+      students.some((s) => s.id === id),
+    );
+
     return students
-      .filter((s) => s.isActive || selectedIds.includes(s.id))
+      .filter((s) => s.isActive || validSelectedIds.includes(s.id))
       .map((s) => ({
         label: (
           <span style={{ color: s.isActive ? 'inherit' : '#999' }}>
@@ -49,13 +54,17 @@ const GroupForm: FC<GroupFormProps> = ({
       }));
   }, [students, group]);
 
+  // при открытии модалки устанавливаем корректные значения
   useEffect(() => {
     if (isModalOpen && group) {
-      form.setFieldsValue(group);
+      const validStudentIds = (group.studentIds ?? []).filter((id) =>
+        students.some((s) => s.id === id),
+      );
+      form.setFieldsValue({ ...group, studentIds: validStudentIds });
     } else {
       form.resetFields();
     }
-  }, [isModalOpen, group, form]);
+  }, [isModalOpen, group, students, form]);
 
   const handleCancel = () => {
     onClose();
