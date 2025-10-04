@@ -60,6 +60,7 @@ export function useStudentActions() {
   const updateStudentStatus = useCallback(
     async ({ id, newStatus }: { id: string; newStatus: boolean }) => {
       try {
+        await removeStudentFromGroups(id, groups);
         await updateStudent({
           id,
           data: { isActive: newStatus },
@@ -69,7 +70,7 @@ export function useStudentActions() {
         handleError(err, 'Failed to delete student status');
       }
     },
-    [updateStudent, handleError],
+    [updateStudent, handleError, removeStudentFromGroups, groups],
   );
 
   return {

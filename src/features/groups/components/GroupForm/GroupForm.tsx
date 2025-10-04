@@ -32,35 +32,18 @@ const GroupForm: FC<GroupFormProps> = ({
     [editedGroupId, groups],
   );
 
-  // вычисляем список студентов (активные + уже выбранные существующие студенты)
   const studentOptions = useMemo(() => {
-    const selectedIds = group?.studentIds ?? [];
-
-    // оставляем только те id, которые реально существуют
-    const validSelectedIds = selectedIds.filter((id) =>
-      students.some((s) => s.id === id),
-    );
-
     return students
-      .filter((s) => s.isActive || validSelectedIds.includes(s.id))
+      .filter((s) => s.isActive)
       .map((s) => ({
-        label: (
-          <span style={{ color: s.isActive ? 'inherit' : '#999' }}>
-            {s.name}
-            {!s.isActive && ' (inactive)'}
-          </span>
-        ),
+        label: s.name,
         value: s.id,
       }));
-  }, [students, group]);
+  }, [students]);
 
-  // при открытии модалки устанавливаем корректные значения
   useEffect(() => {
     if (isModalOpen && group) {
-      const validStudentIds = (group.studentIds ?? []).filter((id) =>
-        students.some((s) => s.id === id),
-      );
-      form.setFieldsValue({ ...group, studentIds: validStudentIds });
+      form.setFieldsValue({ ...group, notes: group?.notes ?? null });
     } else {
       form.resetFields();
     }
@@ -75,11 +58,15 @@ const GroupForm: FC<GroupFormProps> = ({
     try {
       setIsLoading(true);
       const formValues: GroupData = await form.validateFields();
+      const normalizedFormValues = {
+        ...formValues,
+        notes: formValues.notes?.trim() === '' ? null : formValues.notes,
+      };
 
       if (editedGroupId) {
-        await updateGroupData(editedGroupId, formValues);
+        await updateGroupData(editedGroupId, normalizedFormValues);
       } else {
-        await createGroup(formValues);
+        await createGroup(normalizedFormValues);
       }
 
       handleCancel();
