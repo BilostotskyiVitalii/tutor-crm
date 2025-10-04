@@ -29,9 +29,6 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
   async function removeHandler() {
     try {
       await removeGroup(group.id);
-      notification.success({
-        message: 'Group deleted!',
-      });
     } catch {
       notification.error({
         message: 'Failed to delete group',
