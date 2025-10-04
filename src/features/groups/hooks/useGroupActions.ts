@@ -73,7 +73,9 @@ export function useGroupActions() {
           .filter(Boolean) as Promise<unknown>[];
 
         await Promise.all(updatePromises);
-        notification.success({ message: 'Student removed from all groups!' });
+        if (updatePromises.length !== 0) {
+          notification.success({ message: 'Student removed from all groups!' });
+        }
       } catch (err) {
         handleError(err, 'Failed to remove student from groups');
       }
