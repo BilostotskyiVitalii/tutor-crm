@@ -1,12 +1,44 @@
-import { type FC, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
+import {
+  Calendar,
+  dateFnsLocalizer,
+  type Event as RBCEvent,
+} from 'react-big-calendar';
 
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Flex, Space, Spin } from 'antd';
+import { format, getDay, parse, startOfWeek } from 'date-fns';
+import { enUS } from 'date-fns/locale/en-US';
+import { ru } from 'date-fns/locale/ru';
+import { uk } from 'date-fns/locale/uk';
 
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
-import LessonCard from '@/features/lessons/components/LessonCard/LessonCard';
 import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
-import type { ModalState } from '@/features/lessons/types/lessonTypes';
+import type { Lesson, ModalState } from '@/features/lessons/types/lessonTypes';
+
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import styles from './SchedulePage.module.scss';
+
+const locales = {
+  enUS,
+  uk,
+  ru,
+};
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
+  getDay,
+  locales,
+});
+
+interface LessonEvent extends RBCEvent {
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+  resource: Lesson;
+}
 
 const SchedulePage: FC = () => {
   const { data: lessons, isLoading, isError } = useGetLessonsQuery();
@@ -18,31 +50,57 @@ const SchedulePage: FC = () => {
 
   const closeModal = () => setModalState(null);
 
-  return (
-    <>
-      <Flex vertical gap="large">
-        <Space direction="vertical" size="large">
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={() => openLessonModal()}
-          >
-            New lesson
-          </Button>
-        </Space>
+  // ---- перетворення уроків у події календаря ----
+  const calendarEvents: LessonEvent[] = useMemo(() => {
+    return (
+      lessons?.map((lesson) => ({
+        id: lesson.id,
+        title:
+          lesson.groupId && lesson.groupId !== ''
+            ? `Group: ${lesson.groupId}`
+            : lesson.students.map((s) => s.name).join(', ') || 'Lesson',
+        start: new Date(lesson.start),
+        end: new Date(lesson.end),
+        resource: lesson,
+      })) || []
+    );
+  }, [lessons]);
 
-        <Flex wrap gap="large">
-          {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
-          {isLoading && <Spin size="large" />}
-          {lessons?.map((lesson) => (
-            <LessonCard
-              key={lesson.id}
-              lesson={lesson}
-              onEdit={() => openLessonModal(lesson.id)}
-            />
-          ))}
-        </Flex>
-      </Flex>
+  // ---- кольори для подій ----
+  const eventPropGetter = (event: LessonEvent) => {
+    const isGroup = Boolean(event.resource.groupId);
+    return {
+      className: `${styles.event} ${
+        isGroup ? styles.groupEvent : styles.individualEvent
+      }`,
+    };
+  };
+
+  return (
+    <Flex vertical gap="large">
+      {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
+      {isLoading && <Spin size="large" />}
+      <Space direction="vertical" size="large">
+        {/* <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          onClick={() => openLessonModal()}
+        >
+          New lesson
+        </Button> */}
+      </Space>
+
+      <div className={styles.calendarContainer}>
+        <Calendar<LessonEvent>
+          localizer={localizer}
+          events={calendarEvents}
+          startAccessor="start"
+          endAccessor="end"
+          onSelectEvent={(event) => openLessonModal(event.id)}
+          eventPropGetter={eventPropGetter}
+        />
+      </div>
+
       {modalState?.type === 'lesson' && (
         <LessonFormModal
           isModalOpen
@@ -50,7 +108,7 @@ const SchedulePage: FC = () => {
           editedLessonId={modalState?.lessonId}
         />
       )}
-    </>
+    </Flex>
   );
 };
 
