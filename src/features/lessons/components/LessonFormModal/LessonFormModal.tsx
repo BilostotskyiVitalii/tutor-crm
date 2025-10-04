@@ -181,11 +181,21 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
           .find((l) => l.id === editedLessonId)
           ?.students.map((s) => {
             const fullData = students.find((st) => st.id === s.id);
-            const isActive = fullData ? fullData.isActive : false;
+
+            const name = fullData?.name || s.name || s.id;
+
+            let label = name;
+
+            if (!fullData) {
+              // студента нет в глобальном списке → удалён
+              label += ' (deleted)';
+            } else if (!fullData.isActive) {
+              // студент есть, но неактивен
+              label += ' (inactive)';
+            }
+
             return {
-              label: isActive
-                ? fullData?.name || s.name || s.id
-                : `${fullData?.name || s.name || s.id} (inactive)`,
+              label,
               value: s.id,
             };
           }) || []
