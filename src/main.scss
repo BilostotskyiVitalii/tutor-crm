@@ -49,5 +49,10 @@ img {
 }
 
 .rbc-timeslot-group {
-  min-height: 50px !important; /* стандарт — ~20px */
+  min-height: 50px !important;
+}
+
+.rbc-allday-cell,
+.rbc-allday-events {
+  display: none;
 }

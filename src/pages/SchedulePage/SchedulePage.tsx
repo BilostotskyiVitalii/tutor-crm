@@ -1,16 +1,18 @@
 import { type FC, useMemo, useState } from 'react';
 import {
-  Calendar,
+  Calendar as RBC,
   dateFnsLocalizer,
   type Event as RBCEvent,
 } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
-import { Flex, Space, Spin } from 'antd';
+import { Calendar as AntdCalendar, Flex, Spin, theme } from 'antd';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
 import { uk } from 'date-fns/locale/uk';
+import type { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
@@ -30,11 +32,7 @@ type LessonEvent = RBCEvent & {
   end: Date;
 };
 
-const locales = {
-  enUS,
-  uk,
-  ru,
-};
+const locales = { enUS, uk, ru };
 const localizer = dateFnsLocalizer({
   format,
   parse,
@@ -43,18 +41,18 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const DnDCalendar = withDragAndDrop(Calendar);
+const DnDCalendar = withDragAndDrop(RBC);
 
 const SchedulePage: FC = () => {
   const { data: lessons, isLoading, isError } = useGetLessonsQuery();
   const { data: groups } = useGetGroupsQuery();
   const [modalState, setModalState] = useState<ModalState>(null);
   const { updateLessonData } = useLessonActions();
+  const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
 
   const openLessonModal = (lessonId: string | null = null) => {
     setModalState({ type: 'lesson', lessonId });
   };
-
   const closeModal = () => setModalState(null);
 
   const calendarEvents: LessonEvent[] = useMemo(() => {
@@ -64,7 +62,6 @@ const SchedulePage: FC = () => {
 
     return lessons.map((lesson) => {
       const group = groups?.find((g) => g.id === lesson.groupId);
-
       return {
         id: lesson.id,
         title: group
@@ -77,7 +74,7 @@ const SchedulePage: FC = () => {
     });
   }, [lessons, groups]);
 
-  function handleEventDrop({
+  const handleEventDrop = ({
     event,
     start,
     end,
@@ -85,40 +82,63 @@ const SchedulePage: FC = () => {
     event: object;
     start: string | Date;
     end: string | Date;
-  }) {
+  }) => {
     const e = event as LessonEvent;
-
     updateLessonData(e.id, {
       start: Timestamp.fromDate(new Date(start)),
       end: Timestamp.fromDate(new Date(end)),
     });
-  }
+  };
+
+  const { token } = theme.useToken();
+  const wrapperStyle: React.CSSProperties = {
+    width: 300,
+    border: `1px solid ${token.colorBorderSecondary}`,
+    borderRadius: token.borderRadiusLG,
+    marginBottom: 16,
+  };
 
   return (
     <Flex vertical gap="large">
       {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
       {isLoading && <Spin size="large" />}
-      <Space direction="vertical" size="large" />
 
-      <div className={styles.calendarContainer}>
-        <DnDCalendar
-          localizer={localizer}
-          events={calendarEvents}
-          startAccessor={(event) => (event as LessonEvent).start}
-          endAccessor={(event) => (event as LessonEvent).end}
-          onSelectEvent={(event) => openLessonModal((event as LessonEvent).id)}
-          eventPropGetter={(event) => {
-            const e = event as LessonEvent;
-            const isGroup = Boolean(e.resource.groupId);
-            return {
-              className: `${styles.event} ${
-                isGroup ? styles.groupEvent : styles.individualEvent
-              }`,
-            };
-          }}
-          onEventDrop={handleEventDrop}
-        />
-      </div>
+      <Flex align="start" gap={24}>
+        <div style={wrapperStyle}>
+          <AntdCalendar
+            fullscreen={false}
+            value={currentDate}
+            onSelect={(date: Dayjs) => setCurrentDate(date)}
+            onPanelChange={(date: Dayjs) => setCurrentDate(date)}
+          />
+        </div>
+
+        <div className={styles.calendarContainer}>
+          <DnDCalendar
+            localizer={localizer}
+            events={calendarEvents}
+            defaultView="week"
+            date={currentDate.toDate()}
+            onNavigate={(date) => setCurrentDate(dayjs(date))}
+            scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
+            startAccessor={(event) => (event as LessonEvent).start}
+            endAccessor={(event) => (event as LessonEvent).end}
+            onSelectEvent={(event) =>
+              openLessonModal((event as LessonEvent).id)
+            }
+            eventPropGetter={(event) => {
+              const e = event as LessonEvent;
+              const isGroup = Boolean(e.resource.groupId);
+              return {
+                className: `${styles.event} ${
+                  isGroup ? styles.groupEvent : styles.individualEvent
+                }`,
+              };
+            }}
+            onEventDrop={handleEventDrop}
+          />
+        </div>
+      </Flex>
 
       {modalState?.type === 'lesson' && (
         <LessonFormModal
