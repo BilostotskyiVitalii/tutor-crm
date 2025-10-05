@@ -29,7 +29,8 @@ export function useLessonActions() {
   );
 
   const updateLessonData = useCallback(
-    async (id: string, data: LessonData) => {
+    async (id: string, data: Partial<LessonData>) => {
+      // console.log(id, data);
       try {
         await updateLesson({ id, data }).unwrap();
         notification.success({ message: 'Lesson updated!' });

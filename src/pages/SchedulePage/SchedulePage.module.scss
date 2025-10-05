@@ -5,14 +5,14 @@
 .event {
   color: #fff;
   border-radius: 8px;
-  border: none;
+  border: none !important;
   padding: 4px 8px;
 }
 
 .groupEvent {
-  background-color: #52c41a; // зелений
+  background-color: #52c41a;
 }
 
 .individualEvent {
-  background-color: #1677ff; // синій
+  background-color: #1677ff;
 }

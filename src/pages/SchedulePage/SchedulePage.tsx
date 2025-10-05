@@ -4,19 +4,31 @@ import {
   dateFnsLocalizer,
   type Event as RBCEvent,
 } from 'react-big-calendar';
+import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
 import { Flex, Space, Spin } from 'antd';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
 import { uk } from 'date-fns/locale/uk';
+import { Timestamp } from 'firebase/firestore';
 
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
+import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type { Lesson, ModalState } from '@/features/lessons/types/lessonTypes';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './SchedulePage.module.scss';
+
+type LessonEvent = RBCEvent & {
+  resource: Lesson;
+  id: string;
+  title: string;
+  start: Date;
+  end: Date;
+};
 
 const locales = {
   enUS,
@@ -31,17 +43,13 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface LessonEvent extends RBCEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  resource: Lesson;
-}
+const DnDCalendar = withDragAndDrop(Calendar);
 
 const SchedulePage: FC = () => {
   const { data: lessons, isLoading, isError } = useGetLessonsQuery();
+  const { data: groups } = useGetGroupsQuery();
   const [modalState, setModalState] = useState<ModalState>(null);
+  const { updateLessonData } = useLessonActions();
 
   const openLessonModal = (lessonId: string | null = null) => {
     setModalState({ type: 'lesson', lessonId });
@@ -50,28 +58,41 @@ const SchedulePage: FC = () => {
   const closeModal = () => setModalState(null);
 
   const calendarEvents: LessonEvent[] = useMemo(() => {
-    return (
-      lessons?.map((lesson) => ({
+    if (!lessons) {
+      return [];
+    }
+
+    return lessons.map((lesson) => {
+      const group = groups?.find((g) => g.id === lesson.groupId);
+
+      return {
         id: lesson.id,
-        title:
-          lesson.groupId && lesson.groupId !== ''
-            ? `Group: ${lesson.groupId}`
-            : lesson.students.map((s) => s.name).join(', ') || 'Lesson',
+        title: group
+          ? group.title
+          : lesson.students.map((s) => s.name).join(', '),
         start: new Date(lesson.start),
         end: new Date(lesson.end),
         resource: lesson,
-      })) || []
-    );
-  }, [lessons]);
+      };
+    });
+  }, [lessons, groups]);
 
-  const eventPropGetter = (event: LessonEvent) => {
-    const isGroup = Boolean(event.resource.groupId);
-    return {
-      className: `${styles.event} ${
-        isGroup ? styles.groupEvent : styles.individualEvent
-      }`,
-    };
-  };
+  function handleEventDrop({
+    event,
+    start,
+    end,
+  }: {
+    event: object;
+    start: string | Date;
+    end: string | Date;
+  }) {
+    const e = event as LessonEvent;
+
+    updateLessonData(e.id, {
+      start: Timestamp.fromDate(new Date(start)),
+      end: Timestamp.fromDate(new Date(end)),
+    });
+  }
 
   return (
     <Flex vertical gap="large">
@@ -80,13 +101,22 @@ const SchedulePage: FC = () => {
       <Space direction="vertical" size="large" />
 
       <div className={styles.calendarContainer}>
-        <Calendar<LessonEvent>
+        <DnDCalendar
           localizer={localizer}
           events={calendarEvents}
-          startAccessor="start"
-          endAccessor="end"
-          onSelectEvent={(event) => openLessonModal(event.id)}
-          eventPropGetter={eventPropGetter}
+          startAccessor={(event) => (event as LessonEvent).start}
+          endAccessor={(event) => (event as LessonEvent).end}
+          onSelectEvent={(event) => openLessonModal((event as LessonEvent).id)}
+          eventPropGetter={(event) => {
+            const e = event as LessonEvent;
+            const isGroup = Boolean(e.resource.groupId);
+            return {
+              className: `${styles.event} ${
+                isGroup ? styles.groupEvent : styles.individualEvent
+              }`,
+            };
+          }}
+          onEventDrop={handleEventDrop}
         />
       </div>
 
