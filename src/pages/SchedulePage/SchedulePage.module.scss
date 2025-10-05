@@ -1,18 +1,29 @@
 .calendarContainer {
   height: 70vh;
+  flex: 1;
 }
 
 .event {
-  color: #fff;
-  border-radius: 8px;
-  border: none !important;
   padding: 4px 8px;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 500;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+  cursor: pointer;
 }
 
 .groupEvent {
-  background-color: #52c41a;
+  background-color: #52c41a !important;
 }
 
 .individualEvent {
-  background-color: #1677ff;
+  background-color: #1677ff !important;
+}
+
+.event:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: scale(1.03);
 }
