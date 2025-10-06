@@ -1,3 +1,5 @@
+@use '@/shared/styles/variables.scss' as *;
+
 .container {
   position: absolute;
   top: 0;
@@ -7,6 +9,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.7);
-  z-index: 9999;
 }

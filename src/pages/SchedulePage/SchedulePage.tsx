@@ -6,7 +6,7 @@ import {
 } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
-import { Calendar as AntdCalendar, Flex, Spin, theme } from 'antd';
+import { Calendar as AntdCalendar, Flex, Spin } from 'antd';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
@@ -90,21 +90,13 @@ const SchedulePage: FC = () => {
     });
   };
 
-  const { token } = theme.useToken();
-  const wrapperStyle: React.CSSProperties = {
-    width: 300,
-    border: `1px solid ${token.colorBorderSecondary}`,
-    borderRadius: token.borderRadiusLG,
-    marginBottom: 16,
-  };
-
   return (
     <Flex vertical gap="large">
       {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
       {isLoading && <Spin size="large" />}
 
-      <Flex align="start" gap={24}>
-        <div style={wrapperStyle}>
+      <Flex className={styles.calendarWrapper}>
+        <div className={styles.miniCalendar}>
           <AntdCalendar
             fullscreen={false}
             value={currentDate}
@@ -130,8 +122,8 @@ const SchedulePage: FC = () => {
               const e = event as LessonEvent;
               const isGroup = Boolean(e.resource.groupId);
               return {
-                className: `${styles.event} ${
-                  isGroup ? styles.groupEvent : styles.individualEvent
+                className: `${styles.lesson} ${
+                  isGroup ? styles.groupLesson : styles.indivLesson
                 }`,
               };
             }}

@@ -32,16 +32,14 @@ const StudentsPage: FC = () => {
   });
 
   return (
-    <>
-      <div style={{ marginBottom: 16 }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => openStudentModal()}
-        >
-          New student
-        </Button>
-      </div>
+    <Flex className={styles.wrapper}>
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => openStudentModal()}
+      >
+        New student
+      </Button>
 
       {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
       {isLoading && <Spin size="large" />}
@@ -90,7 +88,7 @@ const StudentsPage: FC = () => {
           defaultStudent={modalState.studentId}
         />
       )}
-    </>
+    </Flex>
   );
 };
 

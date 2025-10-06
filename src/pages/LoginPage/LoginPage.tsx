@@ -17,25 +17,16 @@ const LoginPage: FC = () => {
   const handleLogin: FormProps<LoginField>['onFinish'] = login;
 
   return (
-    <section className="auth-backdrop">
-      <Form
-        className="form"
-        name="login"
-        initialValues={{ remember: true }}
-        onFinish={handleLogin}
-      >
+    <Flex className="auth-backdrop">
+      <Form className="auth-form" name="login" onFinish={handleLogin}>
         <h2 className="auth-form-title">Login</h2>
+
         <Form.Item
           name="email"
+          hasFeedback
           rules={[
-            {
-              type: 'email',
-              message: 'The input is not valid E-mail!',
-            },
-            {
-              required: true,
-              message: 'Please input your E-mail!',
-            },
+            { type: 'email', message: 'The input is not valid E-mail!' },
+            { required: true, message: 'Please input your E-mail!' },
           ]}
         >
           <Input prefix={<MailOutlined />} placeholder="E-mail" />
@@ -57,7 +48,7 @@ const LoginPage: FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <div className={styles.buttonsWrapper}>
+          <Flex className={styles.buttonsWrapper}>
             <Button block type="primary" htmlType="submit" loading={loading}>
               Log in
             </Button>
@@ -69,11 +60,11 @@ const LoginPage: FC = () => {
             >
               Log in with Google
             </Button>
-          </div>
+          </Flex>
           or <Link to={navigationUrls.registration}>Register now!</Link>
         </Form.Item>
       </Form>
-    </section>
+    </Flex>
   );
 };
 

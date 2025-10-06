@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Form, type FormProps, Input } from 'antd';
+import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
 import { useRegister } from '@/features/user/hooks/useRegister';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
@@ -14,17 +14,13 @@ const RegistrationPage: FC = () => {
   const handleRegister: FormProps<RegField>['onFinish'] = register;
 
   return (
-    <section className="auth-backdrop">
-      <Form
-        name="register"
-        onFinish={handleRegister}
-        className="form"
-        scrollToFirstError
-      >
+    <Flex className="auth-backdrop">
+      <Form name="register" onFinish={handleRegister} className="auth-form">
         <h2 className="auth-form-title">Registration</h2>
 
         <Form.Item
           name="email"
+          hasFeedback
           rules={[
             { type: 'email', message: 'The input is not valid E-mail!' },
             { required: true, message: 'Please input your E-mail!' },
@@ -35,11 +31,11 @@ const RegistrationPage: FC = () => {
 
         <Form.Item
           name="password"
+          hasFeedback
           rules={[
             { required: true, message: 'Please input your password!' },
             { min: 6, message: 'Password must be at least 6 characters!' },
           ]}
-          hasFeedback
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
@@ -69,6 +65,7 @@ const RegistrationPage: FC = () => {
         <Form.Item
           name="nickName"
           tooltip="What do you want others to call you?"
+          hasFeedback
           rules={[
             {
               required: true,
@@ -87,7 +84,7 @@ const RegistrationPage: FC = () => {
           or <Link to={navigationUrls.login}>Login now!</Link>
         </Form.Item>
       </Form>
-    </section>
+    </Flex>
   );
 };
 

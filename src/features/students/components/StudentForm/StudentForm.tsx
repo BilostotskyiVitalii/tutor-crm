@@ -5,7 +5,7 @@ import { Form, Modal } from 'antd';
 import StudentFormFields from '@/features/students/components/StudentFormFields/StudentFormFields';
 import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import type { StudentFormProps } from '@/features/students/types/studentTypes';
-import AvatarUploader from '@/shared/components/UI/AvatarUploader';
+import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
 
 const StudentForm: FC<StudentFormProps> = (props) => {
   const { form, handleOk, handleCancel, fileList, setFileList, isLoading } =

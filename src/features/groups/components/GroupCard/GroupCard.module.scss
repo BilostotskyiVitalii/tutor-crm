@@ -1,19 +1,31 @@
-@use '@/shared/styles/avatarColors' as *;
+@use '@/shared/styles/variables.scss' as *;
 
 .card {
-  width: 280px;
-  display: flex;
+  width: $group-card-width;
+}
+
+.contentWrapper {
+  gap: 12px;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: 180px;
+}
+
+.info {
+  width: calc($group-card-width - (var(--ant-card-body-padding)) * 2);
+}
+
+.title:hover {
+  color: $color-link-hover;
+  transition: color $motion-duration-slow;
+}
+
+.title,
+.notes,
+.price {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .delete:hover {
-  color: red !important;
-}
-
-.price {
-  font-size: 12px;
-  font-style: italic;
-  margin-top: 5px;
+  color: $color-del-hover !important;
 }

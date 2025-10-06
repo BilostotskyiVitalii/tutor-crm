@@ -1,29 +1,39 @@
+@use '@/shared/styles/variables' as *;
+
+.calendarWrapper {
+  gap: $padding-lg;
+  align-items: flex-start;
+}
+
+.miniCalendar {
+  width: $mini-calendar-width;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
+  flex-shrink: 0;
+}
+
 .calendarContainer {
-  height: 70vh;
+  height: 75vh;
   flex: 1;
 }
 
-.event {
-  padding: 4px 8px;
-  border-radius: 6px;
-  color: #fff;
-  font-weight: 500;
-  transition:
-    transform 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+.lesson {
+  padding: $padding-xxs $padding-xs;
+  border-radius: $border-radius;
+  font-weight: $font-weight-strong;
+  transition: all 0.2s ease;
   cursor: pointer;
+
+  &:hover {
+    box-shadow: $box-shadow-base;
+    transform: scale(1.01);
+  }
 }
 
-.groupEvent {
-  background-color: #52c41a !important;
+.groupLesson {
+  background-color: $color-group-event !important;
 }
 
-.individualEvent {
-  background-color: #1677ff !important;
-}
-
-.event:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  transform: scale(1.03);
+.indivLesson {
+  background-color: $color-indiv-event !important;
 }

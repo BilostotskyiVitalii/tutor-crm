@@ -67,6 +67,50 @@
           "done": false,
           "start": 1759395611884
         }
+      },
+      {
+        "key": 1759662696237,
+        "children": [],
+        "todo": {
+          "content": "Style all with tokens vars",
+          "id": 1759662696237,
+          "level": "success",
+          "done": false,
+          "start": 1759662696237
+        }
+      },
+      {
+        "key": 1759665653471,
+        "children": [],
+        "todo": {
+          "content": "Add delete button to forms",
+          "id": 1759665653471,
+          "level": "warning",
+          "done": false,
+          "start": 1759665653471
+        }
+      },
+      {
+        "key": 1759665859550,
+        "children": [],
+        "todo": {
+          "content": "Check updateFunc data",
+          "id": 1759665859550,
+          "level": "default",
+          "done": false,
+          "start": 1759665859550
+        }
+      },
+      {
+        "key": 1759743115915,
+        "children": [],
+        "todo": {
+          "content": "Research merge login/regist/forgot forms in one component",
+          "id": 1759743115915,
+          "level": "default",
+          "done": false,
+          "start": 1759743115915
+        }
       }
     ],
     "expandKeys": [
@@ -108,6 +152,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1759395690949"
+    "version": "1759743181694"
   }
 }

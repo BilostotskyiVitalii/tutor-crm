@@ -2,7 +2,15 @@ import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Card, notification, Popconfirm, Tooltip } from 'antd';
+import {
+  Avatar,
+  Card,
+  Flex,
+  notification,
+  Popconfirm,
+  Tooltip,
+  Typography,
+} from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group } from '@/features/groups/types/groupTypes';
@@ -11,6 +19,8 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './GroupCard.module.scss';
+
+const { Title, Paragraph } = Typography;
 
 interface GroupCardProps {
   group: Group;
@@ -53,18 +63,13 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
         </Popconfirm>,
       ]}
     >
-      <div className={styles.cardContent}>
-        <Avatar.Group
-          size={65}
-          max={{
-            count: 3,
-          }}
-        >
+      <Flex className={styles.contentWrapper}>
+        <Avatar.Group size={65} max={{ count: 3 }}>
           {filteredStudents?.map((student) => (
             <Tooltip key={student.id} title={student.name} placement="top">
               <Avatar
                 src={student.avatarUrl}
-                className={`${styles.avatar} ${styles[getAvatarColorClass(student.name)]}`}
+                className={`$avatar ${[getAvatarColorClass(student.name)]}`}
               >
                 {student.name[0]}
               </Avatar>
@@ -72,14 +77,20 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
           ))}
         </Avatar.Group>
 
-        <div className={styles.groupInfo}>
+        <div className={styles.info}>
           <Link to={`${navigationUrls.groups}/${group.id}`}>
-            <h2 className={styles.groupTitle}>{group.title}</h2>
+            <Title className={styles.title} level={4}>
+              {group.title}
+            </Title>
           </Link>
-          <p>{group.notes}</p>
-          <p className={styles.price}>Price: {group.price}</p>
+          <Paragraph disabled={!group.notes} className={styles.notes} italic>
+            {group.notes || 'No notes'}
+          </Paragraph>
+          <Paragraph className={styles.price} italic>
+            Price: {group.price}
+          </Paragraph>
         </div>
-      </div>
+      </Flex>
     </Card>
   );
 };
