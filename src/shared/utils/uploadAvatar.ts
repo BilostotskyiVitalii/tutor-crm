@@ -6,7 +6,7 @@ import {
   uploadBytes,
 } from 'firebase/storage';
 
-import { storage } from '@/firebase';
+import { storage } from '@/app/firebase';
 
 // TODO make it reusable, not only for students avatars
 export const uploadAvatar = async (
