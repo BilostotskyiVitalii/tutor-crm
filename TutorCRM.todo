@@ -53,8 +53,10 @@
           "content": "Develop logic to delete students (how to keep info in lessons after delete)",
           "id": 1759395328453,
           "level": "warning",
-          "done": false,
-          "start": 1759395328453
+          "done": true,
+          "start": 1759395328453,
+          "focus": false,
+          "end": 1759771449303
         }
       },
       {
@@ -75,8 +77,10 @@
           "content": "Style all with tokens vars",
           "id": 1759662696237,
           "level": "success",
-          "done": false,
-          "start": 1759662696237
+          "done": true,
+          "start": 1759662696237,
+          "focus": false,
+          "end": 1759771456239
         }
       },
       {
@@ -110,6 +114,28 @@
           "level": "default",
           "done": false,
           "start": 1759743115915
+        }
+      },
+      {
+        "key": 1759771465935,
+        "children": [],
+        "todo": {
+          "content": "Style Calendar with Ant Style",
+          "id": 1759771465935,
+          "level": "default",
+          "done": false,
+          "start": 1759771465935
+        }
+      },
+      {
+        "key": 1759771766183,
+        "children": [],
+        "todo": {
+          "content": "Try to replace html tags to ant components",
+          "id": 1759771766183,
+          "level": "default",
+          "done": false,
+          "start": 1759771766183
         }
       }
     ],
@@ -152,6 +178,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1759743181694"
+    "version": "1759771800703"
   }
 }
