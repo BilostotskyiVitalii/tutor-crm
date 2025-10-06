@@ -10,7 +10,7 @@ import type {
 } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
-import CurrencySelect from '@/shared/components/UI/CurrencySelect';
+import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { TextArea } = Input;

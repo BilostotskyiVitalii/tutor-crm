@@ -1,0 +1,26 @@
+@use '@/shared/styles/variables' as *;
+
+.auth-form {
+  min-width: 300px;
+  padding: $padding-lg;
+  border-radius: $border-radius;
+  background-color: $color-background-base;
+  box-shadow: $box-shadow-base;
+}
+
+.auth-backdrop {
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    120deg,
+    nth($colors-auth-gradient, 1) 0%,
+    nth($colors-auth-gradient, 2) 50%,
+    nth($colors-auth-gradient, 3) 100%
+  );
+}
+
+.auth-form-title {
+  margin-bottom: $margin-bottom-form-title;
+  text-align: center;
+}

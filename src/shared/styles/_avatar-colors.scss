@@ -1,7 +1,5 @@
 @use 'sass:list';
-
-$avatar-colors:
-  #f56a00, #7265e6, #ffbf00, #00a2ae, #52c41a, #eb2f96, #1890ff, #fa541c;
+@use '@/shared/styles/variables.scss' as *;
 
 .avatar {
   border: none !important;

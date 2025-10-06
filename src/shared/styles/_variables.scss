@@ -1,0 +1,71 @@
+//------------- common ---------------------
+
+// colors
+$color-border: var(--ant-color-border); // #d9d9d9
+$color-control-hover: var(--ant-control-item-bg-active-hover); // #bae0ff
+$color-background-base: var(--ant-color-bg-base); // #fff
+$color-link-hover: var(--ant-color-link-hover); // #69b1ff
+$color-del-hover: var(--ant-red); // #f5222d
+
+// dimensions
+$mobile-view: 768px;
+$header-height: var(--ant-layout-header-height); // 64px
+$border-radius: var(--ant-border-radius); // 6px
+
+// paddings/margins
+$paddind-horizontal: var(--ant-padding-content-horizontal); // 16px
+$paddind-vertical: var(--ant-padding-content-vertical); // 12px
+$padding-xxs: var(--ant-padding-xxs); // 4px
+$padding-xs: var(--ant-padding-xs); // 8px
+$padding-lg: var(--ant-padding-lg); // 24px
+$margin-bottom-form-title: var(--ant-form-item-margin-bottom);
+
+// fonts
+$font-weight-strong: var(--ant-font-weight-strong); // 600
+
+// box shadow
+// // 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05)
+$box-shadow-base: var(--ant-box-shadow);
+
+// effects
+$motion-duration-slow: var(--ant-motion-duration-slow); // 0.3s
+
+// ------------ components/features-----------------------------
+
+// auth
+$colors-auth-gradient:
+  var(--ant-magenta),
+  // #eb2f96
+  var(--ant-blue),
+  // #1677ff
+  var(--ant-lime); // #a0d911
+
+// avatar
+$avatar-colors:
+  var(--ant-orange),
+  // #fa8c16
+  var(--ant-purple),
+  // #722ed1
+  var(--ant-gold),
+  // #faad14
+  var(--ant-cyan),
+  // #13c2c2
+  var(--ant-lime),
+  // #a0d911
+  var(--ant-magenta),
+  // #eb2f96
+  var(--ant-blue),
+  // #1677ff
+  var(--ant-volcano); // #fa541c
+
+// burger
+$burger-size: var(--ant-font-size-xl); // 20px
+$burger-color: var(--ant-color-white); // #fff
+
+// calendar
+$color-group-event: var(--ant-volcano); // #fa541c
+$color-indiv-event: var(--ant-green); // #52c41a
+$mini-calendar-width: 300px;
+
+// groups
+$group-card-width: 280px;

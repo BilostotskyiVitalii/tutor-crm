@@ -17,6 +17,7 @@ export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
   if (loading) {
     return <CustomSpinner />;
   }
+  // return <CustomSpinner />;
 
   const isAuth = !!email;
 

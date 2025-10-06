@@ -1,5 +1,6 @@
+@use '@/shared/styles/variables' as *;
+
 .buttonsWrapper {
-  display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: $paddind-vertical;
 }

@@ -1,7 +1,15 @@
+@use '@/shared/styles/variables' as *;
+
+.wrapper {
+  gap: $paddind-vertical;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .studentsMobile {
   display: none;
 
-  @media (max-width: 768px) {
+  @media (max-width: $mobile-view) {
     display: block;
   }
 }
@@ -9,7 +17,7 @@
 .studentsDesktop {
   display: block;
 
-  @media (max-width: 768px) {
+  @media (max-width: $mobile-view) {
     display: none;
   }
 }

@@ -1,0 +1,13 @@
+@use '@/shared/styles/reset' as *;
+@use '@/shared/styles/variables' as *;
+@use '@/shared/styles/avatar-colors' as *;
+@use '@/shared/styles/auth' as *;
+
+.rbc-timeslot-group {
+  min-height: 55px !important;
+}
+
+.rbc-allday-cell,
+.rbc-allday-events {
+  display: none;
+}

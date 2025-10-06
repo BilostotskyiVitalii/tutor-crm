@@ -1,7 +1,8 @@
+@use '@/shared/styles/variables' as *;
+
 .content {
-  margin: 24px 16px 0;
-  padding: 24px;
-  background: #fff;
-  border-radius: 8px;
-  // position: relative;
+  margin: $paddind-vertical $paddind-horizontal 0;
+  padding: $paddind-vertical $paddind-horizontal;
+  background: $color-background-base;
+  border-radius: $border-radius;
 }
