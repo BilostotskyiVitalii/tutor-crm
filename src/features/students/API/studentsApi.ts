@@ -10,12 +10,12 @@ import {
   updateDoc,
 } from 'firebase/firestore';
 
+import { db } from '@/app/firebase';
 import type {
   Student,
   StudentData,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
-import { db } from '@/firebase';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 

@@ -5,13 +5,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import App from '@/app/App.tsx';
 import { persistor, store } from '@/store/index.tsx';
-
-import App from './App.tsx';
 
 import '@/shared/styles/main.scss';
 
-import './firebase.ts';
+import '@/app/firebase.ts';
 
 createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
