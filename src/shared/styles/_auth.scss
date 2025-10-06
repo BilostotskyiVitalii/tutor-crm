@@ -1,3 +1,4 @@
+@use 'sass:list';
 @use '@/shared/styles/variables' as *;
 
 .auth-form {
@@ -14,9 +15,9 @@
   justify-content: center;
   background: linear-gradient(
     120deg,
-    nth($colors-auth-gradient, 1) 0%,
-    nth($colors-auth-gradient, 2) 50%,
-    nth($colors-auth-gradient, 3) 100%
+    list.nth($colors-auth-gradient, 1) 0%,
+    list.nth($colors-auth-gradient, 2) 50%,
+    list.nth($colors-auth-gradient, 3) 100%
   );
 }
 

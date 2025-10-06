@@ -1,11 +1,9 @@
+@use '@/shared/styles/variables' as *;
+
 .card {
-  width: 270px;
+  width: $student-card-width;
+  min-height: $student-card-heigh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 180px;
-}
-
-.delete:hover {
-  color: red !important;
 }

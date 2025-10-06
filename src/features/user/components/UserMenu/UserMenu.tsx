@@ -15,11 +15,7 @@ import styles from './UserMenu.module.scss';
 
 const items: MenuProps['items'] = [
   {
-    label: (
-      <div className={styles.userMenuCardWrapper}>
-        <UserMenuCard />
-      </div>
-    ),
+    label: <UserMenuCard />,
     key: 'user',
     className: styles.noHover,
   },
