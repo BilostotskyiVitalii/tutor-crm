@@ -4,7 +4,7 @@
 @use '@/shared/styles/auth' as *;
 
 .rbc-timeslot-group {
-  min-height: 55px !important;
+  min-height: $hour-cell-height !important;
 }
 
 .rbc-allday-cell,

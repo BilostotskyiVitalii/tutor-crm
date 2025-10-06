@@ -1,7 +1,10 @@
+@use '@/shared/styles/variables' as *;
+
 .wrapper {
   text-align: left;
+  width: $user-menu-width;
 }
 
 .nickname {
-  font-weight: bold;
+  font-weight: $font-weight-strong;
 }
