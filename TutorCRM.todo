@@ -123,8 +123,10 @@
           "content": "Style Calendar with Ant Style",
           "id": 1759771465935,
           "level": "default",
-          "done": false,
-          "start": 1759771465935
+          "done": true,
+          "start": 1759771465935,
+          "focus": false,
+          "end": 1759820868611
         }
       },
       {
@@ -136,6 +138,19 @@
           "level": "default",
           "done": false,
           "start": 1759771766183
+        }
+      },
+      {
+        "key": 1759771989927,
+        "children": [],
+        "todo": {
+          "content": "Add todo to gitignore",
+          "id": 1759771989927,
+          "level": "default",
+          "done": true,
+          "start": 1759771989927,
+          "focus": false,
+          "end": 1759772003734
         }
       }
     ],
@@ -178,6 +193,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1759771800703"
+    "version": "1759820868656"
   }
 }

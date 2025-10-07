@@ -1,0 +1,91 @@
+@use '@/shared/styles/variables' as *;
+
+.calendarWrapper {
+  gap: $padding-lg;
+  align-items: flex-start;
+}
+
+.calendarContainer {
+  height: 75vh;
+  flex: 1;
+}
+
+.miniCalendar {
+  width: $mini-calendar-width;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
+  flex-shrink: 0;
+}
+
+.rbc-allday-cell,
+.rbc-allday-events {
+  display: none;
+}
+
+.rbc-today .rbc-button-link {
+  font-weight: $font-weight-strong;
+}
+
+.rbc-timeslot-group {
+  min-height: $hour-cell-height !important;
+}
+
+.rbc-time-view,
+.rbc-month-view,
+.rbc-agenda-view {
+  border-radius: $border-radius;
+}
+
+.calendarLesson {
+  border: none !important;
+  padding: $padding-xxs $padding-xs;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.groupLesson {
+  background-color: $color-group-event !important;
+}
+
+.indivLesson {
+  background-color: $color-indiv-event !important;
+}
+
+.rbc-time-view .calendarLesson {
+  &:hover {
+    box-shadow: $box-shadow-base;
+    transform: scale(1.01);
+  }
+}
+
+.rbc-active {
+  position: relative;
+  z-index: 1 !important;
+  color: $calendar-active-tabs-color !important;
+  border-color: $calendar-active-tabs-color !important;
+  background-color: $color-background-base !important;
+}
+
+.rbc-toolbar button {
+  &:hover {
+    color: $calendar-active-tabs-color !important;
+    background-color: $color-background-base !important;
+    border-color: $color-border !important;
+  }
+
+  &:focus {
+    background-color: $color-background-base !important;
+  }
+}
+
+.rbc-toolbar button:active,
+.rbc-toolbar button.rbc-active {
+  &:hover {
+    border-color: var($calendar-active-tabs-color) !important;
+  }
+
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  background-color: $color-background-base !important;
+}

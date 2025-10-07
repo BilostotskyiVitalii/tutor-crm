@@ -22,7 +22,6 @@ import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type { Lesson, ModalState } from '@/features/lessons/types/lessonTypes';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import styles from './SchedulePage.module.scss';
 
 type LessonEvent = RBCEvent & {
   resource: Lesson;
@@ -95,8 +94,8 @@ const SchedulePage: FC = () => {
       {isError && <p style={{ color: 'red' }}>Failed to load Lessons</p>}
       {isLoading && <Spin size="large" />}
 
-      <Flex className={styles.calendarWrapper}>
-        <div className={styles.miniCalendar}>
+      <Flex className="calendarWrapper">
+        <div className="miniCalendar">
           <AntdCalendar
             fullscreen={false}
             value={currentDate}
@@ -105,7 +104,7 @@ const SchedulePage: FC = () => {
           />
         </div>
 
-        <div className={styles.calendarContainer}>
+        <div className="calendarContainer">
           <DnDCalendar
             localizer={localizer}
             events={calendarEvents}
@@ -122,8 +121,8 @@ const SchedulePage: FC = () => {
               const e = event as LessonEvent;
               const isGroup = Boolean(e.resource.groupId);
               return {
-                className: `${styles.lesson} ${
-                  isGroup ? styles.groupLesson : styles.indivLesson
+                className: `calendarLesson ${
+                  isGroup ? 'groupLesson' : 'indivLesson'
                 }`,
               };
             }}

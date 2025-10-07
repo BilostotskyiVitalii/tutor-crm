@@ -2,12 +2,4 @@
 @use '@/shared/styles/variables' as *;
 @use '@/shared/styles/avatar-colors' as *;
 @use '@/shared/styles/auth' as *;
-
-.rbc-timeslot-group {
-  min-height: $hour-cell-height !important;
-}
-
-.rbc-allday-cell,
-.rbc-allday-events {
-  display: none;
-}
+@use '@/shared/styles/calendar' as *;
