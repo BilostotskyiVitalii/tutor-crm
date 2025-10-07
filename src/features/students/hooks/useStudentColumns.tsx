@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { Avatar, Button, Popconfirm } from 'antd';
+import { Avatar, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
@@ -84,26 +84,20 @@ export function useStudentColumns({ onEdit, onAddLesson }: Props) {
       key: 'actions',
       render: (_, student) => (
         <>
-          <Button size="small" onClick={() => onEdit(student.id)}>
+          <Button onClick={() => onEdit(student.id)} size="small">
+            {' '}
             Edit
           </Button>{' '}
           <Button
-            size="small"
             onClick={() => onAddLesson(student.id)}
+            size="small"
             disabled={!student.isActive}
           >
             Add Lesson
           </Button>{' '}
-          <Popconfirm
-            title="Delete student?"
-            okText="Yes"
-            cancelText="No"
-            onConfirm={() => removeStudent(student.id)}
-          >
-            <Button size="small" danger>
-              Delete
-            </Button>
-          </Popconfirm>
+          <Button onClick={() => removeStudent(student.id)} size="small" danger>
+            Delete
+          </Button>
         </>
       ),
     },

@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { notification } from 'antd';
+import { Modal, notification } from 'antd';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
@@ -11,6 +11,8 @@ import {
 } from '@/features/students/api/studentsApi';
 import type { StudentData } from '@/features/students/types/studentTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+
+const { confirm } = Modal;
 
 export function useStudentActions() {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
@@ -46,13 +48,21 @@ export function useStudentActions() {
 
   const removeStudent = useCallback(
     async (id: string) => {
-      try {
-        await removeStudentFromGroups(id, groups);
-        await deleteStudent(id).unwrap();
-        notification.success({ message: 'Student deleted!' });
-      } catch (err) {
-        handleError(err, 'Failed to delete student');
-      }
+      confirm({
+        title: 'Delete this student?',
+        okType: 'danger',
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk: async () => {
+          try {
+            await removeStudentFromGroups(id, groups);
+            await deleteStudent(id).unwrap();
+            notification.success({ message: 'Student deleted!' });
+          } catch (err) {
+            handleError(err, 'Failed to delete student');
+          }
+        },
+      });
     },
     [deleteStudent, handleError, removeStudentFromGroups, groups],
   );
