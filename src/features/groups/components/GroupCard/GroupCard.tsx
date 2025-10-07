@@ -2,15 +2,7 @@ import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import {
-  Avatar,
-  Card,
-  Flex,
-  notification,
-  Popconfirm,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Avatar, Card, Flex, Tooltip, Typography } from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group } from '@/features/groups/types/groupTypes';
@@ -36,16 +28,6 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
     group.studentIds.includes(student.id),
   );
 
-  async function removeHandler() {
-    try {
-      await removeGroup(group.id);
-    } catch {
-      notification.error({
-        message: 'Failed to delete group',
-      });
-    }
-  }
-
   return (
     <Card
       loading={isDeleting}
@@ -53,14 +35,11 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
       actions={[
         <PlusOutlined key="add" onClick={() => onAddLesson(group)} />,
         <EditOutlined key="edit" onClick={() => onEdit(group)} />,
-        <Popconfirm
-          title="Delete this group?"
-          okText="Yes"
-          cancelText="No"
-          onConfirm={removeHandler}
-        >
-          <DeleteOutlined key="delete" className={styles.delete} />
-        </Popconfirm>,
+        <DeleteOutlined
+          key="delete"
+          onClick={() => removeGroup(group.id)}
+          className={styles.delete}
+        />,
       ]}
     >
       <Flex className={styles.contentWrapper}>
