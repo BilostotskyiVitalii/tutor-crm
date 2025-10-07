@@ -108,6 +108,7 @@ const SchedulePage: FC = () => {
           <DnDCalendar
             localizer={localizer}
             events={calendarEvents}
+            views={['week', 'day', 'agenda']}
             defaultView="week"
             date={currentDate.toDate()}
             onNavigate={(date) => setCurrentDate(dayjs(date))}
