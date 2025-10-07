@@ -5,6 +5,7 @@ import { DatePicker, Form, Input, InputNumber, Modal } from 'antd';
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 import LessonFormGroupSelect from '@/features/lessons/components/LessonFormGroupSelect/LessonFormGroupSelect';
+import LessonFormModalFooter from '@/features/lessons/components/LessonFormModalFooter/LessonFormModalFooter';
 import UsersSelect from '@/features/lessons/components/LessonFormUsersSelect/LessonFormUsersSelect';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import { useLessonForm } from '@/features/lessons/hooks/useLessonForm';
@@ -21,18 +22,18 @@ const { RangePicker } = DatePicker;
 
 const LessonFormModal: FC<LessonFormModalProps> = ({
   isModalOpen,
-  onClose,
   editedLessonId,
   defaultStudent,
   defaultGroup,
   defaultEnd,
   defaultStart,
+  onClose,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
   const { data: students = [] } = useGetStudentsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
   const { data: lessons = [] } = useGetLessonsQuery();
-  const { updateLessonData, createLesson } = useLessonActions();
+  const { updateLessonData, createLesson, removeLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
 
   const { isGroup, setIsGroup, isLoading, handleFinish, handleCancel } =
@@ -56,11 +57,16 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
     <Modal
       title={editedLessonId ? 'Edit Lesson' : 'Create Lesson'}
       open={isModalOpen}
-      onCancel={() => {
-        handleCancel();
-        onClose();
-      }}
-      onOk={handleFinish}
+      onCancel={handleCancel}
+      footer={
+        <LessonFormModalFooter
+          editedLessonId={editedLessonId}
+          isLoading={isLoading}
+          onDelete={() => removeLesson(editedLessonId!, handleCancel)}
+          onCancel={handleCancel}
+          onSubmit={handleFinish}
+        />
+      }
       okText={editedLessonId ? 'Update' : 'Create'}
       cancelText="Cancel"
       confirmLoading={isLoading}

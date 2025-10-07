@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { notification } from 'antd';
+import { Modal, notification } from 'antd';
 
 import {
   useAddLessonMutation,
@@ -9,6 +9,8 @@ import {
 } from '@/features/lessons/api/lessonsApi';
 import type { LessonData } from '@/features/lessons/types/lessonTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+
+const { confirm } = Modal;
 
 export function useLessonActions() {
   const [deleteLesson, { isLoading: isDeleting }] = useDeleteLessonMutation();
@@ -41,13 +43,22 @@ export function useLessonActions() {
   );
 
   const removeLesson = useCallback(
-    async (id: string) => {
-      try {
-        await deleteLesson(id).unwrap();
-        notification.success({ message: 'Lesson deleted!' });
-      } catch (err) {
-        handleError(err, 'Failed to delete lesson');
-      }
+    (id: string, closeEditModal: () => void) => {
+      confirm({
+        title: 'Delete this lesson?',
+        okType: 'danger',
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk: async () => {
+          try {
+            await deleteLesson(id).unwrap();
+            notification.success({ message: 'Lesson deleted!' });
+            closeEditModal();
+          } catch (err) {
+            handleError(err, 'Failed to delete lesson');
+          }
+        },
+      });
     },
     [deleteLesson, handleError],
   );

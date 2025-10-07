@@ -8,10 +8,8 @@ import type {
   LessonData,
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
-import {
-  buildLessonData,
-  initializeFormValues,
-} from '@/features/lessons/utils/lessonFormUtils';
+import { buildLessonData } from '@/features/lessons/utils/buildLessonData';
+import { initLessonFormValues } from '@/features/lessons/utils/initLessonFormValues';
 import type { Student } from '@/features/students/types/studentTypes';
 
 interface UseLessonFormProps {
@@ -49,7 +47,7 @@ export const useLessonForm = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const initialValues = initializeFormValues(
+    const initialValues = initLessonFormValues(
       lessons,
       students,
       groups,
