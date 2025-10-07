@@ -25,6 +25,8 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
   editedLessonId,
   defaultStudent,
   defaultGroup,
+  defaultEnd,
+  defaultStart,
 }) => {
   const [form] = Form.useForm<LessonFormValues>();
   const { data: students = [] } = useGetStudentsQuery();
@@ -39,6 +41,8 @@ const LessonFormModal: FC<LessonFormModalProps> = ({
       editedLessonId,
       defaultStudent,
       defaultGroup,
+      defaultEnd,
+      defaultStart,
       students,
       lessons,
       groups,

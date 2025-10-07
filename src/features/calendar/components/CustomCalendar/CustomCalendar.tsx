@@ -96,6 +96,15 @@ const CustomCalendar: FC<CustomCalendarProps> = ({ setModalState }) => {
             onSelectEvent={(event) =>
               openLessonModal((event as LessonEvent).id)
             }
+            selectable
+            onSelectSlot={(slotInfo) => {
+              setModalState({
+                type: 'lesson',
+                lessonId: null,
+                start: slotInfo.start,
+                end: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
+              });
+            }}
             eventPropGetter={(event) => {
               const e = event as LessonEvent;
               const isGroup = Boolean(e.resource.groupId);
