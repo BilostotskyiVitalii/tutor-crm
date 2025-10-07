@@ -19,6 +19,8 @@ interface UseLessonFormProps {
   editedLessonId?: string | null;
   defaultStudent?: string | null;
   defaultGroup?: string | null;
+  defaultStart?: Date | null;
+  defaultEnd?: Date | null;
   students: Student[];
   lessons: Lesson[];
   groups: Group[];
@@ -40,6 +42,8 @@ export const useLessonForm = ({
   createLesson,
   handleError,
   onClose,
+  defaultStart,
+  defaultEnd,
 }: UseLessonFormProps) => {
   const [isGroup, setIsGroup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +56,8 @@ export const useLessonForm = ({
       editedLessonId,
       defaultStudent,
       defaultGroup,
+      defaultStart,
+      defaultEnd,
     );
 
     form.setFieldsValue(initialValues.values);
@@ -64,6 +70,8 @@ export const useLessonForm = ({
     editedLessonId,
     defaultStudent,
     defaultGroup,
+    defaultStart,
+    defaultEnd,
   ]);
 
   const handleCancel = () => {

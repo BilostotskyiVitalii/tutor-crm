@@ -19,7 +19,9 @@ const SchedulePage: FC = () => {
         <LessonFormModal
           isModalOpen
           onClose={closeModal}
-          editedLessonId={modalState?.lessonId}
+          editedLessonId={modalState.lessonId}
+          defaultStart={modalState.start ?? null}
+          defaultEnd={modalState.end ?? null}
         />
       )}
     </Flex>

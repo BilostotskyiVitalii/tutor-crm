@@ -21,6 +21,8 @@ export const initializeFormValues = (
   editedLessonId?: string | null,
   defaultStudent?: string | null,
   defaultGroup?: string | null,
+  defaultStart?: Date | null,
+  defaultEnd?: Date | null,
 ): InitialFormResult => {
   if (editedLessonId) {
     const lesson = lessons.find((l) => l.id === editedLessonId);
@@ -58,6 +60,15 @@ export const initializeFormValues = (
       values: {
         studentIds: [defaultStudent],
         price: student?.price,
+      },
+      isGroup: false,
+    };
+  }
+
+  if (defaultStart && defaultEnd) {
+    return {
+      values: {
+        date: [dayjs(defaultStart), dayjs(defaultEnd)],
       },
       isGroup: false,
     };
