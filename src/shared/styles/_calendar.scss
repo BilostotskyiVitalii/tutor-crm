@@ -89,3 +89,19 @@
   box-shadow: none !important;
   background-color: $color-background-base !important;
 }
+
+.rbc-current-time-indicator {
+  background-color: $now-indicator-color;
+  height: $now-indicator-heigth;
+
+  &:before {
+    content: '';
+    width: $now-indicator-circle-diametr;
+    height: $now-indicator-circle-diametr;
+    border-radius: 50%;
+    position: absolute;
+    background-color: $now-indicator-color;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
