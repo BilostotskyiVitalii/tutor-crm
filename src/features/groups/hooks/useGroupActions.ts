@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { notification } from 'antd';
+import { Modal, notification } from 'antd';
 
 import {
   useAddGroupMutation,
@@ -9,6 +9,8 @@ import {
 } from '@/features/groups/api/groupsApi';
 import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+
+const { confirm } = Modal;
 
 export function useGroupActions() {
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
@@ -40,14 +42,33 @@ export function useGroupActions() {
     [updateGroup, handleError],
   );
 
+  // const removeGroup = useCallback(
+  //   async (id: string) => {
+  //     try {
+  //       await deleteGroup(id).unwrap();
+  //       notification.success({ message: 'Group deleted!' });
+  //     } catch (err) {
+  //       handleError(err, 'Failed to delete group');
+  //     }
+  //   },
+  //   [deleteGroup, handleError],
+  // );
   const removeGroup = useCallback(
     async (id: string) => {
-      try {
-        await deleteGroup(id).unwrap();
-        notification.success({ message: 'Group deleted!' });
-      } catch (err) {
-        handleError(err, 'Failed to delete group');
-      }
+      confirm({
+        title: 'Delete this group?',
+        okType: 'danger',
+        okText: 'Yes',
+        cancelText: 'No',
+        onOk: async () => {
+          try {
+            await deleteGroup(id).unwrap();
+            notification.success({ message: 'Group deleted!' });
+          } catch (err) {
+            handleError(err, 'Failed to delete group');
+          }
+        },
+      });
     },
     [deleteGroup, handleError],
   );

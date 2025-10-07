@@ -152,6 +152,28 @@
           "focus": false,
           "end": 1759772003734
         }
+      },
+      {
+        "key": 1759845242992,
+        "children": [],
+        "todo": {
+          "content": "Refactor modals",
+          "id": 1759845242992,
+          "level": "default",
+          "done": false,
+          "start": 1759845242992
+        }
+      },
+      {
+        "key": 1759845262384,
+        "children": [],
+        "todo": {
+          "content": "Refactore student columns",
+          "id": 1759845262384,
+          "level": "default",
+          "done": false,
+          "start": 1759845262384
+        }
       }
     ],
     "expandKeys": [
@@ -193,6 +215,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1759820868656"
+    "version": "1759845276266"
   }
 }
