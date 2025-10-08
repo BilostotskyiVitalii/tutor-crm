@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Flex, Space, Spin } from 'antd';
+import { Button, Empty, Flex, Space, Spin } from 'antd';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import GroupCard from '@/features/groups/components/GroupCard/GroupCard';
@@ -34,9 +34,12 @@ const GroupsPage = () => {
           New group
         </Button>
       </Space>
+
+      {groups?.length === 0 && <Empty description={'No groups found'} />}
+      {isLoading && <Spin size="large" />}
+      {isError && <p style={{ color: 'red' }}>Failed to load group</p>}
+
       <Flex wrap gap="large">
-        {isError && <p style={{ color: 'red' }}>Failed to load group</p>}
-        {isLoading && <Spin size="large" />}
         {groups?.map((group) => (
           <GroupCard
             key={group.id}
