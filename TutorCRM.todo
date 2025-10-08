@@ -47,19 +47,6 @@
         }
       },
       {
-        "key": 1759395328453,
-        "children": [],
-        "todo": {
-          "content": "Develop logic to delete students (how to keep info in lessons after delete)",
-          "id": 1759395328453,
-          "level": "warning",
-          "done": true,
-          "start": 1759395328453,
-          "focus": false,
-          "end": 1759771449303
-        }
-      },
-      {
         "key": 1759395611884,
         "children": [],
         "todo": {
@@ -68,19 +55,6 @@
           "level": "warning",
           "done": false,
           "start": 1759395611884
-        }
-      },
-      {
-        "key": 1759662696237,
-        "children": [],
-        "todo": {
-          "content": "Style all with tokens vars",
-          "id": 1759662696237,
-          "level": "success",
-          "done": true,
-          "start": 1759662696237,
-          "focus": false,
-          "end": 1759771456239
         }
       },
       {
@@ -117,19 +91,6 @@
         }
       },
       {
-        "key": 1759771465935,
-        "children": [],
-        "todo": {
-          "content": "Style Calendar with Ant Style",
-          "id": 1759771465935,
-          "level": "default",
-          "done": true,
-          "start": 1759771465935,
-          "focus": false,
-          "end": 1759820868611
-        }
-      },
-      {
         "key": 1759771766183,
         "children": [],
         "todo": {
@@ -138,19 +99,6 @@
           "level": "default",
           "done": false,
           "start": 1759771766183
-        }
-      },
-      {
-        "key": 1759771989927,
-        "children": [],
-        "todo": {
-          "content": "Add todo to gitignore",
-          "id": 1759771989927,
-          "level": "default",
-          "done": true,
-          "start": 1759771989927,
-          "focus": false,
-          "end": 1759772003734
         }
       },
       {
@@ -173,17 +121,6 @@
           "level": "default",
           "done": false,
           "start": 1759845262384
-        }
-      },
-      {
-        "key": 1759921207661,
-        "children": [],
-        "todo": {
-          "content": "Add empty component where it needs",
-          "id": 1759921207661,
-          "level": "default",
-          "done": false,
-          "start": 1759921207661
         }
       }
     ],
@@ -225,6 +162,6 @@
     "simpleMode": false,
     "lang": "en",
     "desc": "App for tutors on React",
-    "version": "1759922588284"
+    "version": "1759924086549"
   }
 }
