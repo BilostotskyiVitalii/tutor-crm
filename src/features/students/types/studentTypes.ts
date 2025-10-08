@@ -1,4 +1,3 @@
-import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Student {
@@ -22,21 +21,10 @@ export interface StudentData
   birthdate: Timestamp | null;
 }
 
-export interface StudentFormValues
-  extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
-  birthdate: Dayjs | null;
-}
-
 export type UpdateUser = {
   id: string;
   data: Partial<StudentData>;
 };
-
-export interface StudentFormProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  editedStudentId?: string | null;
-}
 
 export interface StudentCardProps {
   student: Student;
