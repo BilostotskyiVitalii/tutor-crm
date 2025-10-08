@@ -42,17 +42,6 @@ export function useGroupActions() {
     [updateGroup, handleError],
   );
 
-  // const removeGroup = useCallback(
-  //   async (id: string) => {
-  //     try {
-  //       await deleteGroup(id).unwrap();
-  //       notification.success({ message: 'Group deleted!' });
-  //     } catch (err) {
-  //       handleError(err, 'Failed to delete group');
-  //     }
-  //   },
-  //   [deleteGroup, handleError],
-  // );
   const removeGroup = useCallback(
     async (id: string) => {
       confirm({

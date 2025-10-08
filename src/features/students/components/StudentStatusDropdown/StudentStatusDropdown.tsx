@@ -2,24 +2,24 @@ import type { FC } from 'react';
 
 import { Dropdown, Tag } from 'antd';
 
-import { StudentStatus } from '@/features/students/constants/constants';
+import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import { type Student } from '@/features/students/types/studentTypes';
 
 import styles from './StudentStatusDropdown.module.scss';
 
-const { active, inactive } = StudentStatus;
+const { active, inactive } = studentStatus;
 
 export const StatusDropdown: FC<{ student: Student }> = ({ student }) => {
   const { updateStudentStatus } = useStudentActions();
 
   const menu = {
-    items: Object.values(StudentStatus).map((menuItem) => ({
+    items: Object.values(studentStatus).map((menuItem) => ({
       key: menuItem,
       label: menuItem,
       disabled:
-        (menuItem === StudentStatus.active && student.isActive) ||
-        (menuItem === StudentStatus.inactive && !student.isActive),
+        (menuItem === active && student.isActive) ||
+        (menuItem === inactive && !student.isActive),
     })),
     onClick: ({ key }: { key: string }) =>
       updateStudentStatus({
