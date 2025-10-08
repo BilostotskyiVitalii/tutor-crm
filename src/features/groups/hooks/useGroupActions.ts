@@ -84,7 +84,9 @@ export function useGroupActions() {
 
         await Promise.all(updatePromises);
         if (updatePromises.length !== 0) {
-          notification.success({ message: 'Student removed from all groups!' });
+          notification.success({
+            message: 'Student removed from all groups!',
+          });
         }
       } catch (err) {
         handleError(err, 'Failed to remove student from groups');

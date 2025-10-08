@@ -1,0 +1,46 @@
+import { createContext, type ReactNode, useContext, useState } from 'react';
+
+type ModalType = 'lesson' | 'group' | 'student' | null;
+
+interface ModalState {
+  open: boolean;
+  type: ModalType;
+  mode?: 'create' | 'edit';
+  entityId?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  extra?: any;
+}
+
+interface ModalContextValue {
+  modal: ModalState;
+  openModal: (options: Omit<ModalState, 'open'>) => void;
+  closeModal: () => void;
+}
+
+const ModalContext = createContext<ModalContextValue | null>(null);
+
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+  const [modal, setModal] = useState<ModalState>({ open: false, type: null });
+
+  const openModal = (options: Omit<ModalState, 'open'>) => {
+    setModal({ ...options, open: true });
+  };
+
+  const closeModal = () => {
+    setModal({ open: false, type: null });
+  };
+
+  return (
+    <ModalContext.Provider value={{ modal, openModal, closeModal }}>
+      {children}
+    </ModalContext.Provider>
+  );
+};
+
+export const useModal = () => {
+  const ctx = useContext(ModalContext);
+  if (!ctx) {
+    throw new Error('useModal must be used within ModalProvider');
+  }
+  return ctx;
+};
