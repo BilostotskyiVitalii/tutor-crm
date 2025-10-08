@@ -1,13 +1,10 @@
 import { type FC, useEffect, useMemo, useState } from 'react';
 
-import { Form, Input, InputNumber, Modal, Select } from 'antd';
+import { Button, Flex, Form, Input, InputNumber, Select } from 'antd';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
-import type {
-  GroupData,
-  GroupFormProps,
-} from '@/features/groups/types/groupTypes';
+import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
@@ -15,11 +12,13 @@ import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { TextArea } = Input;
 
-const GroupForm: FC<GroupFormProps> = ({
-  onClose,
-  isModalOpen,
-  editedGroupId,
-}) => {
+interface GroupFormProps {
+  mode?: string;
+  onClose: () => void;
+  groupId?: string | null;
+}
+
+const GroupForm: FC<GroupFormProps> = ({ onClose, mode, groupId }) => {
   const [form] = Form.useForm<GroupData>();
   const { data: students = [] } = useGetStudentsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
@@ -28,8 +27,8 @@ const GroupForm: FC<GroupFormProps> = ({
   const { handleError } = useErrorHandler();
 
   const group = useMemo(
-    () => (editedGroupId ? groups.find((g) => g.id === editedGroupId) : null),
-    [editedGroupId, groups],
+    () => (groupId ? groups.find((g) => g.id === groupId) : null),
+    [groupId, groups],
   );
 
   const studentOptions = useMemo(() => {
@@ -42,19 +41,13 @@ const GroupForm: FC<GroupFormProps> = ({
   }, [students]);
 
   useEffect(() => {
-    if (isModalOpen && group) {
+    if (group) {
+      // TODO Why notes separetly?
       form.setFieldsValue({ ...group, notes: group?.notes ?? null });
-    } else {
-      form.resetFields();
     }
-  }, [isModalOpen, group, students, form]);
+  }, [group, students, form]);
 
-  const handleCancel = () => {
-    onClose();
-    form.resetFields();
-  };
-
-  const handleOk = async () => {
+  const onFinish = async () => {
     try {
       setIsLoading(true);
       const formValues: GroupData = await form.validateFields();
@@ -63,13 +56,13 @@ const GroupForm: FC<GroupFormProps> = ({
         notes: formValues.notes?.trim() ? formValues.notes.trim() : null,
       };
 
-      if (editedGroupId) {
-        await updateGroupData(editedGroupId, normalizedFormValues);
+      if (groupId) {
+        await updateGroupData(groupId, normalizedFormValues);
       } else {
         await createGroup(normalizedFormValues);
       }
 
-      handleCancel();
+      onClose();
     } catch (err) {
       handleError(err, 'Group form error!');
     } finally {
@@ -78,54 +71,55 @@ const GroupForm: FC<GroupFormProps> = ({
   };
 
   return (
-    <Modal
-      title={editedGroupId ? 'Update Group' : 'New Group'}
-      open={isModalOpen}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      okText={editedGroupId ? 'Update' : 'Create'}
-      cancelText="Cancel"
-      confirmLoading={isLoading}
-    >
-      <Form form={form} layout="vertical" name="group_form">
-        <Form.Item
-          label="Title:"
-          name="title"
-          rules={[{ required: true, message: 'Enter title' }]}
-        >
-          <Input placeholder="Best group ever" />
-        </Form.Item>
+    <Form form={form} onFinish={onFinish} layout="vertical" name="group_form">
+      <Form.Item
+        label="Title:"
+        name="title"
+        rules={[{ required: true, message: 'Enter title' }]}
+      >
+        <Input placeholder="Best group ever" />
+      </Form.Item>
 
-        <Form.Item
-          name="studentIds"
-          label="Students:"
-          rules={[{ required: true }]}
-        >
-          <Select
-            mode="multiple"
-            placeholder="Select students"
-            options={studentOptions}
-          />
-        </Form.Item>
+      <Form.Item
+        name="studentIds"
+        label="Students:"
+        rules={[{ required: true }]}
+      >
+        <Select
+          mode="multiple"
+          placeholder="Select students"
+          options={studentOptions}
+        />
+      </Form.Item>
 
-        <Form.Item
-          name="price"
-          label="Price:"
-          style={{ flex: 1 }}
-          rules={studentFormRules.price}
-        >
-          <InputNumber
-            min={0}
-            placeholder="500"
-            addonAfter={<CurrencySelect />}
-          />
-        </Form.Item>
+      <Form.Item
+        name="price"
+        label="Price:"
+        style={{ flex: 1 }}
+        rules={studentFormRules.price}
+      >
+        <InputNumber
+          min={0}
+          placeholder="500"
+          addonAfter={<CurrencySelect />}
+        />
+      </Form.Item>
 
-        <Form.Item label="Notes:" name="notes">
-          <TextArea rows={3} placeholder="Note some info here" />
-        </Form.Item>
-      </Form>
-    </Modal>
+      <Form.Item label="Notes:" name="notes">
+        <TextArea rows={3} placeholder="Note some info here" />
+      </Form.Item>
+
+      <Form.Item>
+        <Flex justify="flex-end" gap={12}>
+          <Button htmlType="button" onClick={() => onClose()}>
+            Cancel
+          </Button>
+          <Button type="primary" htmlType="submit" loading={isLoading}>
+            {mode === 'create' ? 'Create' : 'Update'}
+          </Button>
+        </Flex>
+      </Form.Item>
+    </Form>
   );
 };
 

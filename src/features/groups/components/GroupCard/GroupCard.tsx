@@ -8,6 +8,7 @@ import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
+import { useModal } from '@/shared/providers/ModalProvider';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './GroupCard.module.scss';
@@ -16,13 +17,13 @@ const { Title, Paragraph } = Typography;
 
 interface GroupCardProps {
   group: Group;
-  onEdit: (lesson: Group) => void;
   onAddLesson: (group: Group) => void;
 }
 
-const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
+const GroupCard: FC<GroupCardProps> = ({ group, onAddLesson }) => {
   const { data: students } = useGetStudentsQuery();
   const { removeGroup, isDeleting } = useGroupActions();
+  const { openModal } = useModal();
 
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),
@@ -34,7 +35,16 @@ const GroupCard: FC<GroupCardProps> = ({ group, onEdit, onAddLesson }) => {
       className={styles.card}
       actions={[
         <PlusOutlined key="add" onClick={() => onAddLesson(group)} />,
-        <EditOutlined key="edit" onClick={() => onEdit(group)} />,
+        <EditOutlined
+          key="edit"
+          onClick={() =>
+            openModal({
+              type: 'group',
+              mode: 'edit',
+              entityId: group.id,
+            })
+          }
+        />,
         <DeleteOutlined
           key="delete"
           onClick={() => removeGroup(group.id)}

@@ -19,9 +19,3 @@ export type ModalState =
   | { type: 'group'; groupId: string | null }
   | { type: 'lesson'; groupId: string }
   | null;
-
-export interface GroupFormProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  editedGroupId: string | null;
-}
