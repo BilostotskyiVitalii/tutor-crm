@@ -17,10 +17,9 @@ const { Title, Paragraph } = Typography;
 
 interface GroupCardProps {
   group: Group;
-  onAddLesson: (group: Group) => void;
 }
 
-const GroupCard: FC<GroupCardProps> = ({ group, onAddLesson }) => {
+const GroupCard: FC<GroupCardProps> = ({ group }) => {
   const { data: students } = useGetStudentsQuery();
   const { removeGroup, isDeleting } = useGroupActions();
   const { openModal } = useModal();
@@ -34,7 +33,17 @@ const GroupCard: FC<GroupCardProps> = ({ group, onAddLesson }) => {
       loading={isDeleting}
       className={styles.card}
       actions={[
-        <PlusOutlined key="add" onClick={() => onAddLesson(group)} />,
+        <PlusOutlined
+          key="add"
+          onClick={() =>
+            openModal({
+              type: 'lesson',
+              mode: 'create',
+              entityId: group.id,
+              extra: { preGroup: group.id },
+            })
+          }
+        />,
         <EditOutlined
           key="edit"
           onClick={() =>

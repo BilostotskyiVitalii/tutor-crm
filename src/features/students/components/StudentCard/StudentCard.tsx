@@ -7,8 +7,9 @@ import { Avatar, Badge, Card, Dropdown, type MenuProps } from 'antd';
 
 import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { StudentCardProps } from '@/features/students/types/studentTypes';
+import type { Student } from '@/features/students/types/studentTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
+import { useModal } from '@/shared/providers/ModalProvider';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './StudentCard.module.scss';
@@ -17,13 +18,14 @@ const { Meta } = Card;
 
 const { active, inactive } = studentStatus;
 
-const StudentCard: FC<StudentCardProps> = ({
-  student,
-  onEdit,
-  onAddLesson,
-}) => {
+interface StudentCardProps {
+  student: Student;
+}
+
+const StudentCard: FC<StudentCardProps> = ({ student }) => {
   const { removeStudent, updateStudentStatus, isDeleting } =
     useStudentActions();
+  const { openModal } = useModal();
 
   const menuItems = useMemo<MenuProps['items']>(
     () => [
@@ -54,13 +56,31 @@ const StudentCard: FC<StudentCardProps> = ({
 
   const cardActions = useMemo(
     () => [
-      <PlusOutlined key="add" onClick={() => onAddLesson(student.id)} />,
-      <EditOutlined key="edit" onClick={() => onEdit(student.id)} />,
+      <PlusOutlined
+        key="add"
+        onClick={() =>
+          openModal({
+            type: 'lesson',
+            mode: 'create',
+            extra: { preStudent: student.id },
+          })
+        }
+      />,
+      <EditOutlined
+        key="edit"
+        onClick={() =>
+          openModal({
+            type: 'student',
+            mode: 'edit',
+            entityId: student.id,
+          })
+        }
+      />,
       <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="top">
         <MoreOutlined key="more" />
       </Dropdown>,
     ],
-    [onAddLesson, onEdit, student.id, menuItems],
+    [openModal, student.id, menuItems],
   );
 
   return (

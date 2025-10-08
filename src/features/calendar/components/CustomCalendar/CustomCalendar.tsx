@@ -13,7 +13,6 @@ import { Timestamp } from 'firebase/firestore';
 
 import { useLessonEvents } from '@/features/calendar/hooks/useLessonEvents';
 import type {
-  CustomCalendarProps,
   DropEventProps,
   LessonEvent,
 } from '@/features/calendar/types/calendarTypes';
@@ -21,16 +20,19 @@ import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import CustomSpinner from '@/shared/components/UI/CustomSpinner/CustomSpinner';
+import { useModal } from '@/shared/providers/ModalProvider';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
-const CustomCalendar: FC<CustomCalendarProps> = ({ setModalState }) => {
+const CustomCalendar: FC = () => {
   const { data: lessons, isLoading } = useGetLessonsQuery();
   const { data: groups } = useGetGroupsQuery();
   const { updateLessonData } = useLessonActions();
   const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
   const calendarEvents = useLessonEvents(lessons, groups);
   const DnDCalendar = withDragAndDrop<LessonEvent, object>(RBC);
+
+  const { openModal } = useModal();
 
   const locales = useMemo(() => ({ enUS, uk, ru }), []);
   const localizer = useMemo(
@@ -44,10 +46,6 @@ const CustomCalendar: FC<CustomCalendarProps> = ({ setModalState }) => {
       }),
     [locales],
   );
-
-  const openLessonModal = (lessonId: string | null = null) => {
-    setModalState({ type: 'lesson', lessonId });
-  };
 
   const handleEventDrop = useCallback(
     ({ event, start, end }: DropEventProps) => {
@@ -94,17 +92,25 @@ const CustomCalendar: FC<CustomCalendarProps> = ({ setModalState }) => {
             startAccessor={(event) => (event as LessonEvent).start}
             endAccessor={(event) => (event as LessonEvent).end}
             onSelectEvent={(event) =>
-              openLessonModal((event as LessonEvent).id)
+              openModal({
+                type: 'lesson',
+                mode: 'edit',
+                entityId: (event as LessonEvent).id,
+                //TODO pass groupId
+                // extra: { preGroup: (event as LessonEvent).resource.groupId },
+              })
             }
             selectable
-            onSelectSlot={(slotInfo) => {
-              setModalState({
+            onSelectSlot={(slotInfo) =>
+              openModal({
                 type: 'lesson',
-                lessonId: null,
-                start: slotInfo.start,
-                end: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
-              });
-            }}
+                mode: 'create',
+                extra: {
+                  preStart: slotInfo.start,
+                  preEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
+                },
+              })
+            }
             eventPropGetter={(event) => {
               const e = event as LessonEvent;
               const isGroup = Boolean(e.resource.groupId);

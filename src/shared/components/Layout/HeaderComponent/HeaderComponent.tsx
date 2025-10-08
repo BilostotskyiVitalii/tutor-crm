@@ -1,14 +1,13 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 
 import { MenuOutlined } from '@ant-design/icons';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Layout, Space } from 'antd';
 
-import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
-import type { ModalState } from '@/features/lessons/types/lessonTypes';
 import UserMenu from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
+import { useModal } from '@/shared/providers/ModalProvider';
 
 import styles from './HeaderComponent.module.scss';
 
@@ -20,11 +19,7 @@ type HeaderProps = {
 };
 
 const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
-  const [modalState, setModalState] = useState<ModalState>(null);
-  const closeModal = () => setModalState(null);
-  const openLessonModal = (lessonId: string | null = null) => {
-    setModalState({ type: 'lesson', lessonId });
-  };
+  const { openModal } = useModal();
 
   return (
     <Header className={styles.header}>
@@ -41,20 +36,18 @@ const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
         <Button
           type="primary"
           icon={<PlusOutlined />}
-          onClick={() => openLessonModal()}
+          onClick={() =>
+            openModal({
+              type: 'lesson',
+              mode: 'create',
+            })
+          }
         >
           New lesson
         </Button>
         <SelectLang />
         <UserMenu />
       </Space>
-      {modalState?.type === 'lesson' && (
-        <LessonFormModal
-          isModalOpen
-          onClose={closeModal}
-          editedLessonId={modalState?.lessonId}
-        />
-      )}
     </Header>
   );
 };

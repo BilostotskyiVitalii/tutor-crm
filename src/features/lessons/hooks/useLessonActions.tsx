@@ -43,7 +43,7 @@ export function useLessonActions() {
   );
 
   const removeLesson = useCallback(
-    (id: string, closeEditModal: () => void) => {
+    (id: string) => {
       confirm({
         title: 'Delete this lesson?',
         okType: 'danger',
@@ -53,7 +53,6 @@ export function useLessonActions() {
           try {
             await deleteLesson(id).unwrap();
             notification.success({ message: 'Lesson deleted!' });
-            closeEditModal();
           } catch (err) {
             handleError(err, 'Failed to delete lesson');
           }

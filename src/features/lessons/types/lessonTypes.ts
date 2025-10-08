@@ -33,20 +33,3 @@ export type UpdateLesson = {
   id: string;
   data: Partial<LessonData>;
 };
-
-export interface LessonFormModalProps {
-  isModalOpen: boolean;
-  onClose: () => void;
-  editedLessonId?: string | null;
-  defaultStudent?: string | null;
-  defaultGroup?: string | null;
-  defaultStart?: Date | null;
-  defaultEnd?: Date | null;
-}
-
-export type ModalState = {
-  type: 'lesson';
-  lessonId: string | null;
-  start?: Date;
-  end?: Date;
-} | null;

@@ -25,14 +25,3 @@ export type UpdateUser = {
   id: string;
   data: Partial<StudentData>;
 };
-
-export interface StudentCardProps {
-  student: Student;
-  onEdit: (studentId: string) => void;
-  onAddLesson: (studentId: string) => void;
-}
-
-export type ModalState =
-  | { type: 'student'; studentId: string | null }
-  | { type: 'lesson'; studentId: string }
-  | null;
