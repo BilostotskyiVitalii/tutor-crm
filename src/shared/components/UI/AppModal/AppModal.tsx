@@ -1,8 +1,8 @@
 import { Modal } from 'antd';
 
 import GroupForm from '@/features/groups/components/GroupForm/GroupForm';
+import StudentForm from '@/features/students/components/StudentForm/StudentForm';
 // import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
-// import UserForm from '@/features/users/components/UserForm/UserForm';
 import { useModal } from '@/shared/providers/ModalProvider';
 
 export const AppModal = () => {
@@ -24,8 +24,10 @@ export const AppModal = () => {
         return (
           <GroupForm mode={mode} groupId={entityId} onClose={closeModal} />
         );
-      //   case 'user':
-      //     return <UserForm mode={mode} userId={entityId} onClose={closeModal} />;
+      case 'student':
+        return (
+          <StudentForm mode={mode} studentId={entityId} onClose={closeModal} />
+        );
       default:
         return null;
     }
