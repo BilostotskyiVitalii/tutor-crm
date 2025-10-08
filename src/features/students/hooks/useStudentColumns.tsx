@@ -4,7 +4,7 @@ import { Avatar, Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
-import { StudentStatus } from '@/features/students/constants/constants';
+import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import { type Student } from '@/features/students/types/studentTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
@@ -15,7 +15,7 @@ interface Props {
   onAddLesson: (studentId: string) => void;
 }
 
-const { active, inactive } = StudentStatus;
+const { active, inactive } = studentStatus;
 const { students } = navigationUrls;
 
 export function useStudentColumns({ onEdit, onAddLesson }: Props) {

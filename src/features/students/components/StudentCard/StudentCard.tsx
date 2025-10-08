@@ -2,12 +2,12 @@ import { type FC, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { EditOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Card, Dropdown } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Card, Dropdown, type MenuProps } from 'antd';
 
-import { StudentStatus } from '@/features/students/constants/constants';
+import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { Student } from '@/features/students/types/studentTypes';
-import { getStudentMenuItems } from '@/features/students/utils/getStudentMenuItems';
+import type { StudentCardProps } from '@/features/students/types/studentTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
@@ -15,13 +15,7 @@ import styles from './StudentCard.module.scss';
 
 const { Meta } = Card;
 
-interface StudentCardProps {
-  student: Student;
-  onEdit: (studentId: string) => void;
-  onAddLesson: (studentId: string) => void;
-}
-
-const { active, inactive } = StudentStatus;
+const { active, inactive } = studentStatus;
 
 const StudentCard: FC<StudentCardProps> = ({
   student,
@@ -31,23 +25,43 @@ const StudentCard: FC<StudentCardProps> = ({
   const { removeStudent, updateStudentStatus, isDeleting } =
     useStudentActions();
 
-  const menuItems = useMemo(
-    () =>
-      getStudentMenuItems(student, {
-        onDelete: () => removeStudent(student.id),
-        onChangeStatus: (status) =>
-          updateStudentStatus({ id: student.id, newStatus: status }),
-      }),
-    [student, removeStudent, updateStudentStatus],
+  const menuItems = useMemo<MenuProps['items']>(
+    () => [
+      {
+        key: active,
+        label: active,
+        disabled: student.isActive,
+        onClick: () => updateStudentStatus({ id: student.id, newStatus: true }),
+      },
+      {
+        key: inactive,
+        label: inactive,
+        disabled: !student.isActive,
+        onClick: () =>
+          updateStudentStatus({ id: student.id, newStatus: false }),
+      },
+      { type: 'divider' },
+      {
+        key: 'delete',
+        label: 'delete',
+        onClick: () => removeStudent(student.id),
+        danger: true,
+        icon: <DeleteOutlined />,
+      },
+    ],
+    [student.id, student.isActive, updateStudentStatus, removeStudent],
   );
 
-  const cardActions = [
-    <PlusOutlined key="add" onClick={() => onAddLesson(student.id)} />,
-    <EditOutlined key="edit" onClick={() => onEdit(student.id)} />,
-    <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="top">
-      <MoreOutlined key="more" />
-    </Dropdown>,
-  ];
+  const cardActions = useMemo(
+    () => [
+      <PlusOutlined key="add" onClick={() => onAddLesson(student.id)} />,
+      <EditOutlined key="edit" onClick={() => onEdit(student.id)} />,
+      <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="top">
+        <MoreOutlined key="more" />
+      </Dropdown>,
+    ],
+    [onAddLesson, onEdit, student.id, menuItems],
+  );
 
   return (
     <Badge.Ribbon

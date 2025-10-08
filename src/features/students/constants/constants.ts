@@ -1,4 +1,4 @@
-export const StudentStatus = {
+export const studentStatus = {
   active: 'active',
   inactive: 'inactive',
 };
