@@ -1,24 +1,12 @@
-import { useState } from 'react';
-
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Empty, Flex, Space, Spin } from 'antd';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import GroupCard from '@/features/groups/components/GroupCard/GroupCard';
-import type { ModalState } from '@/features/groups/types/groupTypes';
-import LessonFormModal from '@/features/lessons/components/LessonFormModal/LessonFormModal';
 import { useModal } from '@/shared/providers/ModalProvider';
 
 const GroupsPage = () => {
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
-  const [modalState, setModalState] = useState<ModalState>(null);
-
-  const openLessonModal = (groupId: string) => {
-    setModalState({ type: 'lesson', groupId });
-  };
-
-  const closeModal = () => setModalState(null);
-
   const { openModal } = useModal();
 
   return (
@@ -44,21 +32,9 @@ const GroupsPage = () => {
 
       <Flex wrap gap="large">
         {groups?.map((group) => (
-          <GroupCard
-            key={group.id}
-            group={group}
-            onAddLesson={() => openLessonModal(group.id)}
-          />
+          <GroupCard key={group.id} group={group} />
         ))}
       </Flex>
-
-      {modalState?.type === 'lesson' && (
-        <LessonFormModal
-          isModalOpen
-          onClose={closeModal}
-          defaultGroup={modalState.groupId}
-        />
-      )}
     </Flex>
   );
 };
