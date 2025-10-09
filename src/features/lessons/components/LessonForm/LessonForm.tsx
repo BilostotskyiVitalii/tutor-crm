@@ -201,12 +201,14 @@ const LessonForm: FC<LessonFormProps> = ({
       </Form.Item>
 
       <Form.Item>
-        <Flex justify="space-between">
-          <Space>
-            <Button danger htmlType="button" onClick={onDeleteHandler}>
-              Delete
-            </Button>
-          </Space>
+        <Flex justify={mode === 'edit' ? 'space-between' : 'flex-end'}>
+          {mode === 'edit' && (
+            <Space>
+              <Button danger htmlType="button" onClick={onDeleteHandler}>
+                Delete
+              </Button>
+            </Space>
+          )}
           <Space>
             <Button htmlType="button" onClick={onClose}>
               Cancel
