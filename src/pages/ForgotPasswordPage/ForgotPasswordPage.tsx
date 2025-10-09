@@ -4,17 +4,20 @@ import { MailOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input, message } from 'antd';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
+import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+
 const ForgotPasswordPage: FC = () => {
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
+  const { handleError } = useErrorHandler();
 
   const onFinish = async (values: { email: string }) => {
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, values.email);
       message.success('Ссылка для сброса пароля отправлена на email.');
-    } catch {
-      message.error('Ошибка при отправке письма. Проверьте email.');
+    } catch (err) {
+      handleError(err, 'Ошибка при отправке письма. Проверьте email.');
     } finally {
       setLoading(false);
     }

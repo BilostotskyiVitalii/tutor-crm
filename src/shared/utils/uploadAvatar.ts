@@ -1,3 +1,4 @@
+import { notification } from 'antd';
 import { getAuth } from 'firebase/auth';
 import {
   deleteObject,
@@ -28,8 +29,8 @@ export const uploadAvatar = async (
 
       const oldRef = ref(storage, pathname);
       await deleteObject(oldRef);
-    } catch (err) {
-      console.warn('Old avatar deletion failed:', err);
+    } catch {
+      notification.error({ message: 'Old avatar deletion failed' });
     }
   }
 
