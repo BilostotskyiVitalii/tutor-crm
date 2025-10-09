@@ -1,8 +1,12 @@
 import { type FC, useCallback, useMemo, useState } from 'react';
-import { Calendar as RBC, dateFnsLocalizer } from 'react-big-calendar';
+import {
+  Calendar as RBC,
+  dateFnsLocalizer,
+  type SlotInfo,
+} from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
 
-import { Calendar as AntdCalendar, Flex } from 'antd';
+import { Calendar as AntdCalendar, Flex, Spin } from 'antd';
 import { format, getDay, parse, startOfWeek } from 'date-fns';
 import { enUS } from 'date-fns/locale/en-US';
 import { ru } from 'date-fns/locale/ru';
@@ -19,10 +23,11 @@ import type {
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
-import CustomSpinner from '@/shared/components/UI/CustomSpinner/CustomSpinner';
 import { useModal } from '@/shared/providers/ModalProvider';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+
+const DnDCalendar = withDragAndDrop<LessonEvent, object>(RBC);
 
 const CustomCalendar: FC = () => {
   const { data: lessons, isLoading } = useGetLessonsQuery();
@@ -30,7 +35,6 @@ const CustomCalendar: FC = () => {
   const { updateLessonData } = useLessonActions();
   const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
   const calendarEvents = useLessonEvents(lessons, groups);
-  const DnDCalendar = withDragAndDrop<LessonEvent, object>(RBC);
 
   const { openModal } = useModal();
 
@@ -66,65 +70,68 @@ const CustomCalendar: FC = () => {
     [updateLessonData],
   );
 
+  function onSlotClick(slotInfo: SlotInfo) {
+    openModal({
+      type: 'lesson',
+      mode: 'create',
+      extra: {
+        preStart: slotInfo.start,
+        preEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
+      },
+    });
+  }
+
+  function getEventProps(event: LessonEvent) {
+    const isGroup = Boolean(event.resource.groupId);
+    return {
+      className: `calendarLesson ${isGroup ? 'groupLesson' : 'indivLesson'}`,
+    };
+  }
+
+  function onEventClick(event: LessonEvent) {
+    openModal({
+      type: 'lesson',
+      mode: 'edit',
+      entityId: (event as LessonEvent).id,
+      extra: {
+        preGroup: (event as LessonEvent).resource.groupId,
+      },
+    });
+  }
+
   return (
-    <>
-      {isLoading && <CustomSpinner />}
-
-      <Flex className="calendarWrapper">
-        <div className="miniCalendar">
-          <AntdCalendar
-            fullscreen={false}
-            value={currentDate}
-            onSelect={(date: Dayjs) => setCurrentDate(date)}
-            onPanelChange={(date: Dayjs) => setCurrentDate(date)}
-          />
-        </div>
-
-        <div className="calendarContainer">
-          <DnDCalendar
-            localizer={localizer}
-            events={calendarEvents}
-            views={['week', 'day', 'agenda']}
-            defaultView="week"
-            date={currentDate.toDate()}
-            onNavigate={(date) => setCurrentDate(dayjs(date))}
-            scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
-            startAccessor={(event) => (event as LessonEvent).start}
-            endAccessor={(event) => (event as LessonEvent).end}
-            onSelectEvent={(event) =>
-              openModal({
-                type: 'lesson',
-                mode: 'edit',
-                entityId: (event as LessonEvent).id,
-                //TODO pass groupId
-                // extra: { preGroup: (event as LessonEvent).resource.groupId },
-              })
-            }
-            selectable
-            onSelectSlot={(slotInfo) =>
-              openModal({
-                type: 'lesson',
-                mode: 'create',
-                extra: {
-                  preStart: slotInfo.start,
-                  preEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
-                },
-              })
-            }
-            eventPropGetter={(event) => {
-              const e = event as LessonEvent;
-              const isGroup = Boolean(e.resource.groupId);
-              return {
-                className: `calendarLesson ${
-                  isGroup ? 'groupLesson' : 'indivLesson'
-                }`,
-              };
-            }}
-            onEventDrop={handleEventDrop}
-          />
-        </div>
-      </Flex>
-    </>
+    <Flex className="calendarWrapper">
+      <div className="miniCalendarWrapper">
+        <AntdCalendar
+          fullscreen={false}
+          value={currentDate}
+          onSelect={(date: Dayjs) => setCurrentDate(date)}
+          onPanelChange={(date: Dayjs) => setCurrentDate(date)}
+        />
+      </div>
+      <div className="mainCalendarWrapper">
+        <Spin spinning={isLoading} size="large" tip="Loading lessons...">
+          <div className="mainCalendarContainer">
+            <DnDCalendar
+              localizer={localizer}
+              events={calendarEvents}
+              views={['week', 'day', 'agenda']}
+              defaultView="week"
+              date={currentDate.toDate()}
+              onNavigate={(date) => setCurrentDate(dayjs(date))}
+              scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
+              startAccessor={(event) => (event as LessonEvent).start}
+              endAccessor={(event) => (event as LessonEvent).end}
+              selectable
+              onSelectEvent={onEventClick}
+              onSelectSlot={onSlotClick}
+              eventPropGetter={getEventProps}
+              onEventDrop={handleEventDrop}
+            />
+          </div>
+        </Spin>
+      </div>
+    </Flex>
   );
 };
 
