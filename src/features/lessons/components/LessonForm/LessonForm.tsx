@@ -1,6 +1,15 @@
 import { type FC, useCallback, useEffect, useState } from 'react';
 
-import { Button, DatePicker, Flex, Form, Input, InputNumber } from 'antd';
+import {
+  Button,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Space,
+} from 'antd';
 import dayjs from 'dayjs';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
@@ -16,6 +25,7 @@ import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 const { RangePicker } = DatePicker;
+const { confirm } = Modal;
 
 interface LessonFormProps {
   mode?: string;
@@ -43,6 +53,7 @@ const LessonForm: FC<LessonFormProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const { updateLessonData, createLesson, removeLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
+  const { preStudent, preGroup, preStart, preEnd } = preload ?? {};
 
   const initVal = useCallback(() => {
     if (lessonId) {
@@ -61,8 +72,8 @@ const LessonForm: FC<LessonFormProps> = ({
       }
     }
 
-    if (preload?.preGroup) {
-      const group = groups.find((g) => g.id === preload.preGroup);
+    if (preGroup) {
+      const group = groups.find((g) => g.id === preGroup);
       if (group) {
         return {
           values: {
@@ -75,27 +86,36 @@ const LessonForm: FC<LessonFormProps> = ({
       }
     }
 
-    if (preload?.preStudent) {
-      const student = students.find((s) => s.id === preload.preStudent);
+    if (preStudent) {
+      const student = students.find((s) => s.id === preStudent);
       return {
         values: {
-          studentIds: [preload.preStudent],
+          studentIds: [preStudent],
           price: student?.price,
         },
         isGroup: false,
       };
     }
 
-    if (preload?.preStart && preload?.preEnd) {
+    if (preStart && preEnd) {
       return {
         values: {
-          date: [dayjs(preload.preStart), dayjs(preload.preEnd)],
+          date: [dayjs(preStart), dayjs(preEnd)],
         },
         isGroup: false,
       };
     }
     return { values: {}, isGroup: false };
-  }, []);
+  }, [
+    groups,
+    lessonId,
+    lessons,
+    preEnd,
+    preGroup,
+    preStart,
+    preStudent,
+    students,
+  ]);
 
   useEffect(() => {
     const initialValues = initVal();
@@ -128,12 +148,25 @@ const LessonForm: FC<LessonFormProps> = ({
     }
   };
 
-  async function onDeleteHandler() {
+  function onDeleteHandler() {
     if (!lessonId) {
       return;
     }
-    await removeLesson(lessonId);
-    onClose();
+
+    confirm({
+      title: 'Delete this lesson?',
+      okType: 'danger',
+      okText: 'Yes',
+      cancelText: 'No',
+      async onOk() {
+        try {
+          await removeLesson(lessonId);
+          onClose();
+        } catch (err) {
+          handleError(err, 'Failed to delete lesson');
+        }
+      },
+    });
   }
 
   return (
@@ -168,16 +201,20 @@ const LessonForm: FC<LessonFormProps> = ({
       </Form.Item>
 
       <Form.Item>
-        <Flex justify="flex-end" gap={12}>
-          <Button danger htmlType="button" onClick={onDeleteHandler}>
-            Delete
-          </Button>
-          <Button htmlType="button" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="primary" htmlType="submit" loading={isLoading}>
-            {mode === 'create' ? 'Create' : 'Update'}
-          </Button>
+        <Flex justify="space-between">
+          <Space>
+            <Button danger htmlType="button" onClick={onDeleteHandler}>
+              Delete
+            </Button>
+          </Space>
+          <Space>
+            <Button htmlType="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="primary" htmlType="submit" loading={isLoading}>
+              {mode === 'create' ? 'Create' : 'Update'}
+            </Button>
+          </Space>
         </Flex>
       </Form.Item>
     </Form>
