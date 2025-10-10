@@ -3,9 +3,13 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import { Spin } from 'antd';
 
-import type { IAuthRouteProps } from '@/routes/routeTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useAppSelector } from '@/store/reduxHooks';
+
+interface IAuthRouteProps {
+  requireAuth: boolean;
+  redirectPath?: string;
+}
 
 export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
   children,
@@ -35,5 +39,5 @@ export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
     return <Navigate to={redirectPath ?? navigationUrls.index} replace />;
   }
 
-  return <>{children}</>;
+  return children;
 };
