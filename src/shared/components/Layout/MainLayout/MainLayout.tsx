@@ -1,24 +1,18 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Layout } from 'antd';
 
-import AppRoutes from '@/routes/AppRoutes/AppRoutes';
+import { AppRoutes } from '@/routes/AppRoutes/AppRoutes';
 import FooterComponent from '@/shared/components/Layout/FooterComponent/FooterComponent';
 import HeaderComponent from '@/shared/components/Layout/HeaderComponent/HeaderComponent';
 import SiderComponent from '@/shared/components/Layout/SiderComponent/SiderComponent';
 import BurgerMenu from '@/shared/components/UI/BurgerMenu/BurgerMenu';
+import { useIsMobile } from '@/shared/hooks/useIsMobile';
 
-const WorkPlaceComponent = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [drawerVisible, setDrawerVisible] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const toggleDrawer = () => setDrawerVisible(!drawerVisible);
+export const MainLayout = () => {
+  const isMobile = useIsMobile();
+  const [drawerVisible, setDrawerVisible] = React.useState(false);
+  const toggleDrawer = () => setDrawerVisible((s) => !s);
 
   return (
     <Layout>
@@ -27,8 +21,8 @@ const WorkPlaceComponent = () => {
         {!isMobile && <SiderComponent />}
         {isMobile && (
           <BurgerMenu
-            drawerVisible={drawerVisible}
             setDrawerVisible={setDrawerVisible}
+            drawerVisible={drawerVisible}
             toggleDrawer={toggleDrawer}
           />
         )}
@@ -40,5 +34,3 @@ const WorkPlaceComponent = () => {
     </Layout>
   );
 };
-
-export default WorkPlaceComponent;

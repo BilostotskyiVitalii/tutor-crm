@@ -2,11 +2,10 @@ import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import { useAuthProfile } from '@/features/user/hooks/useAuthProfile';
-import { ForgotPasswordPage, LoginPage, RegistrationPage } from '@/pages';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
-import WorkPlaceComponent from '@/shared/components/Layout/WorkPlaceComponent/WorkPlaceComponent';
+import { AuthRoutes } from '@/routes/AuthRoutes/AuthRoutes';
+import { MainLayout } from '@/shared/components/Layout/MainLayout/MainLayout';
 import { AppModal } from '@/shared/components/UI/AppModal/AppModal';
-import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { ModalProvider } from '@/shared/providers/ModalProvider';
 
 const App: FC = () => {
@@ -15,36 +14,12 @@ const App: FC = () => {
   return (
     <ModalProvider>
       <Routes>
-        <Route
-          path={navigationUrls.login}
-          element={
-            <AuthRoute requireAuth={false}>
-              <LoginPage />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path={navigationUrls.registration}
-          element={
-            <AuthRoute requireAuth={false}>
-              <RegistrationPage />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path={navigationUrls.forgotPassword}
-          element={
-            <AuthRoute requireAuth={false}>
-              <ForgotPasswordPage />
-            </AuthRoute>
-          }
-        />
-
+        <Route path="/auth/*" element={<AuthRoutes />} />
         <Route
           path="/*"
           element={
             <AuthRoute requireAuth={true}>
-              <WorkPlaceComponent />
+              <MainLayout />
             </AuthRoute>
           }
         />
