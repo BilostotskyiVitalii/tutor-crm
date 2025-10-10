@@ -2,7 +2,7 @@ import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Empty, Flex, Spin, Table } from 'antd';
+import { Avatar, Button, Empty, Flex, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
@@ -132,22 +132,19 @@ const StudentsPage: FC = () => {
       </Button>
 
       {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
-      {isLoading && <Spin size="large" />}
 
-      {students && (
-        <Table
-          className={styles.studentsDesktop}
-          rowKey="id"
-          columns={columns}
-          dataSource={students}
-          pagination={{ pageSize: 30, position: ['bottomCenter'] }}
-          loading={isLoading}
-          locale={{ emptyText: <Empty description="No students found" /> }}
-          size="small"
-        />
-      )}
+      <Table
+        className={styles.studentsDesktop}
+        rowKey="id"
+        columns={columns}
+        dataSource={students}
+        pagination={{ pageSize: 30, position: ['bottomCenter'] }}
+        loading={isLoading}
+        locale={{ emptyText: <Empty description="No students found" /> }}
+        size="small"
+      />
 
-      {students && (
+      {/* {students && (
         <section className={styles.studentsMobile}>
           <Flex wrap gap="large">
             {students?.map((student) => (
@@ -156,7 +153,7 @@ const StudentsPage: FC = () => {
           </Flex>
           {students?.length === 0 && <Empty description="No students found" />}
         </section>
-      )}
+      )} */}
     </Flex>
   );
 };

@@ -109,28 +109,31 @@ const CustomCalendar: FC = () => {
           onPanelChange={(date: Dayjs) => setCurrentDate(date)}
         />
       </div>
-      <div className="mainCalendarWrapper">
-        <Spin spinning={isLoading} size="large" tip="Loading lessons...">
-          <div className="mainCalendarContainer">
-            <DnDCalendar
-              localizer={localizer}
-              events={calendarEvents}
-              views={['week', 'day', 'agenda']}
-              defaultView="week"
-              date={currentDate.toDate()}
-              onNavigate={(date) => setCurrentDate(dayjs(date))}
-              scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
-              startAccessor={(event) => (event as LessonEvent).start}
-              endAccessor={(event) => (event as LessonEvent).end}
-              selectable
-              onSelectEvent={onEventClick}
-              onSelectSlot={onSlotClick}
-              eventPropGetter={getEventProps}
-              onEventDrop={handleEventDrop}
-            />
-          </div>
-        </Spin>
-      </div>
+      <Spin
+        spinning={isLoading}
+        size="large"
+        tip="Loading lessons..."
+        wrapperClassName="mainCalendarWrapper"
+      >
+        <div className="mainCalendarContainer">
+          <DnDCalendar
+            localizer={localizer}
+            events={calendarEvents}
+            views={['week', 'day', 'agenda']}
+            defaultView="week"
+            date={currentDate.toDate()}
+            onNavigate={(date) => setCurrentDate(dayjs(date))}
+            scrollToTime={new Date(1970, 1, 1, 8, 0, 0)}
+            startAccessor={(event) => (event as LessonEvent).start}
+            endAccessor={(event) => (event as LessonEvent).end}
+            selectable
+            onSelectEvent={onEventClick}
+            onSelectSlot={onSlotClick}
+            eventPropGetter={getEventProps}
+            onEventDrop={handleEventDrop}
+          />
+        </div>
+      </Spin>
     </Flex>
   );
 };

@@ -1,8 +1,9 @@
 import type { FC, ReactNode } from 'react';
 import { Navigate } from 'react-router-dom';
 
+import { Spin } from 'antd';
+
 import type { IAuthRouteProps } from '@/routes/routeTypes';
-import CustomSpinner from '@/shared/components/UI/CustomSpinner/CustomSpinner';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useAppSelector } from '@/store/reduxHooks';
 
@@ -15,9 +16,8 @@ export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
   const loading = useAppSelector((state) => state.user.loading);
 
   if (loading) {
-    return <CustomSpinner />;
+    return <Spin spinning={loading} fullscreen />;
   }
-  // return <CustomSpinner />;
 
   const isAuth = !!email;
 
