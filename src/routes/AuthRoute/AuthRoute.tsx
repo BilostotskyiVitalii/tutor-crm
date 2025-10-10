@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 import { Spin } from 'antd';
 
@@ -12,17 +12,23 @@ export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
   requireAuth,
   redirectPath,
 }) => {
-  const email = useAppSelector((state) => state.user.email);
-  const loading = useAppSelector((state) => state.user.loading);
+  const { email, loading } = useAppSelector((s) => s.user);
+  const location = useLocation();
 
   if (loading) {
-    return <Spin spinning={loading} fullscreen />;
+    return <Spin size="large" fullscreen />;
   }
 
   const isAuth = !!email;
 
   if (requireAuth && !isAuth) {
-    return <Navigate to={redirectPath ?? navigationUrls.login} replace />;
+    return (
+      <Navigate
+        to={redirectPath ?? navigationUrls.login}
+        replace
+        state={{ from: location }}
+      />
+    );
   }
 
   if (!requireAuth && isAuth) {

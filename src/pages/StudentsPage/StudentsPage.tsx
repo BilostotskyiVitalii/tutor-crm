@@ -11,6 +11,7 @@ import { StatusDropdown } from '@/features/students/components/StudentStatusDrop
 import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useModal } from '@/shared/providers/ModalProvider';
 import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
@@ -49,7 +50,7 @@ const StudentsPage: FC = () => {
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
       render: (text, student) => (
-        <Link to={`${students}/${student.id}`}>{text}</Link>
+        <Link to={`${navigationUrls.students}/${student.id}`}>{text}</Link>
       ),
     },
     {
