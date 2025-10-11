@@ -6,12 +6,12 @@ import { Spin } from 'antd';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useAppSelector } from '@/store/reduxHooks';
 
-interface IAuthRouteProps {
+interface AuthRouteProps {
   requireAuth: boolean;
   redirectPath?: string;
 }
 
-export const AuthRoute: FC<IAuthRouteProps & { children: ReactNode }> = ({
+export const AuthRoute: FC<AuthRouteProps & { children: ReactNode }> = ({
   children,
   requireAuth,
   redirectPath,
