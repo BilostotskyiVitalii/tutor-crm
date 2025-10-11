@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Layout } from 'antd';
+import { Content } from 'antd/es/layout/layout';
 
 import { AppRoutes } from '@/routes/AppRoutes/AppRoutes';
 import FooterComponent from '@/shared/components/Layout/FooterComponent/FooterComponent';
@@ -8,6 +9,8 @@ import HeaderComponent from '@/shared/components/Layout/HeaderComponent/HeaderCo
 import SiderComponent from '@/shared/components/Layout/SiderComponent/SiderComponent';
 import BurgerMenu from '@/shared/components/UI/BurgerMenu/BurgerMenu';
 import { useIsMobile } from '@/shared/hooks/useIsMobile';
+
+import styles from './MainLayout.module.scss';
 
 export const MainLayout = () => {
   const isMobile = useIsMobile();
@@ -27,7 +30,9 @@ export const MainLayout = () => {
           />
         )}
         <Layout>
-          <AppRoutes />
+          <Content className={styles.content}>
+            <AppRoutes />
+          </Content>
           <FooterComponent />
         </Layout>
       </Layout>
