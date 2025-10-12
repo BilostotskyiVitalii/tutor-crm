@@ -1,24 +1,19 @@
 import { Link } from 'react-router-dom';
 
-import { Button } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
-import { useStudentActions } from '@/features/students/hooks/useStudentActions';
+import { StudentTableActions } from '@/features/students/components/StudentTableAction/StudentTableAction';
 import {
   type Student,
   studentStatus,
 } from '@/features/students/types/studentTypes';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
-import { useModal } from '@/shared/providers/ModalProvider';
 
 const { active, inactive } = studentStatus;
 
 export const useStudentColumns = (): ColumnsType<Student> => {
-  const { removeStudent } = useStudentActions();
-  const { openModal } = useModal();
-
   return [
     {
       title: 'Avatar',
@@ -68,38 +63,7 @@ export const useStudentColumns = (): ColumnsType<Student> => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, student) => (
-        <>
-          <Button
-            onClick={() =>
-              openModal({
-                type: 'student',
-                mode: 'edit',
-                entityId: student.id,
-              })
-            }
-            size="small"
-          >
-            Edit
-          </Button>{' '}
-          <Button
-            onClick={() =>
-              openModal({
-                type: 'lesson',
-                mode: 'create',
-                extra: { preStudent: student.id },
-              })
-            }
-            size="small"
-            disabled={!student.isActive}
-          >
-            Add Lesson
-          </Button>{' '}
-          <Button onClick={() => removeStudent(student.id)} size="small" danger>
-            Delete
-          </Button>
-        </>
-      ),
+      render: (_, student) => <StudentTableActions student={student} />,
     },
   ];
 };
