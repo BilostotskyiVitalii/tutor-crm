@@ -10,7 +10,6 @@ import type { RegField } from '@/shared/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();
-
   const handleRegister: FormProps<RegField>['onFinish'] = register;
 
   return (

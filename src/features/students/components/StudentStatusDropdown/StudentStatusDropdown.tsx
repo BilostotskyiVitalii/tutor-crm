@@ -2,9 +2,11 @@ import type { FC } from 'react';
 
 import { Dropdown, Tag } from 'antd';
 
-import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import { type Student } from '@/features/students/types/studentTypes';
+import {
+  type Student,
+  studentStatus,
+} from '@/features/students/types/studentTypes';
 
 import styles from './StudentStatusDropdown.module.scss';
 
