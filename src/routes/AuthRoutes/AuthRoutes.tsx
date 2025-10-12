@@ -25,7 +25,6 @@ export const AuthRoutes = () => (
           </AuthRoute>
         }
       />
-
       <Route
         path={navigationUrls.registration.replace('/auth', '')}
         element={

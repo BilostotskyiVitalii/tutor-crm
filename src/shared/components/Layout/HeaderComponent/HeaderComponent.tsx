@@ -21,6 +21,13 @@ type HeaderProps = {
 const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
   const { openModal } = useModal();
 
+  function onAddLesson() {
+    openModal({
+      type: 'lesson',
+      mode: 'create',
+    });
+  }
+
   return (
     <Header className={styles.header}>
       {isMobile && onBurgerClick && (
@@ -33,19 +40,11 @@ const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
       )}
       <LogoComponent />
       <Space>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() =>
-            openModal({
-              type: 'lesson',
-              mode: 'create',
-            })
-          }
-        >
+        <Button type="primary" icon={<PlusOutlined />} onClick={onAddLesson}>
           New lesson
         </Button>
         <SelectLang />
+        {/* добавь здесь кнопку смены темы и реализуй */}
         <UserMenu />
       </Space>
     </Header>

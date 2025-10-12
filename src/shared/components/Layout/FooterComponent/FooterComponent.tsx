@@ -4,9 +4,11 @@ import { Layout } from 'antd';
 
 const { Footer } = Layout;
 
+import styles from './FooterComponent.module.scss';
+
 const FooterComponent: FC = () => {
   return (
-    <Footer style={{ textAlign: 'center' }}>
+    <Footer className={styles.footer}>
       Tutor CRM ©{new Date().getFullYear()} Created with love by Vit
     </Footer>
   );
