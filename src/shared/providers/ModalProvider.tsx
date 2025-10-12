@@ -7,8 +7,7 @@ interface ModalState {
   type: ModalType;
   mode?: 'create' | 'edit';
   entityId?: string | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  extra?: any;
+  extra?: unknown;
 }
 
 interface ModalContextValue {

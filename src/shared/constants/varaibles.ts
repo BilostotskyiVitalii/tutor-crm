@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 
 import { navigationUrls } from '@/shared/constants/navigationUrls';
+
 export const langLevels = [
   { value: 'A1', label: 'A1' },
   { value: 'A2', label: 'A2' },

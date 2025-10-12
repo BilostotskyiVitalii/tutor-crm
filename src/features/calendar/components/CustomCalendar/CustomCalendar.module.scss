@@ -1,0 +1,111 @@
+@use '@/shared/styles/variables.scss' as *;
+
+.calendarWrapper {
+  gap: $padding-lg;
+  align-items: flex-start;
+
+  :global(.rbc-allday-cell),
+  :global(.rbc-allday-events) {
+    display: none;
+  }
+
+  :global(.rbc-today) :global(.rbc-button-link) {
+    font-weight: $font-weight-strong;
+  }
+
+  :global(.rbc-timeslot-group) {
+    min-height: $hour-cell-height !important;
+  }
+
+  :global(.rbc-time-view),
+  :global(.rbc-month-view),
+  :global(.rbc-agenda-view) {
+    border-radius: $border-radius;
+  }
+
+  :global(.rbc-time-view) .calendarLesson {
+    &:hover {
+      box-shadow: $box-shadow-base;
+      transform: scale(1.01);
+    }
+  }
+
+  :global(.rbc-active) {
+    position: relative;
+    z-index: 1 !important;
+    color: $calendar-active-tabs-color !important;
+    border-color: $calendar-active-tabs-color !important;
+    background-color: $color-background-base !important;
+  }
+
+  :global(.rbc-toolbar) button {
+    &:hover {
+      color: $calendar-active-tabs-color !important;
+      background-color: $color-background-base !important;
+      border-color: $color-border !important;
+    }
+
+    &:focus {
+      background-color: $color-background-base !important;
+    }
+  }
+
+  :global(.rbc-toolbar) button:active,
+  :global(.rbc-toolbar) button.rbc-active {
+    &:hover {
+      border-color: var($calendar-active-tabs-color) !important;
+    }
+
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    background-color: $color-background-base !important;
+  }
+
+  :global(.rbc-current-time-indicator) {
+    background-color: $now-indicator-color;
+    height: $now-indicator-heigth;
+
+    &:before {
+      content: '';
+      width: $now-indicator-circle-diametr;
+      height: $now-indicator-circle-diametr;
+      border-radius: 50%;
+      position: absolute;
+      background-color: $now-indicator-color;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}
+
+.miniCalendarWrapper {
+  width: $mini-calendar-width;
+  border: 1px solid $color-border;
+  border-radius: $border-radius;
+  flex-shrink: 0;
+}
+
+.mainCalendarWrapper {
+  flex: 1;
+}
+
+.mainCalendarContainer {
+  height: 75vh;
+  flex: 1;
+}
+
+.calendarLesson {
+  border: none !important;
+  padding: $padding-xxs $padding-xs;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.groupLesson {
+  background-color: $color-group-event !important;
+}
+
+.indivLesson {
+  background-color: $color-indiv-event !important;
+}
