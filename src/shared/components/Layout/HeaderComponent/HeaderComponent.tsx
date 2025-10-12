@@ -44,7 +44,7 @@ const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
           New lesson
         </Button>
         <SelectLang />
-        {/* добавь здесь кнопку смены темы и реализуй */}
+        {/* TODO добавь здесь кнопку смены темы и реализуй */}
         <UserMenu />
       </Space>
     </Header>

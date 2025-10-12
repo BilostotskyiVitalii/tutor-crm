@@ -26,6 +26,7 @@ import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import { useModal } from '@/shared/providers/ModalProvider';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import styles from './CustomCalendar.module.scss';
 
 const DnDCalendar = withDragAndDrop<LessonEvent, object>(RBC);
 
@@ -84,7 +85,7 @@ const CustomCalendar: FC = () => {
   function getEventProps(event: LessonEvent) {
     const isGroup = Boolean(event.resource.groupId);
     return {
-      className: `calendarLesson ${isGroup ? 'groupLesson' : 'indivLesson'}`,
+      className: `${styles.calendarLesson} ${isGroup ? styles.groupLesson : styles.indivLesson}`,
     };
   }
 
@@ -100,8 +101,8 @@ const CustomCalendar: FC = () => {
   }
 
   return (
-    <Flex className="calendarWrapper">
-      <div className="miniCalendarWrapper">
+    <Flex className={styles.calendarWrapper}>
+      <div className={styles.miniCalendarWrapper}>
         <AntdCalendar
           fullscreen={false}
           value={currentDate}
@@ -113,9 +114,9 @@ const CustomCalendar: FC = () => {
         spinning={isLoading}
         size="large"
         tip="Loading lessons..."
-        wrapperClassName="mainCalendarWrapper"
+        wrapperClassName={styles.mainCalendarWrapper}
       >
-        <div className="mainCalendarContainer">
+        <div className={styles.mainCalendarContainer}>
           <DnDCalendar
             localizer={localizer}
             events={calendarEvents}
