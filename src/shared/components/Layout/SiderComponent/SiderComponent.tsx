@@ -37,6 +37,7 @@ const SiderComponent: FC = () => {
     >
       <Menu
         theme="dark"
+        className={styles.menu}
         mode="inline"
         items={siderItems}
         onClick={({ key }) => navigate(key)}

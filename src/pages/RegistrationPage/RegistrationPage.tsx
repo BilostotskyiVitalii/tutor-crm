@@ -19,6 +19,21 @@ const RegistrationPage: FC = () => {
         <h2 className="auth-form-title">Registration</h2>
 
         <Form.Item
+          name="nickName"
+          tooltip="What do you want others to call you?"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: 'Please input your nickname!',
+              whitespace: true,
+            },
+          ]}
+        >
+          <Input prefix={<UserOutlined />} placeholder="Nickname" />
+        </Form.Item>
+
+        <Form.Item
           name="email"
           hasFeedback
           rules={[
@@ -37,7 +52,11 @@ const RegistrationPage: FC = () => {
             { min: 6, message: 'Password must be at least 6 characters!' },
           ]}
         >
-          <Input.Password prefix={<LockOutlined />} placeholder="Password" />
+          <Input.Password
+            prefix={<LockOutlined />}
+            type="password"
+            placeholder="Password"
+          />
         </Form.Item>
 
         <Form.Item
@@ -60,21 +79,6 @@ const RegistrationPage: FC = () => {
             prefix={<LockOutlined />}
             placeholder="Confirm password"
           />
-        </Form.Item>
-
-        <Form.Item
-          name="nickName"
-          tooltip="What do you want others to call you?"
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Please input your nickname!',
-              whitespace: true,
-            },
-          ]}
-        >
-          <Input prefix={<UserOutlined />} placeholder="Nickname" />
         </Form.Item>
 
         <Form.Item>
