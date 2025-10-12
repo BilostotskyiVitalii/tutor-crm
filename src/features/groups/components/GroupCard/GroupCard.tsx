@@ -5,11 +5,10 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Card, Flex, Typography } from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
+import { useGroupCard } from '@/features/groups/hooks/useGroupCard';
 import type { Group } from '@/features/groups/types/groupTypes';
-import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
-import { useModal } from '@/shared/providers/ModalProvider';
 
 import styles from './GroupCard.module.scss';
 
@@ -20,34 +19,11 @@ interface GroupCardProps {
 }
 
 const GroupCard: FC<GroupCardProps> = ({ group }) => {
-  const { data: students, isLoading } = useGetStudentsQuery();
   const { removeGroup } = useGroupActions();
-  const { openModal } = useModal();
-
-  const filteredStudents = students?.filter((student) =>
-    group.studentIds.includes(student.id),
-  );
-
-  function onAddLesson() {
-    openModal({
-      type: 'lesson',
-      mode: 'create',
-      entityId: group.id,
-      extra: { preGroup: group.id },
-    });
-  }
-
-  function onEditGroup() {
-    openModal({
-      type: 'group',
-      mode: 'edit',
-      entityId: group.id,
-    });
-  }
+  const { onAddLesson, onEditGroup, filteredStudents } = useGroupCard(group);
 
   return (
     <Card
-      loading={isLoading}
       className={styles.card}
       actions={[
         <PlusOutlined key="add" onClick={onAddLesson} />,
