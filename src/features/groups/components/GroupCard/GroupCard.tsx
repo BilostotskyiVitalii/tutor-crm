@@ -2,14 +2,14 @@ import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
-import { Avatar, Card, Flex, Tooltip, Typography } from 'antd';
+import { Avatar, Card, Flex, Typography } from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { Group } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useModal } from '@/shared/providers/ModalProvider';
-import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './GroupCard.module.scss';
 
@@ -20,40 +20,38 @@ interface GroupCardProps {
 }
 
 const GroupCard: FC<GroupCardProps> = ({ group }) => {
-  const { data: students } = useGetStudentsQuery();
-  const { removeGroup, isDeleting } = useGroupActions();
+  const { data: students, isLoading } = useGetStudentsQuery();
+  const { removeGroup } = useGroupActions();
   const { openModal } = useModal();
 
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),
   );
 
+  function onAddLesson() {
+    openModal({
+      type: 'lesson',
+      mode: 'create',
+      entityId: group.id,
+      extra: { preGroup: group.id },
+    });
+  }
+
+  function onEditGroup() {
+    openModal({
+      type: 'group',
+      mode: 'edit',
+      entityId: group.id,
+    });
+  }
+
   return (
     <Card
-      loading={isDeleting}
+      loading={isLoading}
       className={styles.card}
       actions={[
-        <PlusOutlined
-          key="add"
-          onClick={() =>
-            openModal({
-              type: 'lesson',
-              mode: 'create',
-              entityId: group.id,
-              extra: { preGroup: group.id },
-            })
-          }
-        />,
-        <EditOutlined
-          key="edit"
-          onClick={() =>
-            openModal({
-              type: 'group',
-              mode: 'edit',
-              entityId: group.id,
-            })
-          }
-        />,
+        <PlusOutlined key="add" onClick={onAddLesson} />,
+        <EditOutlined key="edit" onClick={onEditGroup} />,
         <DeleteOutlined
           key="delete"
           onClick={() => removeGroup(group.id)}
@@ -64,14 +62,7 @@ const GroupCard: FC<GroupCardProps> = ({ group }) => {
       <Flex className={styles.contentWrapper}>
         <Avatar.Group size={65} max={{ count: 3 }}>
           {filteredStudents?.map((student) => (
-            <Tooltip key={student.id} title={student.name} placement="top">
-              <Avatar
-                src={student.avatarUrl}
-                className={`$avatar ${[getAvatarColorClass(student.name)]}`}
-              >
-                {student.name[0]}
-              </Avatar>
-            </Tooltip>
+            <AvatarCustom src={student.avatarUrl ?? null} name={student.name} />
           ))}
         </Avatar.Group>
 

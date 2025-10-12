@@ -1,134 +1,29 @@
 import { type FC } from 'react';
-import { Link } from 'react-router-dom';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { Avatar, Button, Empty, Flex, Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { Button, Empty, Flex, Table } from 'antd';
 
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
-import StudentCard from '@/features/students/components/StudentCard/StudentCard';
-import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
-import { studentStatus } from '@/features/students/constants/constants';
-import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { Student } from '@/features/students/types/studentTypes';
-import { navigationUrls } from '@/shared/constants/navigationUrls';
+import { useStudentColumns } from '@/features/students/hooks/useStudentColumns';
 import { useModal } from '@/shared/providers/ModalProvider';
-import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './StudentsPage.module.scss';
 
-const { active, inactive } = studentStatus;
-
 const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
-  const { removeStudent } = useStudentActions();
-
   const { openModal } = useModal();
+  const columns = useStudentColumns();
 
-  const columns: ColumnsType<Student> = [
-    {
-      title: 'Avatar',
-      dataIndex: 'avatarUrl',
-      key: 'avatarUrl',
-      render: (avatarUrl: string | null, student) => (
-        <Avatar
-          src={avatarUrl ?? undefined}
-          className={`avatar ${
-            student.isActive
-              ? getAvatarColorClass(student.name)
-              : 'avatar-inactive'
-          }`}
-          size={50}
-        >
-          {!avatarUrl && student.name?.[0]}
-        </Avatar>
-      ),
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-      render: (text, student) => (
-        <Link to={`${navigationUrls.students}/${student.id}`}>{text}</Link>
-      ),
-    },
-    {
-      title: 'Status',
-      dataIndex: 'isActive',
-      key: 'isActive',
-      filters: [
-        { text: active, value: true },
-        { text: inactive, value: false },
-      ],
-      onFilter: (value, record) => record.isActive === value,
-      render: (_, student) => <StatusDropdown student={student} />,
-    },
-    {
-      title: 'Level',
-      dataIndex: 'currentLevel',
-      key: 'currentLevel',
-      sorter: (a, b) => a.currentLevel.localeCompare(b.currentLevel),
-      render: (val) => val,
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-      sorter: (a, b) => (a.price ?? 0) - (b.price ?? 0),
-      render: (val) => (val !== null ? `₴ ${val}` : '-'),
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      render: (_, student) => (
-        <>
-          <Button
-            onClick={() =>
-              openModal({
-                type: 'student',
-                mode: 'edit',
-                entityId: student.id,
-              })
-            }
-            size="small"
-          >
-            {' '}
-            Edit
-          </Button>{' '}
-          <Button
-            onClick={() =>
-              openModal({
-                type: 'lesson',
-                mode: 'create',
-                extra: { preStudent: student.id },
-              })
-            }
-            size="small"
-            disabled={!student.isActive}
-          >
-            Add Lesson
-          </Button>{' '}
-          <Button onClick={() => removeStudent(student.id)} size="small" danger>
-            Delete
-          </Button>
-        </>
-      ),
-    },
-  ];
+  function onAddStudent() {
+    openModal({
+      type: 'student',
+      mode: 'create',
+    });
+  }
 
   return (
     <Flex className={styles.wrapper}>
-      <Button
-        type="primary"
-        icon={<PlusOutlined />}
-        onClick={() =>
-          openModal({
-            type: 'student',
-            mode: 'create',
-          })
-        }
-      >
+      <Button type="primary" icon={<PlusOutlined />} onClick={onAddStudent}>
         New student
       </Button>
 
@@ -144,17 +39,6 @@ const StudentsPage: FC = () => {
         locale={{ emptyText: <Empty description="No students found" /> }}
         size="small"
       />
-
-      {/* {students && (
-        <section className={styles.studentsMobile}>
-          <Flex wrap gap="large">
-            {students?.map((student) => (
-              <StudentCard key={student.id} student={student} />
-            ))}
-          </Flex>
-          {students?.length === 0 && <Empty description="No students found" />}
-        </section>
-      )} */}
     </Flex>
   );
 };

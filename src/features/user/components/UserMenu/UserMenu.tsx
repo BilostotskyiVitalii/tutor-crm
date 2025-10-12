@@ -1,14 +1,13 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 
-import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, type MenuProps } from 'antd';
+import { Dropdown, type MenuProps } from 'antd';
 import { getAuth, signOut } from 'firebase/auth';
 
 import { studentsApi } from '@/features/students/api/studentsApi';
 import { removeUser } from '@/features/user/api/userSlice';
 import UserMenuCard from '@/features/user/components/UserMenuCard/UserMenuCard';
+import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';
 
 import styles from './UserMenu.module.scss';
@@ -30,16 +29,11 @@ const items: MenuProps['items'] = [
 ];
 
 const UserMenu: FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const avatar = useAppSelector((state) => state.user.avatar);
   const userName = useAppSelector((state) => state.user.nickName);
   const auth = getAuth();
   const { handleError } = useErrorHandler();
-
-  function handleOpenChange(open: boolean) {
-    setIsOpen(open);
-  }
 
   const handleClick: MenuProps['onClick'] = async ({ key }) => {
     if (key === 'logout') {
@@ -54,17 +48,14 @@ const UserMenu: FC = () => {
   };
 
   return (
-    <Dropdown
-      menu={{ items, onClick: handleClick }}
-      trigger={['click']}
-      onOpenChange={handleOpenChange}
-    >
-      <Avatar
-        className={`${styles.avatar} ${styles[getAvatarColorClass(userName ?? '')]} ${isOpen ? styles.openMenu : ''}`}
-        src={avatar ?? undefined}
-        icon={<UserOutlined />}
-        onError={() => true}
-      />
+    <Dropdown menu={{ items, onClick: handleClick }} trigger={['click']}>
+      <div className={styles.dropDownContainer}>
+        <AvatarCustom
+          className={styles.avatar}
+          src={avatar}
+          name={userName ?? ''}
+        />
+      </div>
     </Dropdown>
   );
 };

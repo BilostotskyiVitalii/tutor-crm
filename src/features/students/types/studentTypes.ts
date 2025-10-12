@@ -25,3 +25,8 @@ export type UpdateUser = {
   id: string;
   data: Partial<StudentData>;
 };
+
+export const studentStatus = {
+  active: 'active',
+  inactive: 'inactive',
+} as const;

@@ -11,18 +11,20 @@ const GroupsPage = () => {
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
   const { openModal } = useModal();
 
+  function onAddGroup() {
+    openModal({
+      type: 'group',
+      mode: 'create',
+    });
+  }
+
   return (
     <Flex vertical gap="large" className={styles.wrapper}>
       <Button
         className={styles.addButton}
         type="primary"
         icon={<PlusOutlined />}
-        onClick={() =>
-          openModal({
-            type: 'group',
-            mode: 'create',
-          })
-        }
+        onClick={onAddGroup}
       >
         New group
       </Button>

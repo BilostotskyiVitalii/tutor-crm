@@ -3,14 +3,16 @@ import { Link } from 'react-router-dom';
 
 import { EditOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
 import { DeleteOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Card, Dropdown, type MenuProps } from 'antd';
+import { Badge, Card, Dropdown, type MenuProps } from 'antd';
 
-import { studentStatus } from '@/features/students/constants/constants';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { Student } from '@/features/students/types/studentTypes';
+import {
+  type Student,
+  studentStatus,
+} from '@/features/students/types/studentTypes';
+import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useModal } from '@/shared/providers/ModalProvider';
-import { getAvatarColorClass } from '@/shared/utils/getAvatarColorClass';
 
 import styles from './StudentCard.module.scss';
 
@@ -91,17 +93,11 @@ const StudentCard: FC<StudentCardProps> = ({ student }) => {
       <Card loading={isDeleting} className={styles.card} actions={cardActions}>
         <Meta
           avatar={
-            <Avatar
-              size={70}
-              src={student.avatarUrl}
-              className={`avatar ${[getAvatarColorClass(student.name)]}`}
-            >
-              {student.name[0]}
-            </Avatar>
+            <AvatarCustom src={student.avatarUrl ?? ''} name={student.name} />
           }
           title={
             <Link to={`${navigationUrls.students}/${student.id}`}>
-              <span>{student.name}</span>
+              {student.name}
             </Link>
           }
           description={

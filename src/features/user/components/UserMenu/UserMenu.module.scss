@@ -9,7 +9,7 @@
   }
 }
 
-.openMenu {
+.dropDownContainer:global(.ant-dropdown-open) .avatar {
   box-shadow: 0 0 0 4px $color-control-hover;
 }
 

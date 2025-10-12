@@ -5,12 +5,12 @@
   border: none !important;
 }
 
-.avatar-inactive {
+.avatarInactive {
   filter: grayscale(100%);
 }
 
 @for $i from 1 through list.length($avatar-colors) {
-  .avatar-color-#{$i - 1} {
+  :global(.avatar-color-#{$i - 1}) {
     background-color: list.nth($avatar-colors, $i);
   }
 }
