@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Form } from 'antd';
 
-import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
@@ -17,14 +17,9 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm<GroupData>();
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: groups = [] } = useGetGroupsQuery();
+  const { data: group } = useGetGroupByIdQuery(groupId ?? '');
   const { createGroup, updateGroupData } = useGroupActions();
   const { handleError } = useErrorHandler();
-
-  const group = useMemo(
-    () => (groupId ? groups.find((g) => g.id === groupId) : null),
-    [groupId, groups],
-  );
 
   useEffect(() => {
     if (group) {
