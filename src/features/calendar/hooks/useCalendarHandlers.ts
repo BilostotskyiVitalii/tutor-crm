@@ -39,9 +39,9 @@ export const useCalendarHandlers = (setCurrentDate: (date: Dayjs) => void) => {
       openModal({
         type: 'lesson',
         mode: 'create',
-        extra: {
-          preStart: slotInfo.start,
-          preEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
+        initData: {
+          initStart: slotInfo.start,
+          initEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
         },
       });
     },
@@ -54,7 +54,7 @@ export const useCalendarHandlers = (setCurrentDate: (date: Dayjs) => void) => {
         type: 'lesson',
         mode: 'edit',
         entityId: event.id,
-        extra: { preGroup: event.resource.groupId },
+        initData: { initGroup: event.resource.groupId },
       });
     },
     [openModal],

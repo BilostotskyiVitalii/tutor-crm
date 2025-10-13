@@ -15,7 +15,7 @@ export const useGroupCard = (group: Group) => {
       type: 'lesson',
       mode: 'create',
       entityId: group.id,
-      extra: { preGroup: group.id },
+      initData: { initGroup: group.id },
     });
   }
 

@@ -38,7 +38,11 @@ const GroupCard: FC<GroupCardProps> = ({ group }) => {
       <Flex className={styles.contentWrapper}>
         <Avatar.Group size={65} max={{ count: 3 }}>
           {filteredStudents?.map((student) => (
-            <AvatarCustom src={student.avatarUrl ?? null} name={student.name} />
+            <AvatarCustom
+              key={student.id}
+              src={student.avatarUrl ?? null}
+              name={student.name}
+            />
           ))}
         </Avatar.Group>
 
