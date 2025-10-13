@@ -39,6 +39,8 @@ interface StudentFormValues
   birthdate: Dayjs | null;
 }
 
+const DATE_FORMAT = 'DD.MM.YYYY';
+
 const StudentForm: FC<StudentFormProps> = ({ mode, onClose, studentId }) => {
   const { createStudent, updateStudentData } = useStudentActions();
   const [form] = Form.useForm<StudentFormValues>();
@@ -117,25 +119,19 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, studentId }) => {
       </Form.Item>
 
       <Form.Item name="birthdate" label="Birthdate:">
-        <DatePicker format="DD.MM.YYYY" placeholder="DD.MM.YYYY" />
+        <DatePicker format={DATE_FORMAT} placeholder={DATE_FORMAT} />
       </Form.Item>
 
       <Flex justify="space-between" gap={24}>
         <Form.Item
           name="currentLevel"
           label="Current level:"
-          style={{ flex: 1 }}
           rules={studentFormRules.level}
         >
           <Select options={langLevels} />
         </Form.Item>
 
-        <Form.Item
-          name="price"
-          label="Price:"
-          style={{ flex: 1 }}
-          rules={studentFormRules.price}
-        >
+        <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
           <InputNumber
             min={0}
             placeholder="500"

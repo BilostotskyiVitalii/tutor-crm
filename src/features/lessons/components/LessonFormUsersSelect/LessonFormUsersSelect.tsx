@@ -11,13 +11,17 @@ type LessonFormUsersSelectProps = {
   onChange?: (val: string[]) => void;
 };
 
-const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
+export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
   editedLessonId,
   value,
   onChange,
 }) => {
   const { data: students = [] } = useGetStudentsQuery();
   const { data: lessons = [] } = useGetLessonsQuery();
+
+  const activeStudents = students
+    .filter((s) => s.isActive)
+    .map((s) => ({ label: s.name, value: s.id }));
 
   const extraStudents =
     editedLessonId && lessons
@@ -36,10 +40,6 @@ const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
             return { label, value: s.id };
           }) || []
       : [];
-
-  const activeStudents = students
-    .filter((s) => s.isActive)
-    .map((s) => ({ label: s.name, value: s.id }));
 
   const studentOptions = [...activeStudents, ...extraStudents].filter(
     (option, index, self) =>
@@ -62,5 +62,3 @@ const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
     </Form.Item>
   );
 };
-
-export default LessonFormUsersSelect;
