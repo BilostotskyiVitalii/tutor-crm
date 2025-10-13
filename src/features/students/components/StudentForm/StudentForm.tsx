@@ -1,4 +1,4 @@
-import { type FC, useEffect, useState } from 'react';
+import { type FC, useState } from 'react';
 
 import {
   Button,
@@ -11,22 +11,14 @@ import {
   type UploadFile,
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import type { Dayjs } from 'dayjs';
-import dayjs from 'dayjs';
-import { Timestamp } from 'firebase/firestore';
 
-import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
-import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type {
-  Student,
-  StudentData,
-} from '@/features/students/types/studentTypes';
+import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 import { langLevels } from '@/shared/constants/varaibles';
-import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { uploadAvatar } from '@/shared/utils/uploadAvatar';
+
+const DATE_FORMAT = 'DD.MM.YYYY';
 
 interface StudentFormProps {
   mode?: string;
@@ -34,71 +26,14 @@ interface StudentFormProps {
   studentId?: string | null;
 }
 
-interface StudentFormValues
-  extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
-  birthdate: Dayjs | null;
-}
-
-const DATE_FORMAT = 'DD.MM.YYYY';
-
 const StudentForm: FC<StudentFormProps> = ({ mode, onClose, studentId }) => {
-  const { createStudent, updateStudentData } = useStudentActions();
-  const [form] = Form.useForm<StudentFormValues>();
-  const { data: students } = useGetStudentsQuery();
-  const [isLoading, setIsLoading] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const editedStudent = students?.find((s) => s.id === studentId);
-  const { handleError } = useErrorHandler();
-
-  useEffect(() => {
-    if (editedStudent) {
-      form.setFieldsValue({
-        ...editedStudent,
-        birthdate: editedStudent.birthdate
-          ? dayjs(editedStudent.birthdate)
-          : null,
-      });
-    }
-  }, [students, editedStudent, form]);
-
-  const onFinish = async () => {
-    try {
-      setIsLoading(true);
-      const formValues: StudentFormValues = await form.validateFields();
-      const normalizeValues: StudentData = {
-        ...formValues,
-        birthdate: formValues.birthdate
-          ? Timestamp.fromMillis(formValues.birthdate.valueOf())
-          : null,
-        isActive: editedStudent?.isActive ?? true,
-        phone: formValues.phone || null,
-        contact: formValues.contact || null,
-        notes: formValues.notes || null,
-      };
-
-      if (fileList.length > 0) {
-        const file = fileList[0].originFileObj as File;
-        normalizeValues.avatarUrl = await uploadAvatar(
-          file,
-          editedStudent ? editedStudent.id : crypto.randomUUID(),
-          editedStudent?.avatarUrl,
-        );
-      }
-
-      if (editedStudent) {
-        await updateStudentData(editedStudent.id, normalizeValues);
-      } else {
-        await createStudent(normalizeValues);
-      }
-
-      onClose();
-      setFileList([]);
-    } catch (err) {
-      handleError(err, 'Student form error!');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { form, onFinish, isLoading } = useStudentForm({
+    studentId,
+    onClose,
+    fileList,
+    setFileList,
+  });
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical" name="student_form">

@@ -1,3 +1,4 @@
+import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
 export interface Student {
@@ -30,3 +31,8 @@ export const studentStatus = {
   active: 'active',
   inactive: 'inactive',
 } as const;
+
+export interface StudentFormValues
+  extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
+  birthdate: Dayjs | null;
+}
