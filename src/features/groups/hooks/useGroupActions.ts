@@ -5,6 +5,7 @@ import { Modal, notification } from 'antd';
 import {
   useAddGroupMutation,
   useDeleteGroupMutation,
+  useGetGroupsQuery,
   useUpdateGroupMutation,
 } from '@/features/groups/api/groupsApi';
 import type { GroupData } from '@/features/groups/types/groupTypes';
@@ -17,6 +18,7 @@ export function useGroupActions() {
   const [updateGroup] = useUpdateGroupMutation();
   const [addGroup] = useAddGroupMutation();
   const { handleError } = useErrorHandler();
+  const { data: groups = [] } = useGetGroupsQuery();
 
   const createGroup = useCallback(
     async (data: GroupData) => {
@@ -63,12 +65,9 @@ export function useGroupActions() {
   );
 
   const removeStudentFromGroups = useCallback(
-    async (
-      studentId: string,
-      allGroups: { id: string; studentIds?: string[] }[],
-    ) => {
+    async (studentId: string) => {
       try {
-        const updatePromises = allGroups
+        const updatePromises = groups
           .map((group) => {
             if (group.studentIds?.includes(studentId)) {
               return updateGroup({
@@ -92,7 +91,7 @@ export function useGroupActions() {
         handleError(err, 'Failed to remove student from groups');
       }
     },
-    [updateGroup, handleError],
+    [updateGroup, handleError, groups],
   );
 
   return {

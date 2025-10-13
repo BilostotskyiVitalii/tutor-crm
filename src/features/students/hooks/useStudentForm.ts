@@ -4,7 +4,7 @@ import { Form, type UploadFile } from 'antd';
 import dayjs from 'dayjs';
 import { Timestamp } from 'firebase/firestore';
 
-import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type {
   StudentData,
@@ -27,8 +27,7 @@ export const useStudentForm = ({
   setFileList,
 }: useStudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
-  const { data: students } = useGetStudentsQuery();
-  const editedStudent = students?.find((s) => s.id === studentId);
+  const { data: editedStudent } = useGetStudentByIdQuery(studentId ?? '');
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +41,7 @@ export const useStudentForm = ({
           : null,
       });
     }
-  }, [students, editedStudent, form]);
+  }, [editedStudent, form]);
 
   const onFinish = async () => {
     try {
