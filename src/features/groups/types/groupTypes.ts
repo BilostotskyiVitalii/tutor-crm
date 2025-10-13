@@ -14,8 +14,3 @@ export type UpdateGroup = {
   id: string;
   data: Partial<GroupData>;
 };
-
-export type ModalState =
-  | { type: 'group'; groupId: string | null }
-  | { type: 'lesson'; groupId: string }
-  | null;

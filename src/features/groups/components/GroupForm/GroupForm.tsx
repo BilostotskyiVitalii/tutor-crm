@@ -15,13 +15,18 @@ interface GroupFormProps {
 }
 
 const GroupForm: FC<GroupFormProps> = ({ onClose, mode, groupId }) => {
-  const { form, onFinish, studentOptions, isLoading } = useGroupForm({
+  const { form, handleFinish, studentOptions, isLoading } = useGroupForm({
     groupId,
     onClose,
   });
 
   return (
-    <Form form={form} onFinish={onFinish} layout="vertical" name="group_form">
+    <Form
+      form={form}
+      onFinish={handleFinish}
+      layout="vertical"
+      name="group_form"
+    >
       <Form.Item
         label="Title:"
         name="title"

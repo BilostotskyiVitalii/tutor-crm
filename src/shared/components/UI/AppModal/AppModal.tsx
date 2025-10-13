@@ -7,7 +7,7 @@ import { useModal } from '@/shared/providers/ModalProvider';
 
 export const AppModal = () => {
   const { modal, closeModal } = useModal();
-  const { type, mode, entityId, open, extra } = modal;
+  const { type, mode, entityId, open, initData } = modal;
 
   const getContent = () => {
     switch (type) {
@@ -16,7 +16,7 @@ export const AppModal = () => {
           <LessonForm
             mode={mode}
             lessonId={entityId}
-            preload={extra}
+            initData={initData}
             onClose={closeModal}
           />
         );

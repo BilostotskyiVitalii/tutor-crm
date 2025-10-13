@@ -42,9 +42,10 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
     [students],
   );
 
-  const onFinish = async () => {
+  const handleFinish = async () => {
     try {
       setIsLoading(true);
+
       const formValues: GroupData = await form.validateFields();
       const normalizedFormValues = {
         ...formValues,
@@ -64,9 +65,10 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
       setIsLoading(false);
     }
   };
+
   return {
     form,
-    onFinish,
+    handleFinish,
     studentOptions,
     isLoading,
   };
