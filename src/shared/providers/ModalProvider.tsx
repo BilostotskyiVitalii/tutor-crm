@@ -1,14 +1,6 @@
 import { createContext, type ReactNode, useContext, useState } from 'react';
 
-type ModalType = 'lesson' | 'group' | 'student' | null;
-
-interface ModalState {
-  open: boolean;
-  type: ModalType;
-  mode?: 'create' | 'edit';
-  entityId?: string | null;
-  extra?: unknown;
-}
+import type { ModalState } from '@/shared/types/modalTypes';
 
 interface ModalContextValue {
   modal: ModalState;
