@@ -1,11 +1,9 @@
-import { type FC } from 'react';
-
 import { Dropdown, type MenuProps } from 'antd';
 import { getAuth, signOut } from 'firebase/auth';
 
 import { studentsApi } from '@/features/students/api/studentsApi';
 import { removeUser } from '@/features/user/api/userSlice';
-import UserMenuCard from '@/features/user/components/UserMenuCard/UserMenuCard';
+import { UserMenuCard } from '@/features/user/components/UserMenuCard/UserMenuCard';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';
@@ -28,7 +26,7 @@ const items: MenuProps['items'] = [
   },
 ];
 
-const UserMenu: FC = () => {
+export const UserMenu = () => {
   const dispatch = useAppDispatch();
   const avatar = useAppSelector((state) => state.user.avatar);
   const userName = useAppSelector((state) => state.user.nickName);
@@ -59,5 +57,3 @@ const UserMenu: FC = () => {
     </Dropdown>
   );
 };
-
-export default UserMenu;
