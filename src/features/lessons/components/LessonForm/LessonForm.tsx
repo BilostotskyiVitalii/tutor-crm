@@ -11,7 +11,7 @@ import {
 } from 'antd';
 
 import LessonFormGroupSelect from '@/features/lessons/components/LessonFormGroupSelect/LessonFormGroupSelect';
-import UsersSelect from '@/features/lessons/components/LessonFormUsersSelect/LessonFormUsersSelect';
+import { LessonFormUsersSelect } from '@/features/lessons/components/LessonFormUsersSelect/LessonFormUsersSelect';
 import { useLessonForm } from '@/features/lessons/hooks/useLessonForm';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
@@ -45,7 +45,7 @@ const LessonForm: FC<LessonFormProps> = ({
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
-      <UsersSelect editedLessonId={lessonId} />
+      <LessonFormUsersSelect editedLessonId={lessonId} />
 
       <LessonFormGroupSelect
         isGroup={isGroup}

@@ -5,9 +5,9 @@ import dayjs from 'dayjs';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
+import { useBuildLessonData } from '@/features/lessons/hooks/useBuildLessonData';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type { LessonFormValues } from '@/features/lessons/types/lessonTypes';
-import { buildLessonData } from '@/features/lessons/utils/buildLessonData';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
@@ -35,6 +35,7 @@ export const useLessonForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const { handleError } = useErrorHandler();
   const { initStudent, initGroup, initStart, initEnd } = initData ?? {};
+  const { buildLessonData } = useBuildLessonData();
 
   const initVal = useCallback(() => {
     if (lessonId) {
@@ -104,17 +105,12 @@ export const useLessonForm = ({
     setIsGroup(initialValues.isGroup);
   }, [form, initVal, lessonId, lessons, students, groups, setIsGroup]);
 
-  const onFinish = async () => {
+  async function onFinish() {
     setIsLoading(true);
 
     try {
       const formValues = await form.validateFields();
-      const lessonData = buildLessonData(
-        formValues,
-        students,
-        lessons,
-        lessonId,
-      );
+      const lessonData = buildLessonData(formValues, lessonId);
 
       if (lessonId) {
         await updateLessonData(lessonId, lessonData);
@@ -128,7 +124,7 @@ export const useLessonForm = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   function onDeleteHandler() {
     if (!lessonId) {
