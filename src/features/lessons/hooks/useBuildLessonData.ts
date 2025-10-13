@@ -1,24 +1,19 @@
 import { Timestamp } from 'firebase/firestore';
 
-import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
+import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import type {
   LessonData,
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 
-export const useBuildLessonData = () => {
+export const useBuildLessonData = (editedLessonId?: string | null) => {
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: lessons = [] } = useGetLessonsQuery();
+  const { data: lesson } = useGetLessonByIdQuery(editedLessonId ?? '', {
+    skip: !editedLessonId,
+  });
 
-  const buildLessonData = (
-    formValues: LessonFormValues,
-    editedLessonId?: string | null,
-  ): LessonData => {
-    const lesson = editedLessonId
-      ? lessons.find((l) => l.id === editedLessonId)
-      : null;
-
+  const buildLessonData = (formValues: LessonFormValues): LessonData => {
     const studentMap = new Map(students.map((s) => [s.id, s]));
     const lessonMap = new Map(lesson?.students.map((s) => [s.id, s]) ?? []);
 

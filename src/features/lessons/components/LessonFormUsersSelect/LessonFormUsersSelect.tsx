@@ -2,7 +2,7 @@ import type { FC } from 'react';
 
 import { Form, Select } from 'antd';
 
-import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
+import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 
 type LessonFormUsersSelectProps = {
@@ -17,29 +17,25 @@ export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
   onChange,
 }) => {
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: lessons = [] } = useGetLessonsQuery();
+  const { data: lesson } = useGetLessonByIdQuery(editedLessonId ?? '');
 
   const activeStudents = students
     .filter((s) => s.isActive)
     .map((s) => ({ label: s.name, value: s.id }));
 
   const extraStudents =
-    editedLessonId && lessons
-      ? lessons
-          .find((l) => l.id === editedLessonId)
-          ?.students.map((s) => {
-            const fullData = students.find((st) => st.id === s.id);
-            let label = fullData?.name || s.name || s.id;
+    lesson?.students.map((s) => {
+      const fullData = students.find((st) => st.id === s.id);
+      let label = fullData?.name || s.name || s.id;
 
-            if (!fullData) {
-              label += ' (deleted)';
-            } else if (!fullData.isActive) {
-              label += ' (inactive)';
-            }
+      if (!fullData) {
+        label += ' (deleted)';
+      } else if (!fullData.isActive) {
+        label += ' (inactive)';
+      }
 
-            return { label, value: s.id };
-          }) || []
-      : [];
+      return { label, value: s.id };
+    }) || [];
 
   const studentOptions = [...activeStudents, ...extraStudents].filter(
     (option, index, self) =>

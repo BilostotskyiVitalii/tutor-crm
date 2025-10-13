@@ -3,12 +3,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { Form, Modal } from 'antd';
 import dayjs from 'dayjs';
 
-import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
-import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
+import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
+import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import { useBuildLessonData } from '@/features/lessons/hooks/useBuildLessonData';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import type { LessonFormValues } from '@/features/lessons/types/lessonTypes';
-import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
 
@@ -28,52 +28,47 @@ export const useLessonForm = ({
   setIsGroup,
 }: useLessonFormProps) => {
   const [form] = Form.useForm<LessonFormValues>();
-  const { data: students = [] } = useGetStudentsQuery();
-  const { data: groups = [] } = useGetGroupsQuery();
-  const { data: lessons = [] } = useGetLessonsQuery();
-  const { updateLessonData, createLesson, removeLesson } = useLessonActions();
-  const [isLoading, setIsLoading] = useState(false);
-  const { handleError } = useErrorHandler();
   const { initStudent, initGroup, initStart, initEnd } = initData ?? {};
-  const { buildLessonData } = useBuildLessonData();
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: student } = useGetStudentByIdQuery(initStudent ?? '');
+  const { data: group } = useGetGroupByIdQuery(initGroup ?? '');
+  const { data: lesson } = useGetLessonByIdQuery(lessonId ?? '');
+  const { updateLessonData, createLesson, removeLesson } = useLessonActions();
+  const { handleError } = useErrorHandler();
+  const { buildLessonData } = useBuildLessonData(lessonId);
 
   const initVal = useCallback(() => {
-    if (lessonId) {
-      const lesson = lessons.find((l) => l.id === lessonId);
-      if (lesson) {
-        return {
-          values: {
-            studentIds: lesson.students.map((s) => s.id),
-            groupId: lesson.groupId,
-            date: [dayjs(lesson.start), dayjs(lesson.end)],
-            notes: lesson.notes || null,
-            price: lesson.price,
-          },
-          isGroup: !!lesson.groupId,
-        };
-      }
-    }
-
-    if (initGroup) {
-      const group = groups.find((g) => g.id === initGroup);
-      if (group) {
-        return {
-          values: {
-            studentIds: group.studentIds,
-            groupId: group.id,
-            price: group.price,
-          },
-          isGroup: true,
-        };
-      }
-    }
-
-    if (initStudent) {
-      const student = students.find((s) => s.id === initStudent);
+    if (lesson) {
       return {
         values: {
-          studentIds: [initStudent],
-          price: student?.price,
+          studentIds: lesson.students
+            .map((s) => s.id)
+            .filter(Boolean) as string[],
+          groupId: lesson.groupId,
+          date: [dayjs(lesson.start), dayjs(lesson.end)],
+          notes: lesson.notes || null,
+          price: lesson.price,
+        },
+        isGroup: !!lesson.groupId,
+      };
+    }
+
+    if (group) {
+      return {
+        values: {
+          studentIds: group.studentIds.filter(Boolean) as string[],
+          groupId: group.id,
+          price: group.price,
+        },
+        isGroup: true,
+      };
+    }
+
+    if (student && initStudent) {
+      return {
+        values: {
+          studentIds: [initStudent].filter(Boolean) as string[],
+          price: student.price,
         },
         isGroup: false,
       };
@@ -87,30 +82,22 @@ export const useLessonForm = ({
         isGroup: false,
       };
     }
+
     return { values: {}, isGroup: false };
-  }, [
-    lessonId,
-    groups,
-    students,
-    lessons,
-    initGroup,
-    initStudent,
-    initEnd,
-    initStart,
-  ]);
+  }, [lesson, group, student, initStudent, initEnd, initStart]);
 
   useEffect(() => {
     const initialValues = initVal();
     form.setFieldsValue(initialValues.values);
     setIsGroup(initialValues.isGroup);
-  }, [form, initVal, lessonId, lessons, students, groups, setIsGroup]);
+  }, [form, initVal, lessonId, student, group, setIsGroup]);
 
   async function onFinish() {
     setIsLoading(true);
 
     try {
       const formValues = await form.validateFields();
-      const lessonData = buildLessonData(formValues, lessonId);
+      const lessonData = buildLessonData(formValues);
 
       if (lessonId) {
         await updateLessonData(lessonId, lessonData);

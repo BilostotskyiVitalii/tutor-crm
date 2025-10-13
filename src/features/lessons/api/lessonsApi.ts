@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   Timestamp,
@@ -58,6 +59,35 @@ export const lessonsApi = createApi({
           : [{ type: 'Lessons', id: 'LIST' }],
     }),
 
+    getLessonById: builder.query<Lesson | null, string>({
+      async queryFn(id) {
+        try {
+          const uid = getCurrentUid();
+          const docRef = doc(db, `${users}/${uid}/${lessons}/${id}`);
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            return { data: null };
+          }
+
+          const data = docSnap.data();
+          const lesson: Lesson = {
+            id: docSnap.id,
+            ...data,
+            start: (data.start as Timestamp)?.toMillis?.(),
+            end: (data.end as Timestamp)?.toMillis?.(),
+            createdAt: (data.createdAt as Timestamp)?.toMillis?.(),
+            updatedAt: (data.updatedAt as Timestamp)?.toMillis?.(),
+          } as Lesson;
+
+          return { data: lesson };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
+        }
+      },
+      providesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
+    }),
+
     addLesson: builder.mutation<void, LessonData>({
       async queryFn(newLesson) {
         try {
@@ -108,6 +138,7 @@ export const lessonsApi = createApi({
 
 export const {
   useGetLessonsQuery,
+  useGetLessonByIdQuery,
   useAddLessonMutation,
   useUpdateLessonMutation,
   useDeleteLessonMutation,

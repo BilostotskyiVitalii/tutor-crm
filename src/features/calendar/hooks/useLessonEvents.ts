@@ -15,6 +15,7 @@ export const useLessonEvents = () => {
 
     return lessons.map((lesson) => {
       const group = groups?.find((g) => g.id === lesson.groupId);
+
       return {
         id: lesson.id,
         title: group

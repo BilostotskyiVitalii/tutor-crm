@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   Timestamp,
@@ -59,6 +60,45 @@ export const studentsApi = createApi({
           : [{ type: 'Students', id: 'LIST' }],
     }),
 
+    getStudentById: builder.query<Student | null, string>({
+      async queryFn(id) {
+        try {
+          const uid = getCurrentUid();
+          const docRef = doc(db, `${users}/${uid}/${students}/${id}`);
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            return { data: null };
+          }
+
+          const data = docSnap.data();
+
+          const student: Student = {
+            id: docSnap.id,
+            name: data.name ?? '',
+            email: data.email ?? '',
+            phone: data.phone ?? null,
+            contact: data.contact ?? null,
+            birthdate: (data.birthdate as Timestamp)?.toMillis?.() ?? null,
+            currentLevel: data.currentLevel ?? '',
+            price: data.price ?? 0,
+            notes: data.notes ?? null,
+            avatarUrl: data.avatarUrl ?? undefined,
+            isActive: data.isActive ?? true,
+            createdAt:
+              (data.createdAt as Timestamp)?.toMillis?.() ?? Date.now(),
+            updatedAt:
+              (data.updatedAt as Timestamp)?.toMillis?.() ?? Date.now(),
+          };
+
+          return { data: student };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
+        }
+      },
+      providesTags: (_result, _error, id) => [{ type: 'Students', id }],
+    }),
+
     addStudent: builder.mutation<void, StudentData>({
       async queryFn(newStudent) {
         try {
@@ -109,6 +149,7 @@ export const studentsApi = createApi({
 
 export const {
   useGetStudentsQuery,
+  useGetStudentByIdQuery,
   useAddStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation,
