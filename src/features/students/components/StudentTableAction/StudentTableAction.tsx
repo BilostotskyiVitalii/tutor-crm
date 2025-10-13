@@ -35,7 +35,7 @@ export const StudentTableActions: FC<StudentTableActionsProps> = ({
           openModal({
             type: 'lesson',
             mode: 'create',
-            extra: { preStudent: student.id },
+            initData: { initStudent: student.id },
           })
         }
         size="small"

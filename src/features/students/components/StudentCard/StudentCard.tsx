@@ -64,7 +64,7 @@ const StudentCard: FC<StudentCardProps> = ({ student }) => {
           openModal({
             type: 'lesson',
             mode: 'create',
-            extra: { preStudent: student.id },
+            initData: { initStudent: student.id },
           })
         }
       />,
