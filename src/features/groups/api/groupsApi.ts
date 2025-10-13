@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   Timestamp,
@@ -56,6 +57,33 @@ export const groupsApi = createApi({
           : [{ type: 'Groups', id: 'LIST' }],
     }),
 
+    getGroupById: builder.query<Group | null, string>({
+      async queryFn(id) {
+        try {
+          const uid = getCurrentUid();
+          const docRef = doc(db, `${users}/${uid}/${groups}/${id}`);
+          const docSnap = await getDoc(docRef);
+
+          if (!docSnap.exists()) {
+            return { data: null };
+          }
+
+          const data = docSnap.data();
+          const group: Group = {
+            id: docSnap.id,
+            ...data,
+            createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
+            updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
+          } as Group;
+
+          return { data: group };
+        } catch (err) {
+          return { error: { message: (err as Error).message } };
+        }
+      },
+      providesTags: (_result, _error, id) => [{ type: 'Groups', id }],
+    }),
+
     addGroup: builder.mutation<void, GroupData>({
       async queryFn(newGroup) {
         try {
@@ -106,6 +134,7 @@ export const groupsApi = createApi({
 
 export const {
   useGetGroupsQuery,
+  useGetGroupByIdQuery,
   useAddGroupMutation,
   useUpdateGroupMutation,
   useDeleteGroupMutation,

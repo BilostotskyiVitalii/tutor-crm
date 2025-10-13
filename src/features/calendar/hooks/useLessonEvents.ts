@@ -1,17 +1,18 @@
 import { useMemo } from 'react';
 
-import type { LessonEvent } from '@/features/calendar/types/calendarTypes';
-import type { Group } from '@/features/groups/types/groupTypes';
-import type { Lesson } from '@/features/lessons/types/lessonTypes';
+import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
+import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 
-export const useLessonEvents = (
-  lessons?: Lesson[],
-  groups?: Group[],
-): LessonEvent[] => {
-  return useMemo(() => {
+export const useLessonEvents = () => {
+  const { data: lessons = [], isLoading: isLessonsLoading } =
+    useGetLessonsQuery();
+  const { data: groups = [] } = useGetGroupsQuery();
+
+  const calendarEvents = useMemo(() => {
     if (!lessons) {
       return [];
     }
+
     return lessons.map((lesson) => {
       const group = groups?.find((g) => g.id === lesson.groupId);
       return {
@@ -25,4 +26,9 @@ export const useLessonEvents = (
       };
     });
   }, [lessons, groups]);
+
+  return {
+    calendarEvents,
+    isLessonsLoading,
+  };
 };

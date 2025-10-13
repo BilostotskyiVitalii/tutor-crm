@@ -10,8 +10,6 @@ import { useCalendarHandlers } from '@/features/calendar/hooks/useCalendarHandle
 import { useCalendarLocalizer } from '@/features/calendar/hooks/useCalendarLocalizer';
 import { useLessonEvents } from '@/features/calendar/hooks/useLessonEvents';
 import type { LessonEvent } from '@/features/calendar/types/calendarTypes';
-import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
-import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import styles from './CustomCalendar.module.scss';
@@ -19,10 +17,8 @@ import styles from './CustomCalendar.module.scss';
 const DnDCalendar = withDragAndDrop<LessonEvent, object>(RBC);
 
 const CustomCalendar: FC = () => {
-  const { data: lessons = [], isLoading } = useGetLessonsQuery();
-  const { data: groups = [] } = useGetGroupsQuery();
   const [currentDate, setCurrentDate] = useState<Dayjs>(dayjs());
-  const calendarEvents = useLessonEvents(lessons, groups);
+  const { calendarEvents, isLessonsLoading } = useLessonEvents();
   const localizer = useCalendarLocalizer();
   const SCROLL_TIME = new Date(1970, 1, 1, 8, 0, 0);
 
@@ -45,7 +41,7 @@ const CustomCalendar: FC = () => {
         />
       </div>
       <Spin
-        spinning={isLoading}
+        spinning={isLessonsLoading}
         size="large"
         tip="Loading lessons..."
         wrapperClassName={styles.mainCalendarWrapper}
