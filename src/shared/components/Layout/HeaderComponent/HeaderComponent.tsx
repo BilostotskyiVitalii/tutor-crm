@@ -4,7 +4,7 @@ import { MenuOutlined } from '@ant-design/icons';
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Layout, Space } from 'antd';
 
-import UserMenu from '@/features/user/components/UserMenu/UserMenu';
+import { UserMenu } from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
 import { useModal } from '@/shared/providers/ModalProvider';

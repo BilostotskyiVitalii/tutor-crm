@@ -1,10 +1,8 @@
-import type { FC } from 'react';
-
 import { useAppSelector } from '@/store/reduxHooks';
 
 import styles from './UserMenuCard.module.scss';
 
-const UserMenuCard: FC = () => {
+export const UserMenuCard = () => {
   const nickName = useAppSelector((state) => state.user.nickName);
   const email = useAppSelector((state) => state.user.email);
 
@@ -15,5 +13,3 @@ const UserMenuCard: FC = () => {
     </div>
   );
 };
-
-export default UserMenuCard;
