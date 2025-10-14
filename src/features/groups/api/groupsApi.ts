@@ -6,8 +6,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  serverTimestamp,
-  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -17,6 +15,7 @@ import type {
   GroupData,
   UpdateGroup,
 } from '@/features/groups/types/groupTypes';
+import { mapFirestoreGroup } from '@/features/groups/utils/mapFirestoreGroup';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
@@ -34,15 +33,11 @@ export const groupsApi = createApi({
           const snapshot = await getDocs(
             collection(db, `${users}/${uid}/${groups}`),
           );
-          const groupsData: Group[] = snapshot.docs.map((docSnap) => {
-            const data = docSnap.data();
-            return {
-              id: docSnap.id,
-              ...data,
-              createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
-              updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
-            };
-          }) as Group[];
+
+          const groupsData: Group[] = snapshot.docs.map((docSnap) =>
+            mapFirestoreGroup(docSnap.id, docSnap.data()),
+          );
+
           return { data: groupsData };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -69,14 +64,8 @@ export const groupsApi = createApi({
           }
 
           const data = docSnap.data();
-          const group: Group = {
-            id: docSnap.id,
-            ...data,
-            createdAt: (data.createdAt as Timestamp)?.toMillis?.() ?? 0,
-            updatedAt: (data.updatedAt as Timestamp)?.toMillis?.() ?? 0,
-          } as Group;
 
-          return { data: group };
+          return { data: mapFirestoreGroup(docSnap.id, data) };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
@@ -88,11 +77,7 @@ export const groupsApi = createApi({
       async queryFn(newGroup) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `${users}/${uid}/${groups}`), {
-            ...newGroup,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          });
+          await addDoc(collection(db, `${users}/${uid}/${groups}`), newGroup);
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -105,10 +90,7 @@ export const groupsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${groups}/${id}`), {
-            ...data,
-            updatedAt: serverTimestamp(),
-          });
+          await updateDoc(doc(db, `${users}/${uid}/${groups}/${id}`), data);
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
