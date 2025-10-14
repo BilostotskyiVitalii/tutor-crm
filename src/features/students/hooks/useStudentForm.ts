@@ -4,9 +4,9 @@ import { Form, type UploadFile } from 'antd';
 import dayjs from 'dayjs';
 
 import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
+import { usePrepareStudentData } from '@/features/students/hooks/usePrepareStudentData';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { StudentFormValues } from '@/features/students/types/studentTypes';
-import { prepareStudentData } from '@/features/students/utils/prepareStudentData';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
 type useStudentFormProps = {
@@ -27,6 +27,7 @@ export const useStudentForm = ({
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
+  const { prepareStudentData } = usePrepareStudentData();
 
   useEffect(() => {
     if (editedStudent) {

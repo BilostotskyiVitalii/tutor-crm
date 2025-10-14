@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Modal, notification } from 'antd';
+import { App as AntApp } from 'antd';
 
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import {
@@ -11,14 +11,13 @@ import {
 import type { StudentData } from '@/features/students/types/studentTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
-const { confirm } = Modal;
-
 export function useStudentActions() {
   const [deleteStudent, { isLoading: isDeleting }] = useDeleteStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
   const [addStudent] = useAddStudentMutation();
   const { removeStudentFromGroups } = useGroupActions();
   const { handleError } = useErrorHandler();
+  const { notification, modal } = AntApp.useApp();
 
   const createStudent = useCallback(
     async (data: StudentData) => {
@@ -29,7 +28,7 @@ export function useStudentActions() {
         handleError(err, 'Failed to create student');
       }
     },
-    [addStudent, handleError],
+    [addStudent, handleError, notification],
   );
 
   const updateStudentData = useCallback(
@@ -41,12 +40,12 @@ export function useStudentActions() {
         handleError(err, 'Failed to update student');
       }
     },
-    [updateStudent, handleError],
+    [updateStudent, handleError, notification],
   );
 
   const removeStudent = useCallback(
     async (id: string) => {
-      confirm({
+      modal.confirm({
         title: 'Delete this student?',
         okType: 'danger',
         okText: 'Yes',
@@ -62,7 +61,7 @@ export function useStudentActions() {
         },
       });
     },
-    [deleteStudent, handleError, removeStudentFromGroups],
+    [deleteStudent, handleError, removeStudentFromGroups, modal, notification],
   );
 
   const updateStudentStatus = useCallback(
@@ -78,7 +77,7 @@ export function useStudentActions() {
         handleError(err, 'Failed to delete student status');
       }
     },
-    [updateStudent, handleError, removeStudentFromGroups],
+    [updateStudent, handleError, removeStudentFromGroups, notification],
   );
 
   return {

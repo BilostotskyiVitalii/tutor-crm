@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { Form, Modal } from 'antd';
+import { App as AntApp, Form } from 'antd';
 import dayjs from 'dayjs';
 
 import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
@@ -12,7 +12,7 @@ import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
 
-const { confirm } = Modal;
+// const { confirm } = Modal;
 
 interface useLessonFormProps {
   lessonId?: string | null;
@@ -36,6 +36,7 @@ export const useLessonForm = ({
   const { updateLessonData, createLesson, removeLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
   const { buildLessonData } = useBuildLessonData(lessonId);
+  const { modal } = AntApp.useApp();
 
   const initVal = useCallback(() => {
     if (lesson) {
@@ -118,7 +119,7 @@ export const useLessonForm = ({
       return;
     }
 
-    confirm({
+    modal.confirm({
       title: 'Delete this lesson?',
       okType: 'danger',
       okText: 'Yes',
