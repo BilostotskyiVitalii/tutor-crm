@@ -6,8 +6,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  serverTimestamp,
-  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -17,6 +15,7 @@ import type {
   StudentData,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
+import { mapFirestoreStudent } from '@/features/students/utils/mapFirestoreStudent';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
@@ -35,16 +34,9 @@ export const studentsApi = createApi({
             collection(db, `${users}/${uid}/${students}`),
           );
 
-          const studentsData: Student[] = snapshot.docs.map((docSnap) => {
-            const data = docSnap.data();
-            return {
-              id: docSnap.id,
-              ...data,
-              birthdate: (data.birthdate as Timestamp)?.toMillis?.() ?? null,
-              createdAt: (data.createdAt as Timestamp)?.toMillis?.(),
-              updatedAt: (data.updatedAt as Timestamp)?.toMillis?.(),
-            };
-          }) as Student[];
+          const studentsData: Student[] = snapshot.docs.map((docSnap) =>
+            mapFirestoreStudent(docSnap.id, docSnap.data()),
+          );
 
           return { data: studentsData };
         } catch (err) {
@@ -71,27 +63,7 @@ export const studentsApi = createApi({
             return { data: null };
           }
 
-          const data = docSnap.data();
-
-          const student: Student = {
-            id: docSnap.id,
-            name: data.name ?? '',
-            email: data.email ?? '',
-            phone: data.phone ?? null,
-            contact: data.contact ?? null,
-            birthdate: (data.birthdate as Timestamp)?.toMillis?.() ?? null,
-            currentLevel: data.currentLevel ?? '',
-            price: data.price ?? 0,
-            notes: data.notes ?? null,
-            avatarUrl: data.avatarUrl ?? undefined,
-            isActive: data.isActive ?? true,
-            createdAt:
-              (data.createdAt as Timestamp)?.toMillis?.() ?? Date.now(),
-            updatedAt:
-              (data.updatedAt as Timestamp)?.toMillis?.() ?? Date.now(),
-          };
-
-          return { data: student };
+          return { data: mapFirestoreStudent(docSnap.id, docSnap.data()) };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
