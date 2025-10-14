@@ -1,5 +1,5 @@
 import type { UploadFile } from 'antd';
-import { Timestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 import type {
   Student,
@@ -24,6 +24,8 @@ export const prepareStudentData = async (
     phone: formValues.phone || null,
     contact: formValues.contact || null,
     notes: formValues.notes || null,
+    ...(editedStudent ? {} : { createdAt: serverTimestamp() }),
+    updatedAt: serverTimestamp(),
   };
 
   if (fileList.length > 0) {
