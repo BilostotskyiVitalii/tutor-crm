@@ -1,4 +1,4 @@
-import { Timestamp } from 'firebase/firestore';
+import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import type {
@@ -34,6 +34,8 @@ export const useBuildLessonData = (editedLessonId?: string | null) => {
       end: Timestamp.fromMillis(formValues.date[1].valueOf()),
       notes: formValues.notes || null,
       price: formValues.price,
+      ...(editedLessonId ? {} : { createdAt: serverTimestamp() }),
+      updatedAt: serverTimestamp(),
     };
   };
 

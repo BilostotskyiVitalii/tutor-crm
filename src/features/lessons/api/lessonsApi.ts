@@ -6,8 +6,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  serverTimestamp,
-  Timestamp,
   updateDoc,
 } from 'firebase/firestore';
 
@@ -17,6 +15,7 @@ import type {
   LessonData,
   UpdateLesson,
 } from '@/features/lessons/types/lessonTypes';
+import { mapFirestoreLesson } from '@/features/lessons/utils/mapFirestoreLesson';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
@@ -34,17 +33,11 @@ export const lessonsApi = createApi({
           const snapshot = await getDocs(
             collection(db, `${users}/${uid}/${lessons}`),
           );
-          const lessonsData: Lesson[] = snapshot.docs.map((docSnap) => {
-            const data = docSnap.data();
-            return {
-              id: docSnap.id,
-              ...data,
-              start: (data.start as Timestamp)?.toMillis?.(),
-              end: (data.end as Timestamp)?.toMillis?.(),
-              createdAt: (data.createdAt as Timestamp)?.toMillis?.(),
-              updatedAt: (data.updatedAt as Timestamp)?.toMillis?.(),
-            };
-          }) as Lesson[];
+
+          const lessonsData: Lesson[] = snapshot.docs.map((docSnap) =>
+            mapFirestoreLesson(docSnap.id, docSnap.data()),
+          );
+
           return { data: lessonsData };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -70,17 +63,7 @@ export const lessonsApi = createApi({
             return { data: null };
           }
 
-          const data = docSnap.data();
-          const lesson: Lesson = {
-            id: docSnap.id,
-            ...data,
-            start: (data.start as Timestamp)?.toMillis?.(),
-            end: (data.end as Timestamp)?.toMillis?.(),
-            createdAt: (data.createdAt as Timestamp)?.toMillis?.(),
-            updatedAt: (data.updatedAt as Timestamp)?.toMillis?.(),
-          } as Lesson;
-
-          return { data: lesson };
+          return { data: mapFirestoreLesson(docSnap.id, docSnap.data()) };
         } catch (err) {
           return { error: { message: (err as Error).message } };
         }
@@ -92,11 +75,7 @@ export const lessonsApi = createApi({
       async queryFn(newLesson) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `${users}/${uid}/${lessons}`), {
-            ...newLesson,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          });
+          await addDoc(collection(db, `${users}/${uid}/${lessons}`), newLesson);
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -109,10 +88,7 @@ export const lessonsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${lessons}/${id}`), {
-            ...data,
-            updatedAt: serverTimestamp(),
-          });
+          await updateDoc(doc(db, `${users}/${uid}/${lessons}/${id}`), data);
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
