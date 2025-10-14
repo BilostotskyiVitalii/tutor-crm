@@ -8,7 +8,7 @@ import { toggleTheme } from '@/features/theme/themeSlice';
 import { UserMenu } from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
-import { useAppDispatch } from '@/store/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';
 
 import styles from './HeaderComponent.module.scss';
 
@@ -21,6 +21,7 @@ type HeaderProps = {
 
 const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
   const dispatch = useAppDispatch();
+  const theme = useAppSelector((state) => state.theme.mode);
 
   return (
     <Header className={styles.header}>
@@ -37,7 +38,7 @@ const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
         <Switch
           checkedChildren={<SunFilled />}
           unCheckedChildren={<MoonFilled />}
-          defaultChecked
+          defaultChecked={theme === 'light'}
           onChange={() => dispatch(toggleTheme())}
         />
         <SelectLang />

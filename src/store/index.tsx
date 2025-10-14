@@ -17,13 +17,18 @@ import { studentsApi } from '@/features/students/api/studentsApi';
 import themeReducer from '@/features/theme/themeSlice';
 import userReducer from '@/features/user/api/userSlice';
 
-const persistConfig = {
-  key: 'root',
+const userPersistConfig = {
+  key: 'user',
   storage,
 };
 
-const persistedReducer = persistReducer(persistConfig, userReducer);
-const persistedThemeReducer = persistReducer(persistConfig, themeReducer);
+const themePersistConfig = {
+  key: 'theme',
+  storage,
+};
+
+const persistedReducer = persistReducer(userPersistConfig, userReducer);
+const persistedThemeReducer = persistReducer(themePersistConfig, themeReducer);
 
 export const store = configureStore({
   reducer: {
