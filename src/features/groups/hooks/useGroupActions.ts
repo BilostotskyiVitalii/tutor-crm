@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 
 import { Modal, notification } from 'antd';
+import { serverTimestamp } from 'firebase/firestore';
 
 import {
   useAddGroupMutation,
@@ -73,8 +74,8 @@ export function useGroupActions() {
               return updateGroup({
                 id: group.id,
                 data: {
-                  ...group,
                   studentIds: group.studentIds.filter((id) => id !== studentId),
+                  updatedAt: serverTimestamp(),
                 },
               }).unwrap();
             }
