@@ -2,7 +2,7 @@ export interface Group {
   id: string;
   title: string;
   studentIds: string[];
-  notes: string | null;
+  notes?: string | null;
   price: number;
   createdAt: number;
   updatedAt: number;
