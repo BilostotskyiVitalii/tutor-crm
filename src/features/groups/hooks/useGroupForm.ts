@@ -5,9 +5,9 @@ import { Form } from 'antd';
 import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { GroupData } from '@/features/groups/types/groupTypes';
+import { normalizeGroupData } from '@/features/groups/utils/normalizeGroupData';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { normalizeNulls } from '@/shared/utils/normalizeNulls';
 
 interface useGroupFormProps {
   groupId?: string | null;
@@ -43,7 +43,7 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
       setIsLoading(true);
 
       const formValues: GroupData = await form.validateFields();
-      const updateData = normalizeNulls(formValues);
+      const updateData = normalizeGroupData(formValues, group);
 
       if (groupId) {
         await updateGroupData(groupId, updateData);
