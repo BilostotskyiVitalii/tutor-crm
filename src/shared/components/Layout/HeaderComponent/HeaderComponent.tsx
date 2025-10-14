@@ -1,13 +1,14 @@
 import { type FC } from 'react';
 
 import { MenuOutlined } from '@ant-design/icons';
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Layout, Space } from 'antd';
+import { MoonFilled, SunFilled } from '@ant-design/icons';
+import { Button, Layout, Space, Switch } from 'antd';
 
+import { toggleTheme } from '@/features/theme/themeSlice';
 import { UserMenu } from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
-import { useModal } from '@/shared/providers/ModalProvider';
+import { useAppDispatch } from '@/store/reduxHooks';
 
 import styles from './HeaderComponent.module.scss';
 
@@ -19,14 +20,7 @@ type HeaderProps = {
 };
 
 const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
-  const { openModal } = useModal();
-
-  function onAddLesson() {
-    openModal({
-      type: 'lesson',
-      mode: 'create',
-    });
-  }
+  const dispatch = useAppDispatch();
 
   return (
     <Header className={styles.header}>
@@ -40,11 +34,13 @@ const HeaderComponent: FC<HeaderProps> = ({ onBurgerClick, isMobile }) => {
       )}
       <LogoComponent />
       <Space>
-        <Button type="primary" icon={<PlusOutlined />} onClick={onAddLesson}>
-          New lesson
-        </Button>
+        <Switch
+          checkedChildren={<SunFilled />}
+          unCheckedChildren={<MoonFilled />}
+          defaultChecked
+          onChange={() => dispatch(toggleTheme())}
+        />
         <SelectLang />
-        {/* TODO добавь здесь кнопку смены темы и реализуй */}
         <UserMenu />
       </Space>
     </Header>
