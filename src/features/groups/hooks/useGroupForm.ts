@@ -24,8 +24,7 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
 
   useEffect(() => {
     if (group) {
-      // TODO Why notes separetly?
-      form.setFieldsValue({ ...group, notes: group?.notes ?? null });
+      form.setFieldsValue({ ...group, notes: group.notes || null });
     }
   }, [group, form]);
 
