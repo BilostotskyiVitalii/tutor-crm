@@ -2,17 +2,12 @@ import { useEffect, useState } from 'react';
 
 import { Form, type UploadFile } from 'antd';
 import dayjs from 'dayjs';
-import { Timestamp } from 'firebase/firestore';
 
 import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type {
-  StudentData,
-  StudentFormValues,
-} from '@/features/students/types/studentTypes';
+import type { StudentFormValues } from '@/features/students/types/studentTypes';
 import { prepareStudentData } from '@/features/students/utils/prepareStudentData';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { uploadAvatar } from '@/shared/utils/uploadAvatar';
 
 type useStudentFormProps = {
   studentId?: string | null;

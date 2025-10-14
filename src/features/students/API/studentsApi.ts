@@ -103,11 +103,10 @@ export const studentsApi = createApi({
       async queryFn(newStudent) {
         try {
           const uid = getCurrentUid();
-          await addDoc(collection(db, `${users}/${uid}/${students}`), {
-            ...newStudent,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          });
+          await addDoc(
+            collection(db, `${users}/${uid}/${students}`),
+            newStudent,
+          );
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
@@ -120,10 +119,7 @@ export const studentsApi = createApi({
       async queryFn({ id, data }) {
         try {
           const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${students}/${id}`), {
-            ...data,
-            updatedAt: serverTimestamp(),
-          });
+          await updateDoc(doc(db, `${users}/${uid}/${students}/${id}`), data);
           return { data: undefined };
         } catch (err) {
           return { error: { message: (err as Error).message } };
