@@ -1,6 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 
-import { ConfigProvider, theme as antdTheme } from 'antd';
+import { App as AntApp, ConfigProvider, theme as antdTheme } from 'antd';
 
 import App from '@/app/App';
 import { useAppSelector } from '@/store/reduxHooks';
@@ -19,7 +19,9 @@ export const AppWrapper = () => {
       }}
     >
       <BrowserRouter>
-        <App />
+        <AntApp>
+          <App />
+        </AntApp>
       </BrowserRouter>
     </ConfigProvider>
   );

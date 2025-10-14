@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { Modal, notification } from 'antd';
+import { App as AntApp } from 'antd';
 import { serverTimestamp } from 'firebase/firestore';
 
 import {
@@ -12,14 +12,13 @@ import {
 import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 
-const { confirm } = Modal;
-
 export function useGroupActions() {
   const [deleteGroup, { isLoading: isDeleting }] = useDeleteGroupMutation();
   const [updateGroup] = useUpdateGroupMutation();
   const [addGroup] = useAddGroupMutation();
   const { handleError } = useErrorHandler();
   const { data: groups = [] } = useGetGroupsQuery();
+  const { notification, modal } = AntApp.useApp();
 
   const createGroup = useCallback(
     async (data: GroupData) => {
@@ -30,7 +29,7 @@ export function useGroupActions() {
         handleError(err, 'Failed to create group');
       }
     },
-    [addGroup, handleError],
+    [addGroup, handleError, notification],
   );
 
   const updateGroupData = useCallback(
@@ -42,12 +41,12 @@ export function useGroupActions() {
         handleError(err, 'Failed to update group');
       }
     },
-    [updateGroup, handleError],
+    [updateGroup, handleError, notification],
   );
 
   const removeGroup = useCallback(
     async (id: string) => {
-      confirm({
+      modal.confirm({
         title: 'Delete this group?',
         okType: 'danger',
         okText: 'Yes',
@@ -62,7 +61,7 @@ export function useGroupActions() {
         },
       });
     },
-    [deleteGroup, handleError],
+    [deleteGroup, handleError, notification, modal],
   );
 
   const removeStudentFromGroups = useCallback(
@@ -92,7 +91,7 @@ export function useGroupActions() {
         handleError(err, 'Failed to remove student from groups');
       }
     },
-    [updateGroup, handleError, groups],
+    [updateGroup, handleError, groups, notification],
   );
 
   return {

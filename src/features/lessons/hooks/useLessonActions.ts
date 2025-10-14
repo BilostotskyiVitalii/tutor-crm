@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { notification } from 'antd';
+import { App as AntApp } from 'antd';
 
 import {
   useAddLessonMutation,
@@ -15,6 +15,7 @@ export function useLessonActions() {
   const [updateLesson] = useUpdateLessonMutation();
   const [addLesson] = useAddLessonMutation();
   const { handleError } = useErrorHandler();
+  const { notification } = AntApp.useApp();
 
   const createLesson = useCallback(
     async (data: LessonData) => {
@@ -25,7 +26,7 @@ export function useLessonActions() {
         handleError(err, 'Failed to create lesson');
       }
     },
-    [addLesson, handleError],
+    [addLesson, handleError, notification],
   );
 
   const updateLessonData = useCallback(
@@ -37,7 +38,7 @@ export function useLessonActions() {
         handleError(err, 'Failed to update lesson');
       }
     },
-    [updateLesson, handleError],
+    [updateLesson, handleError, notification],
   );
 
   const removeLesson = useCallback(
@@ -49,7 +50,7 @@ export function useLessonActions() {
         handleError(err, 'Failed to delete lesson');
       }
     },
-    [deleteLesson, handleError],
+    [deleteLesson, handleError, notification],
   );
 
   return {
