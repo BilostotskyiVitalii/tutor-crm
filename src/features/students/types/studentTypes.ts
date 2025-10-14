@@ -17,11 +17,6 @@ export interface Student {
   updatedAt: number;
 }
 
-// export interface StudentData
-//   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
-//   birthdate: Timestamp | null;
-// }
-
 export interface StudentData
   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
   birthdate: Timestamp | null;
