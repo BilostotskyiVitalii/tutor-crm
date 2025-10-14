@@ -10,6 +10,7 @@ import type {
   StudentData,
   StudentFormValues,
 } from '@/features/students/types/studentTypes';
+import { prepareStudentData } from '@/features/students/utils/prepareStudentData';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { uploadAvatar } from '@/shared/utils/uploadAvatar';
 
@@ -48,30 +49,16 @@ export const useStudentForm = ({
       setIsLoading(true);
 
       const formValues: StudentFormValues = await form.validateFields();
-      const normalizeValues: StudentData = {
-        ...formValues,
-        birthdate: formValues.birthdate
-          ? Timestamp.fromMillis(formValues.birthdate.valueOf())
-          : null,
-        isActive: editedStudent?.isActive ?? true,
-        phone: formValues.phone || null,
-        contact: formValues.contact || null,
-        notes: formValues.notes || null,
-      };
-
-      if (fileList.length > 0) {
-        const file = fileList[0].originFileObj as File;
-        normalizeValues.avatarUrl = await uploadAvatar(
-          file,
-          editedStudent ? editedStudent.id : crypto.randomUUID(),
-          editedStudent?.avatarUrl,
-        );
-      }
+      const normalized = await prepareStudentData(
+        formValues,
+        fileList,
+        editedStudent,
+      );
 
       if (editedStudent) {
-        await updateStudentData(editedStudent.id, normalizeValues);
+        await updateStudentData(editedStudent.id, normalized);
       } else {
-        await createStudent(normalizeValues);
+        await createStudent(normalized);
       }
 
       onClose();
