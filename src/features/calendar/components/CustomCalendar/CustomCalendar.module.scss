@@ -15,6 +15,16 @@
 
   :global(.rbc-timeslot-group) {
     min-height: $hour-cell-height !important;
+    border-color: $color-border;
+  }
+
+  :global(.rbc-day-slot) :global(.rbc-time-slot) {
+    border-top: 1px solid $color-border !important;
+  }
+
+  :global(.rbc-time-view) {
+    background-color: $calendar-background-color;
+    border: 1px solid $color-border;
   }
 
   :global(.rbc-time-view),
@@ -30,35 +40,38 @@
     }
   }
 
-  :global(.rbc-active) {
-    position: relative;
-    z-index: 1 !important;
-    color: $calendar-active-tabs-color !important;
-    border-color: $calendar-active-tabs-color !important;
-    background-color: $color-background-base !important;
-  }
-
   :global(.rbc-toolbar) button {
+    border: 1px solid $color-border;
+    background-color: $calendar-background-color;
+    color: $color-text;
+    transition: color 0.2s ease;
+
     &:hover {
       color: $calendar-active-tabs-color !important;
-      background-color: $color-background-base !important;
+      background-color: $calendar-background-color !important;
       border-color: $color-border !important;
     }
 
     &:focus {
-      background-color: $color-background-base !important;
+      box-shadow: none;
+      background-color: $calendar-background-color !important;
+      border-color: $color-border !important;
+      color: $color-text;
     }
   }
 
-  :global(.rbc-toolbar) button:active,
-  :global(.rbc-toolbar) button.rbc-active {
-    &:hover {
-      border-color: var($calendar-active-tabs-color) !important;
-    }
+  :global(.rbc-toolbar) button:global(.rbc-active) {
+    position: relative;
+    z-index: 1 !important;
+    color: $calendar-active-tabs-color !important;
+    border-color: $calendar-active-tabs-color !important;
+    background-color: $calendar-background-color !important;
+    box-shadow: none;
 
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
-    background-color: $color-background-base !important;
+    &:hover {
+      color: $calendar-active-tabs-color-hover !important;
+      border-color: $calendar-active-tabs-color-hover !important;
+    }
   }
 
   :global(.rbc-current-time-indicator) {
@@ -75,6 +88,10 @@
       top: 50%;
       transform: translate(-50%, -50%);
     }
+  }
+
+  :global(.rbc-today) {
+    background-color: $color-today-column;
   }
 }
 

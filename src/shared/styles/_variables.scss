@@ -1,6 +1,7 @@
 //------------- common ---------------------
 
 // colors
+$color-text: var(--ant-color-text);
 $color-text-light: var(--ant-color-text-light-solid);
 $color-border: var(--ant-color-border); // #d9d9d9
 $color-control-hover: var(--ant-control-item-bg-active-hover); // #bae0ff
@@ -64,14 +65,17 @@ $burger-size: var(--ant-font-size-xl); // 20px
 $burger-color: var(--ant-color-white); // #fff
 
 // calendar
-$color-group-event: var(--ant-volcano); // #fa541c
-$color-indiv-event: var(--ant-green); // #52c41a
 $mini-calendar-width: 300px;
 $hour-cell-height: 55px;
-$calendar-active-tabs-color: var(--ant-color-primary);
-$now-indicator-color: var(--ant-purple);
 $now-indicator-heigth: 2px;
 $now-indicator-circle-diametr: 10px;
+$color-group-event: var(--ant-volcano); // #fa541c
+$color-indiv-event: var(--ant-green); // #52c41a
+$color-today-column: var(--ant-geekblue-2);
+$now-indicator-color: var(--ant-purple);
+$calendar-active-tabs-color: var(--ant-color-primary);
+$calendar-active-tabs-color-hover: var(--ant-color-primary-hover);
+$calendar-background-color: var(--ant-layout-light-sider-bg);
 
 // groups
 $group-card-width: 280px;
