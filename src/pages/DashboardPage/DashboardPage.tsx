@@ -8,10 +8,10 @@ import {
 } from '@ant-design/icons';
 import { Alert, Card, Flex, Spin, Statistic } from 'antd';
 
-import { useDashboardData } from '@/features/dashboard/hooks/useDashboardData';
+import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
 
 const DashboardPage: FC = () => {
-  const { data, isLoading, isError } = useDashboardData();
+  const { data, isLoading, isError } = useGetDashboardStatsQuery();
 
   if (isLoading) {
     return <Spin tip="Loading dashboard..." />;
@@ -25,13 +25,13 @@ const DashboardPage: FC = () => {
       <Card variant="borderless" title="Students">
         <Statistic
           title="Active students"
-          value={data.activeStudents}
+          value={data?.activeStudents}
           valueStyle={{ color: '#3f8600' }}
           prefix={<UserOutlined />}
         />
         <Statistic
           title="New students this month"
-          value={data.newStudents}
+          value={data?.newStudents}
           valueStyle={{ color: '#3f8600' }}
           prefix={<UserOutlined />}
         />
@@ -40,38 +40,38 @@ const DashboardPage: FC = () => {
       <Card variant="borderless" title="Groups">
         <Statistic
           title="Active groups"
-          value={data.activeGroups}
+          value={data?.activeGroups}
           prefix={<GroupOutlined />}
         />
       </Card>
 
       <Card variant="borderless" title="Lessons">
-        <Statistic title="Done this month" value={data.doneLessons} />
-        <Statistic title="Planned this month" value={data.plannedLessons} />
+        <Statistic title="Done this month" value={data?.doneLessons} />
+        <Statistic title="Planned this month" value={data?.plannedLessons} />
       </Card>
 
       <Card variant="borderless" title="Prices">
         <Statistic
           title="Avg lesson price"
           prefix="$"
-          value={data.avgLessonPrice}
+          value={data?.avgLessonPrice}
         />
         <Statistic
           title="Total revenue (month)"
           prefix="$"
-          value={data.totalRevenue}
+          value={data?.totalRevenue}
         />
       </Card>
 
       <Card variant="borderless" title="Top students">
         <Statistic
           title="By hours"
-          value={data.topByLessons}
+          value={data?.topByLessons}
           prefix={<TrophyOutlined />}
         />
         <Statistic
           title="By $"
-          value={data.topByRevenue}
+          value={data?.topByRevenue}
           prefix={<DollarOutlined />}
         />
       </Card>

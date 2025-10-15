@@ -19,6 +19,8 @@
     "antd-img-crop": "^4.25.0",
     "date-fns": "^4.1.0",
     "firebase": "^12.2.1",
+    "firebase-admin": "^13.5.0",
+    "firebase-functions": "^6.5.0",
     "react": "^18.3.1",
     "react-big-calendar": "^1.19.4",
     "react-dom": "^18.3.1",
