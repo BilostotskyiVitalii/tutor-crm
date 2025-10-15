@@ -1,4 +1,4 @@
-import type { DocumentData, Timestamp } from 'firebase/firestore';
+import { type DocumentData, Timestamp } from 'firebase/firestore';
 
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
 
