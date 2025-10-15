@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { dashboardApi } from '@/features/dashboard/api/dashboardApi';
 import { groupsApi } from '@/features/groups/api/groupsApi';
 import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
@@ -37,6 +38,7 @@ export const store = configureStore({
     [studentsApi.reducerPath]: studentsApi.reducer,
     [lessonsApi.reducerPath]: lessonsApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -47,6 +49,7 @@ export const store = configureStore({
       studentsApi.middleware,
       lessonsApi.middleware,
       groupsApi.middleware,
+      dashboardApi.middleware,
     ),
 });
 

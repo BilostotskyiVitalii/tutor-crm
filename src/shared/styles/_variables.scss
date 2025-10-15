@@ -69,8 +69,10 @@ $mini-calendar-width: 300px;
 $hour-cell-height: 55px;
 $now-indicator-heigth: 2px;
 $now-indicator-circle-diametr: 10px;
-$color-group-event: var(--ant-volcano); // #fa541c
-$color-indiv-event: var(--ant-green); // #52c41a
+
+$color-group-event: var(--ant-volcano-6); // #fa541c
+$color-indiv-event: var(--ant-green-6); // #52c41a
+
 $color-today-column: var(--ant-geekblue-2);
 $now-indicator-color: var(--ant-purple);
 $calendar-active-tabs-color: var(--ant-color-primary);

@@ -12,8 +12,6 @@ import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
 
-// const { confirm } = Modal;
-
 interface useLessonFormProps {
   lessonId?: string | null;
   onClose: () => void;
