@@ -1,22 +1,22 @@
-import type { FieldValue, Timestamp } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore';
 
 export interface Group {
-  id: string;
+  // id: string;
   title: string;
   studentIds: string[];
   notes?: string | null;
   price: number;
-  createdAt: number;
-  updatedAt: number;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
-export interface GroupData
-  extends Omit<Group, 'id' | 'createdAt' | 'updatedAt'> {
-  createdAt?: FieldValue | Timestamp;
-  updatedAt?: FieldValue | Timestamp;
-}
+// export interface GroupData
+//   extends Omit<Group, 'id' | 'createdAt' | 'updatedAt'> {
+//   createdAt?: FieldValue | Timestamp;
+//   updatedAt?: FieldValue | Timestamp;
+// }
 
-export type UpdateGroup = {
-  id: string;
-  data: Partial<GroupData>;
-};
+// export type UpdateGroup = {
+//   id: string;
+//   data: Partial<GroupData>;
+// };

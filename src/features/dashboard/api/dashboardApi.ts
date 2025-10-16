@@ -3,16 +3,27 @@ import { getAuth } from 'firebase/auth';
 
 import { app } from '../../../app/firebase';
 
+interface Student {
+  id: string;
+  name: string;
+  totalHours: number;
+  totalRevenue: number;
+  avatar: string;
+}
+
 interface DashboardStats {
   activeStudents: number;
   newStudents: number;
   activeGroups: number;
   doneLessons: number;
   plannedLessons: number;
+  currentMonthIncome: number;
+  expectedMonthIncome: number;
   avgLessonPrice: number;
-  totalRevenue: number;
-  topByLessons: string;
-  topByRevenue: string;
+  averageHourPrice: number;
+  averagePerHourStudentPrice: number;
+  topStudentsByIncome: Student[];
+  topStudentsByHours: Student[];
 }
 
 export const dashboardApi = createApi({
