@@ -1,7 +1,6 @@
 import type { Timestamp } from 'firebase/firestore';
 
-export interface Group {
-  // id: string;
+export interface GroupData {
   title: string;
   studentIds: string[];
   notes?: string | null;
@@ -10,13 +9,6 @@ export interface Group {
   updatedAt: Timestamp;
 }
 
-// export interface GroupData
-//   extends Omit<Group, 'id' | 'createdAt' | 'updatedAt'> {
-//   createdAt?: FieldValue | Timestamp;
-//   updatedAt?: FieldValue | Timestamp;
-// }
-
-// export type UpdateGroup = {
-//   id: string;
-//   data: Partial<GroupData>;
-// };
+export interface Group extends GroupData {
+  id: string;
+}

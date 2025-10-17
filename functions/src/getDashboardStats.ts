@@ -2,6 +2,7 @@ import cors from 'cors';
 import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 
+import { Group, GroupData } from './types/groupTypes';
 import { Lesson } from './types/lessonTypes';
 import { Student, StudentData } from './types/studentTypes';
 
@@ -21,7 +22,16 @@ type TopStudentStats = {
   totalRevenue: number;
 };
 
-const statsMap: Record<string, TopStudentStats> = {};
+const studentStatsMap: Record<string, TopStudentStats> = {};
+
+type TopGroupsStats = {
+  id: string;
+  title: string;
+  totalHours: number;
+  totalRevenue: number;
+};
+
+const groupStatsMap: Record<string, TopGroupsStats> = {};
 
 export const getDashboardStats = functions.https.onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
@@ -72,7 +82,17 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
       // --- Groups ---
 
       const groupsSnap = await db.collection(`${userPath}/groups`).get();
+      const groups: Group[] = groupsSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as GroupData),
+      }));
       const activeGroups = groupsSnap.size;
+      const newGroupsSnap = await db
+        .collection(`${userPath}/groups`)
+        .where('createdAt', '>=', monthStartTs)
+        .get();
+
+      const newGroups = newGroupsSnap.size;
 
       // --- Lessons ---
 
@@ -121,7 +141,7 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
       // --- Top students ---
 
       students.forEach((s) => {
-        statsMap[s.id] = {
+        studentStatsMap[s.id] = {
           id: s.id,
           name: s.name,
           totalHours: 0,
@@ -145,7 +165,7 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
           (lesson.price || 0) / lesson.students.length;
 
         lesson.students.forEach((studentInLesson) => {
-          const stat = statsMap[studentInLesson.id];
+          const stat = studentStatsMap[studentInLesson.id];
           if (stat) {
             stat.totalHours += lessonHours;
             stat.totalRevenue += lessonRevenuePerStudent;
@@ -153,7 +173,7 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         });
       });
 
-      const statsArray = Object.values(statsMap);
+      const statsArray = Object.values(studentStatsMap);
 
       const topStudentsByHours = [...statsArray]
         .sort((a, b) => b.totalHours - a.totalHours)
@@ -162,10 +182,57 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
         .slice(0, 3);
 
+      // --- Top groups ---
+
+      Object.keys(groupStatsMap).forEach((k) => delete groupStatsMap[k]);
+
+      groups.forEach((g) => {
+        groupStatsMap[g.id] = {
+          id: g.id,
+          title: g.title,
+          totalHours: 0,
+          totalRevenue: 0,
+        };
+      });
+
+      lessons.forEach((lesson) => {
+        // рахуємо лише уроки, прив'язані до груп
+        if (!lesson.groupId || !lesson.start || !lesson.end) {
+          return;
+        }
+
+        const groupLessonHours =
+          (lesson.end.toMillis() - lesson.start.toMillis()) / (1000 * 60 * 60);
+
+        if (groupLessonHours <= 0) {
+          return;
+        }
+
+        const stat = groupStatsMap[lesson.groupId];
+        if (!stat) {
+          return;
+        } // група могла бути видалена або неактивна
+
+        stat.totalHours += groupLessonHours;
+        stat.totalRevenue += lesson.price || 0; // весь дохід уроку відносимо на групу
+      });
+
+      const statsGroupArray = Object.values(groupStatsMap);
+
+      // назви зробив у множині для симетрії зі студентами
+      const topGroupsByHours = [...statsGroupArray]
+        .sort((a, b) => b.totalHours - a.totalHours)
+        .slice(0, 3);
+
+      const topGroupsByIncome = [...statsGroupArray]
+        .sort((a, b) => b.totalRevenue - a.totalRevenue)
+        .slice(0, 3);
+
       const dashboardStats = {
         activeStudents,
         newStudents,
         activeGroups,
+        newGroups,
         doneLessons,
         plannedLessons,
         currentMonthIncome,
@@ -175,6 +242,8 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         averagePerHourStudentPrice,
         topStudentsByHours,
         topStudentsByIncome,
+        topGroupsByHours,
+        topGroupsByIncome,
       };
 
       res.json(dashboardStats);

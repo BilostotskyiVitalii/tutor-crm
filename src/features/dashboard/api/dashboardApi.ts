@@ -11,10 +11,20 @@ interface Student {
   avatar: string;
 }
 
+interface Group {
+  id: string;
+  title: string;
+  totalHours: number;
+  totalRevenue: number;
+}
+
 interface DashboardStats {
   activeStudents: number;
   newStudents: number;
   activeGroups: number;
+  newGroups: number;
+  topGroupsByHours: Group[];
+  topGroupsByIncome: Group[];
   doneLessons: number;
   plannedLessons: number;
   currentMonthIncome: number;
