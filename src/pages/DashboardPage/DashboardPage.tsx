@@ -2,7 +2,12 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { GroupOutlined, TrophyOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  TeamOutlined,
+  TrophyOutlined,
+  UserAddOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 import {
   Alert,
   Card,
@@ -38,8 +43,9 @@ const DashboardPage: FC = () => {
   return (
     <Spin spinning={isLoading}>
       {/* Top Students */}
-      <Flex gap={12} wrap>
-        <div className={styles.topstudentsWrapper}>
+
+      <div className={styles.layoutGrid}>
+        <Flex className={styles.leftGrid}>
           <Card className={styles.topStudents}>
             <Flex
               align="center"
@@ -100,88 +106,81 @@ const DashboardPage: FC = () => {
               )}
             />
           </Card>
-        </div>
-        <div className={styles.masonryContainer}>
-          {/* Students */}
-          <Card className={`${styles.masonryItem} ${styles.students}`}>
-            <Statistic
-              title="Active"
-              value={data?.activeStudents}
-              prefix={<UserOutlined />}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          </Card>
-          <Card className={`${styles.masonryItem} ${styles.students}`}>
-            <Statistic
-              title="New"
-              value={data?.newStudents}
-              prefix={<UserOutlined />}
-              valueStyle={{ color: '#52c41a' }}
-            />
-          </Card>
+        </Flex>
 
+        <div className={styles.rightGrid}>
+          {/* Income */}
+          <Card title="💰 Month income">
+            <Flex justify="space-evenly" gap={12}>
+              <Statistic
+                title="Current"
+                value={data?.currentMonthIncome}
+                prefix="$"
+                precision={0}
+              />
+              <Divider type="vertical" style={{ height: '64px' }} />
+              <Statistic
+                title="Expected"
+                value={data?.expectedMonthIncome}
+                prefix="$"
+                precision={0}
+              />
+            </Flex>
+          </Card>
+          <Card title="💸 Average price">
+            <Flex justify="space-evenly" gap={12}>
+              <Statistic
+                title="Hour"
+                prefix="$"
+                precision={0}
+                value={data?.averageHourPrice}
+              />
+              <Divider type="vertical" style={{ height: '64px' }} />
+              <Statistic
+                title="Student per/hour"
+                prefix="$"
+                precision={0}
+                value={data?.averagePerHourStudentPrice}
+              />
+            </Flex>
+          </Card>
+          {/* Students */}
+          <Card title="🧑‍🎓 Students">
+            <Flex justify="space-evenly" gap={12}>
+              <Statistic
+                title="Active"
+                value={data?.activeStudents}
+                prefix={<UserOutlined />}
+                valueStyle={{ color: '#3f8600' }}
+              />
+              <Divider type="vertical" style={{ height: '64px' }} />
+              <Statistic
+                title="New"
+                value={data?.newStudents}
+                prefix={<UserAddOutlined />}
+                valueStyle={{ color: '#52c41a' }}
+              />
+            </Flex>
+          </Card>
           {/* Groups */}
-          <Card className={`${styles.masonryItem} ${styles.groups}`}>
+          <Card title="🎓 Groups">
             <Statistic
               title="Active groups"
               value={data?.activeGroups}
-              prefix={<GroupOutlined />}
+              prefix={<TeamOutlined />}
             />
           </Card>
 
           {/* Lessons */}
-          <Card className={`${styles.masonryItem} ${styles.lessons}`}>
-            <Statistic title="Done" value={data?.doneLessons} />
-          </Card>
-          <Card className={`${styles.masonryItem} ${styles.lessons}`}>
-            <Statistic title="Planned" value={data?.plannedLessons} />
-          </Card>
-
-          {/* Income */}
-          <Card className={`${styles.masonryItem} ${styles.income}`}>
-            <Statistic
-              title="Current"
-              value={data?.currentMonthIncome}
-              prefix="$"
-              precision={0}
-            />
-          </Card>
-          <Card className={`${styles.masonryItem} ${styles.income}`}>
-            <Statistic
-              title="Expected"
-              value={data?.expectedMonthIncome}
-              prefix="$"
-              precision={0}
-            />
-          </Card>
-
-          {/* Average Prices */}
-          <Card className={`${styles.masonryItem} ${styles.prices}`}>
-            <Statistic
-              title="Lesson"
-              prefix="$"
-              precision={0}
-              value={data?.avgLessonPrice}
-            />
-          </Card>
-          <Card className={`${styles.masonryItem} ${styles.prices}`}>
-            <Statistic
-              title="Hour"
-              prefix="$"
-              precision={0}
-              value={data?.averageHourPrice}
-            />
-          </Card>
-          <Card className={`${styles.masonryItem} ${styles.prices}`}>
-            <Statistic
-              title="Student per/hour"
-              prefix="$"
-              precision={0}
-              value={data?.averagePerHourStudentPrice}
-            />
+          <Card title="📚 Lessons">
+            <Flex justify="space-evenly" gap={12}>
+              <Statistic title="Done" value={data?.doneLessons} />
+              <Divider type="vertical" style={{ height: '64px' }} />
+              <Statistic title="Planned" value={data?.plannedLessons} />
+            </Flex>
           </Card>
         </div>
-      </Flex>
+      </div>
     </Spin>
   );
 };

@@ -1,19 +1,39 @@
-.topStudents {
-  min-width: 400px;
+/* 1) Батьківський грід: 400px (ліворуч) + флюїдна права зона */
+.layoutGrid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 12px;
+  align-items: start;
 }
 
-.masonryContainer {
-  flex: 1;
+.leftGrid {
+  flex-direction: column;
+  gap: 12px;
+  width: 400px;
+  grid-column: 1;
 }
 
-.masonryContainer {
+/* 2) Права область сама — грід з авто-перенесенням */
+.rightGrid {
+  grid-column: 2;
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  /* картки не на всю ширину: підбираємо скільки влізе в ряд */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
-@media (max-width: 700px) {
-  .topstudentsWrapper {
+/* Адаптив: на середніх/малих — одна колонка, без «дір» */
+@media (max-width: 768px) {
+  .layoutGrid {
+    grid-template-columns: 1fr;
+  }
+  .leftGrid {
     width: 100%;
+    grid-column: 1;
+  }
+  .rightGrid {
+    grid-column: 1;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
