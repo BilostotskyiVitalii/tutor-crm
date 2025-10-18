@@ -34,6 +34,14 @@ interface DashboardStats {
   averagePerHourStudentPrice: number;
   topStudentsByIncome: Student[];
   topStudentsByHours: Student[];
+  revenueMixExpected: {
+    individualPct: number; // 0..100
+    groupPct: number; // 0..100
+  };
+  revenueMixCurrent: {
+    individualPct: number; // 0..100
+    groupPct: number; // 0..100
+  };
 }
 
 export const dashboardApi = createApi({

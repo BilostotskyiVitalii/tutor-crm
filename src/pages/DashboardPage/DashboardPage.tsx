@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import {
+  CalendarOutlined,
+  CheckOutlined,
   TeamOutlined,
   TrophyOutlined,
   UserAddOutlined,
@@ -22,6 +24,7 @@ import {
 } from 'antd';
 
 import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
+import PieRevenueMix from '@/features/dashboard/components/PieRevenueMix/PieRevenueMix';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 
 import styles from './DashboardPage.module.scss';
@@ -192,7 +195,7 @@ const DashboardPage: FC = () => {
           <Card title="💸 Average price">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
-                title="Hour"
+                title="Per/hour"
                 prefix="$"
                 precision={0}
                 value={data?.averageHourPrice}
@@ -213,7 +216,6 @@ const DashboardPage: FC = () => {
                 title="Active"
                 value={data?.activeStudents}
                 prefix={<UserOutlined />}
-                valueStyle={{ color: '#3f8600' }}
               />
               <Divider type="vertical" style={{ height: '64px' }} />
               <Statistic
@@ -228,13 +230,13 @@ const DashboardPage: FC = () => {
           <Card title="🎓 Groups">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
-                title="Active groups"
+                title="Active"
                 value={data?.activeGroups}
                 prefix={<TeamOutlined />}
               />
               <Divider type="vertical" style={{ height: '64px' }} />
               <Statistic
-                title="Active groups"
+                title="New"
                 value={data?.newGroups}
                 prefix={<UsergroupAddOutlined />}
                 valueStyle={{ color: '#3f8600' }}
@@ -245,12 +247,21 @@ const DashboardPage: FC = () => {
           {/* Lessons */}
           <Card title="📚 Lessons">
             <Flex justify="space-evenly" gap={12}>
-              <Statistic title="Done" value={data?.doneLessons} />
+              <Statistic
+                title="Done"
+                value={data?.doneLessons}
+                prefix={<CheckOutlined />}
+              />
               <Divider type="vertical" style={{ height: '64px' }} />
-              <Statistic title="Planned" value={data?.plannedLessons} />
+              <Statistic
+                title="Planned"
+                value={data?.plannedLessons}
+                prefix={<CalendarOutlined />}
+              />
             </Flex>
           </Card>
         </div>
+        <PieRevenueMix />
       </div>
     </Spin>
   );

@@ -33,6 +33,9 @@ type TopGroupsStats = {
 
 const groupStatsMap: Record<string, TopGroupsStats> = {};
 
+const toPercent = (part: number, total: number): number =>
+  total > 0 ? Math.round((part / total) * 100) : 0;
+
 export const getDashboardStats = functions.https.onRequest(async (req, res) => {
   corsHandler(req, res, async () => {
     try {
@@ -140,6 +143,8 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
 
       // --- Top students ---
 
+      Object.keys(studentStatsMap).forEach((k) => delete studentStatsMap[k]);
+
       students.forEach((s) => {
         studentStatsMap[s.id] = {
           id: s.id,
@@ -228,6 +233,47 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
         .slice(0, 3);
 
+      // ---- PRCnts-----
+
+      // --- Revenue mix (CURRENT = тільки проведені уроки цього місяця) ---
+      const revenueIndividualCurrent = doneLessonsData
+        .filter((l) => !l.groupId) // індивідуальні уроки
+        .reduce((sum, l) => sum + (l.price || 0), 0);
+
+      const revenueGroupCurrent = doneLessonsData
+        .filter((l) => !!l.groupId) // групові уроки
+        .reduce((sum, l) => sum + (l.price || 0), 0);
+
+      const totalRevenueCurrent =
+        revenueIndividualCurrent + revenueGroupCurrent;
+
+      const revenueMixCurrent = {
+        individualPct: toPercent(revenueIndividualCurrent, totalRevenueCurrent), // 0..100
+        groupPct: toPercent(revenueGroupCurrent, totalRevenueCurrent), // 0..100
+      };
+
+      // --- Revenue mix (EXPECTED = проведені + заплановані до кінця місяця) ---
+      const allThisMonth = [...doneLessonsData, ...plannedLessonsData];
+
+      const revenueIndividualExpected = allThisMonth
+        .filter((l) => !l.groupId)
+        .reduce((sum, l) => sum + (l.price || 0), 0);
+
+      const revenueGroupExpected = allThisMonth
+        .filter((l) => !!l.groupId)
+        .reduce((sum, l) => sum + (l.price || 0), 0);
+
+      const totalRevenueExpected =
+        revenueIndividualExpected + revenueGroupExpected;
+
+      const revenueMixExpected = {
+        individualPct: toPercent(
+          revenueIndividualExpected,
+          totalRevenueExpected,
+        ), // 0..100
+        groupPct: toPercent(revenueGroupExpected, totalRevenueExpected), // 0..100
+      };
+
       const dashboardStats = {
         activeStudents,
         newStudents,
@@ -244,6 +290,8 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         topStudentsByIncome,
         topGroupsByHours,
         topGroupsByIncome,
+        revenueMixCurrent,
+        revenueMixExpected,
       };
 
       res.json(dashboardStats);
