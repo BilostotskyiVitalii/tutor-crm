@@ -29,4 +29,4 @@ setGlobalOptions({ maxInstances: 10 });
 //   response.send("Hello from Firebase!");
 // });
 
-export { getDashboardStats } from './getDashboardStats';
+export { getDashboardStats } from './handlers/dashboard.handler';

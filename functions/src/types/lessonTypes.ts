@@ -1,8 +1,6 @@
-// import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
-export interface Lesson {
-  // id: string;
+export interface LessonData {
   groupId: string | null;
   students: {
     id: string;
@@ -17,21 +15,6 @@ export interface Lesson {
   updatedAt: Timestamp;
 }
 
-// export interface LessonData
-//   extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {
-//   start: Timestamp;
-//   end: Timestamp;
-//   createdAt?: FieldValue | Timestamp;
-//   updatedAt?: FieldValue | Timestamp;
-// }
-
-// export interface LessonFormValues
-//   extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {
-//   date: Dayjs[];
-//   studentIds: string[];
-// }
-
-// export type UpdateLesson = {
-//   id: string;
-//   data: Partial<LessonData>;
-// };
+export interface Lesson extends LessonData {
+  id: string;
+}

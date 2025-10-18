@@ -1,7 +1,13 @@
 import * as admin from 'firebase-admin';
 
-admin.initializeApp(); // Без конфигурации — Firebase сам подставит нужные ключи
+admin.initializeApp();
 
-export const db = admin.firestore();
-export const auth = admin.auth();
-export const storage = admin.storage();
+if (admin.apps.length === 0) {
+  admin.initializeApp();
+}
+
+const db = admin.firestore();
+const auth = admin.auth();
+const storage = admin.storage();
+
+export { admin, auth, db, storage };
