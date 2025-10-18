@@ -1,0 +1,7 @@
+@use '@/shared/styles/variables' as *;
+
+.chartWrapper {
+  height: 250px;
+  --chart-individual: #{$color-indiv-event};
+  --chart-group: #{$color-group-event};
+}
