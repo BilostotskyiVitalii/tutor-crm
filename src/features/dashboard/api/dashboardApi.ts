@@ -24,15 +24,15 @@ interface DashboardStats {
   activeGroups: number;
   newGroups: number;
   topGroupsByHours: Group[];
-  topGroupsByIncome: Group[];
+  topGroupsByRevenue: Group[];
   doneLessons: number;
   plannedLessons: number;
-  currentMonthIncome: number;
-  expectedMonthIncome: number;
+  currentMonthRevenue: number;
+  expectedMonthRevenue: number;
   avgLessonPrice: number;
   averageHourPrice: number;
   averagePerHourStudentPrice: number;
-  topStudentsByIncome: Student[];
+  topStudentsByRevenue: Student[];
   topStudentsByHours: Student[];
   revenueMixExpected: {
     individualPct: number; // 0..100

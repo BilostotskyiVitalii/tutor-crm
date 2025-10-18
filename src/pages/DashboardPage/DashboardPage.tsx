@@ -33,18 +33,20 @@ const { Title, Text } = Typography;
 
 const DashboardPage: FC = () => {
   const { data, isLoading, isError } = useGetDashboardStatsQuery();
-  const [topMode, setTopMode] = useState<'hours' | 'income'>('hours');
-  const [topGroupMode, setTopGroupMode] = useState<'hours' | 'income'>('hours');
+  const [topMode, setTopMode] = useState<'hours' | 'revenue'>('hours');
+  const [topGroupMode, setTopGroupMode] = useState<'hours' | 'revenue'>(
+    'hours',
+  );
 
   const topList =
     topMode === 'hours'
       ? data?.topStudentsByHours || []
-      : data?.topStudentsByIncome || [];
+      : data?.topStudentsByRevenue || [];
 
   const topGroupsList =
     topGroupMode === 'hours'
       ? data?.topGroupsByHours || []
-      : data?.topGroupsByIncome || [];
+      : data?.topGroupsByRevenue || [];
 
   if (isError) {
     return <Alert message="Failed to load dashboard data" type="error" />;
@@ -54,29 +56,28 @@ const DashboardPage: FC = () => {
     <Spin spinning={isLoading}>
       <div className={styles.layoutGrid}>
         <Flex className={styles.leftGrid}>
-          <Card className={styles.topStudents}>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ marginBottom: 16 }}
-            >
-              <Flex align="center" gap="small">
-                <TrophyOutlined style={{ color: '#faad14' }} />
-                <Title level={5} style={{ margin: 0 }}>
-                  Top Students
-                </Title>
+          <Card
+            className={styles.topStudents}
+            title={
+              <Flex align="center" justify="space-between">
+                <Flex align="center" gap="small">
+                  <TrophyOutlined style={{ color: '#faad14' }} />
+                  <Title level={5} style={{ margin: 0 }}>
+                    Top Students
+                  </Title>
+                </Flex>
+                <Segmented
+                  size="small"
+                  value={topMode}
+                  onChange={(val) => setTopMode(val as 'hours' | 'revenue')}
+                  options={[
+                    { label: 'By hours', value: 'hours' },
+                    { label: 'By revenue', value: 'revenue' },
+                  ]}
+                />
               </Flex>
-              <Segmented
-                size="small"
-                value={topMode}
-                onChange={(val) => setTopMode(val as 'hours' | 'income')}
-                options={[
-                  { label: 'By hours', value: 'hours' },
-                  { label: 'By income', value: 'income' },
-                ]}
-              />
-            </Flex>
-
+            }
+          >
             <List
               dataSource={topList}
               renderItem={(item, index) => (
@@ -114,29 +115,30 @@ const DashboardPage: FC = () => {
               )}
             />
           </Card>
-          <Card className={styles.topGroups}>
-            <Flex
-              align="center"
-              justify="space-between"
-              style={{ marginBottom: 16 }}
-            >
-              <Flex align="center" gap="small">
-                <TrophyOutlined style={{ color: '#faad14' }} />
-                <Title level={5} style={{ margin: 0 }}>
-                  Top Groups
-                </Title>
+          <Card
+            className={styles.topGroups}
+            title={
+              <Flex align="center" justify="space-between">
+                <Flex align="center" gap="small">
+                  <TrophyOutlined style={{ color: '#faad14' }} />
+                  <Title level={5} style={{ margin: 0 }}>
+                    Top Groups
+                  </Title>
+                </Flex>
+                <Segmented
+                  size="small"
+                  value={topGroupMode}
+                  onChange={(val) =>
+                    setTopGroupMode(val as 'hours' | 'revenue')
+                  }
+                  options={[
+                    { label: 'By hours', value: 'hours' },
+                    { label: 'By revenue', value: 'revenue' },
+                  ]}
+                />
               </Flex>
-              <Segmented
-                size="small"
-                value={topGroupMode}
-                onChange={(val) => setTopGroupMode(val as 'hours' | 'income')}
-                options={[
-                  { label: 'By hours', value: 'hours' },
-                  { label: 'By income', value: 'income' },
-                ]}
-              />
-            </Flex>
-
+            }
+          >
             <List
               dataSource={topGroupsList}
               renderItem={(item, index) => (
@@ -171,22 +173,21 @@ const DashboardPage: FC = () => {
               )}
             />
           </Card>
+          <PieRevenueMix />
         </Flex>
-
         <div className={styles.rightGrid}>
-          {/* Income */}
-          <Card title="💰 Month income">
+          <Card title="💰 Month revenue">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
                 title="Current"
-                value={data?.currentMonthIncome}
+                value={data?.currentMonthRevenue}
                 prefix="$"
                 precision={0}
               />
               <Divider type="vertical" style={{ height: '64px' }} />
               <Statistic
                 title="Expected"
-                value={data?.expectedMonthIncome}
+                value={data?.expectedMonthRevenue}
                 prefix="$"
                 precision={0}
               />
@@ -209,7 +210,6 @@ const DashboardPage: FC = () => {
               />
             </Flex>
           </Card>
-          {/* Students */}
           <Card title="🧑‍🎓 Students">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
@@ -226,7 +226,6 @@ const DashboardPage: FC = () => {
               />
             </Flex>
           </Card>
-          {/* Groups */}
           <Card title="🎓 Groups">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
@@ -243,8 +242,6 @@ const DashboardPage: FC = () => {
               />
             </Flex>
           </Card>
-
-          {/* Lessons */}
           <Card title="📚 Lessons">
             <Flex justify="space-evenly" gap={12}>
               <Statistic
@@ -261,7 +258,6 @@ const DashboardPage: FC = () => {
             </Flex>
           </Card>
         </div>
-        <PieRevenueMix />
       </div>
     </Spin>
   );

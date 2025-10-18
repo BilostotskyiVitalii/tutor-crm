@@ -118,22 +118,22 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         return sum + durationHours;
       }, 0);
 
-      // ---- Income ----
+      // ---- Revenue ----
 
-      const currentMonthIncome = doneLessonsData.reduce(
+      const currentMonthRevenue = doneLessonsData.reduce(
         (sum, l) => sum + (l.price || 0),
         0,
       );
-      const plannedLessonsIncome = plannedLessonsData.reduce(
+      const plannedLessonsRevenue = plannedLessonsData.reduce(
         (sum, l) => sum + (l.price || 0),
         0,
       );
-      const expectedMonthIncome = currentMonthIncome + plannedLessonsIncome;
+      const expectedMonthRevenue = currentMonthRevenue + plannedLessonsRevenue;
 
       const averageHourPrice =
-        doneHours > 0 ? currentMonthIncome / doneHours : 0;
+        doneHours > 0 ? currentMonthRevenue / doneHours : 0;
       const avgLessonPrice =
-        doneLessons > 0 ? currentMonthIncome / doneLessons : 0;
+        doneLessons > 0 ? currentMonthRevenue / doneLessons : 0;
       const totalStudentPrice = students.reduce(
         (sum, s) => sum + (s.price || 0),
         0,
@@ -183,7 +183,7 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
       const topStudentsByHours = [...statsArray]
         .sort((a, b) => b.totalHours - a.totalHours)
         .slice(0, 3);
-      const topStudentsByIncome = [...statsArray]
+      const topStudentsByRevenue = [...statsArray]
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
         .slice(0, 3);
 
@@ -229,7 +229,7 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         .sort((a, b) => b.totalHours - a.totalHours)
         .slice(0, 3);
 
-      const topGroupsByIncome = [...statsGroupArray]
+      const topGroupsByRevenue = [...statsGroupArray]
         .sort((a, b) => b.totalRevenue - a.totalRevenue)
         .slice(0, 3);
 
@@ -281,15 +281,15 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         newGroups,
         doneLessons,
         plannedLessons,
-        currentMonthIncome,
-        expectedMonthIncome,
+        currentMonthRevenue,
+        expectedMonthRevenue,
         avgLessonPrice,
         averageHourPrice,
         averagePerHourStudentPrice,
         topStudentsByHours,
-        topStudentsByIncome,
+        topStudentsByRevenue,
         topGroupsByHours,
-        topGroupsByIncome,
+        topGroupsByRevenue,
         revenueMixCurrent,
         revenueMixExpected,
       };

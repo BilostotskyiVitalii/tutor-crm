@@ -11,6 +11,7 @@ $color-del-hover: var(--ant-red); // #f5222d
 
 // dimensions
 $mobile-view: 768px;
+$laptop-view: 1280px;
 $header-height: var(--ant-layout-header-height); // 64px
 $border-radius: var(--ant-border-radius); // 6px
 
@@ -70,8 +71,8 @@ $hour-cell-height: 55px;
 $now-indicator-heigth: 2px;
 $now-indicator-circle-diametr: 10px;
 
-$color-group-event: var(--ant-volcano-6); // #fa541c
-$color-indiv-event: var(--ant-green-6); // #52c41a
+$color-group-event: var(--ant-volcano-7);
+$color-indiv-event: var(--ant-green-7);
 
 $color-today-column: var(--ant-geekblue-2);
 $now-indicator-color: var(--ant-purple);
