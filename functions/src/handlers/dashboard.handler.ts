@@ -29,7 +29,6 @@ export const getDashboardStats = functions.https.onRequest(async (req, res) => {
         fetchLessonsForMonth(userPath, startTs, endExclusiveTs),
       ]);
 
-      // лічильники
       const activeStudents = students.filter((s) => s.isActive).length;
       const newStudents = students.filter(
         (s) => s.createdAt && s.createdAt >= startTs,

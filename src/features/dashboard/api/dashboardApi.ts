@@ -1,48 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getAuth } from 'firebase/auth';
 
+import type { DashboardStats } from '@/features/dashboard/types/DashboardStats';
+
 import { app } from '../../../app/firebase';
-
-interface Student {
-  id: string;
-  name: string;
-  totalHours: number;
-  totalRevenue: number;
-  avatar: string;
-}
-
-interface Group {
-  id: string;
-  title: string;
-  totalHours: number;
-  totalRevenue: number;
-}
-
-interface DashboardStats {
-  activeStudents: number;
-  newStudents: number;
-  activeGroups: number;
-  newGroups: number;
-  topGroupsByHours: Group[];
-  topGroupsByRevenue: Group[];
-  doneLessons: number;
-  plannedLessons: number;
-  currentMonthRevenue: number;
-  expectedMonthRevenue: number;
-  avgLessonPrice: number;
-  averageHourPrice: number;
-  averagePerHourStudentPrice: number;
-  topStudentsByRevenue: Student[];
-  topStudentsByHours: Student[];
-  revenueMixExpected: {
-    individualPct: number; // 0..100
-    groupPct: number; // 0..100
-  };
-  revenueMixCurrent: {
-    individualPct: number; // 0..100
-    groupPct: number; // 0..100
-  };
-}
 
 export const dashboardApi = createApi({
   reducerPath: 'dashboardApi',
