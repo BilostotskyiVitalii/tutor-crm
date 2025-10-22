@@ -3,7 +3,6 @@ import { z, ZodError } from 'zod';
 
 import { admin, db } from '../firebase';
 import { extractUidFromBearer } from '../utils/auth';
-import { normalizeData } from '../utils/normalizeData';
 
 const FieldValue = admin.firestore.FieldValue;
 
@@ -34,11 +33,10 @@ groupsRouter.post('/', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
     const parsed = createSchema.parse(req.body ?? {});
-    const normalized = normalizeData(parsed);
 
     const now = FieldValue.serverTimestamp();
     const ref = await db.collection(`users/${uid}/groups`).add({
-      ...normalized,
+      ...parsed,
       createdAt: now,
       updatedAt: now,
     });
@@ -82,11 +80,10 @@ groupsRouter.patch('/:id', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
     const updates = updateSchema.parse(req.body ?? {});
-    const normalized = normalizeData(updates);
     const ref = db.doc(`users/${uid}/groups/${req.params.id}`);
 
     await ref.update({
-      ...normalized,
+      ...updates,
       updatedAt: FieldValue.serverTimestamp(),
     });
     const fresh = await ref.get();

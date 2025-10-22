@@ -37,7 +37,7 @@ export const usePrepareStudentData = () => {
           editedStudent?.avatarUrl,
         );
       } else if (fileList.length === 0) {
-        normalized.avatarUrl = editedStudent?.avatarUrl;
+        normalized.avatarUrl = editedStudent?.avatarUrl || null;
       }
 
       return normalized;

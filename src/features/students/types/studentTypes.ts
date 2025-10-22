@@ -10,7 +10,7 @@ export interface Student {
   currentLevel: string;
   price: number;
   notes: string | null;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   isActive: boolean;
   createdAt: number;
   updatedAt: number;

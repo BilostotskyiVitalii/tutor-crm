@@ -1,6 +1,6 @@
 import { admin } from '../firebase';
 
-export const toFirestoreTimestamp = (v: unknown) => {
+export const toTimestamp = (v: unknown) => {
   if (v === null) {
     return null;
   }

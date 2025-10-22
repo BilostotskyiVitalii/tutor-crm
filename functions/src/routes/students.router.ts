@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 import { admin, db } from '../firebase';
 import { extractUidFromBearer } from '../utils/auth';
-import { toFirestoreTimestamp } from '../utils/toFirestoreTimestamp';
-import { toNullable } from '../utils/toNullable';
+import { toTimestamp } from '../utils/toTimestamp';
+// import { toNullable } from '../utils/toNullable';
 
 const FieldValue = admin.firestore.FieldValue;
 export const studentsRouter = Router();
@@ -14,28 +14,22 @@ export const studentsRouter = Router();
 // --------------------
 const createSchema = z.object({
   name: z.string().min(1),
-  email: toNullable(z.string().email()).default(null),
+  // email: toNullable(z.email()).default(null),
+  email: z.email().nullable().default(null),
   phone: z.string().optional().nullable().default(null),
   contact: z.string().optional().nullable().default(null),
-  birthdate: z.union([z.number(), z.string(), z.null()]).optional(),
-  currentLevel: z.string().optional().nullable().default(''),
+  birthdate: z
+    .union([z.number(), z.string(), z.null()])
+    .optional()
+    .default(null),
+  currentLevel: z.string().optional().nullable().default(null),
   price: z.number().nonnegative().default(0),
   notes: z.string().optional().nullable().default(null),
-  avatarUrl: z.string().url().optional().nullable().default(null),
+  avatarUrl: z.url().optional().nullable().default(null),
   isActive: z.boolean().optional().default(true),
 });
 
 const updateSchema = createSchema.partial();
-
-type StudentCreate = z.infer<typeof createSchema>;
-type StudentUpdate = z.infer<typeof updateSchema>;
-
-// --------------------
-// 🔹 HELPERS
-// --------------------
-function toStudentData(data: FirebaseFirestore.DocumentData, id: string) {
-  return { id, ...data } as Record<string, unknown>;
-}
 
 // --------------------
 // 🔹 ROUTES
@@ -46,7 +40,7 @@ studentsRouter.get('/', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
     const snap = await db.collection(`users/${uid}/students`).get();
-    const items = snap.docs.map((d) => toStudentData(d.data(), d.id));
+    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     return res.json(items);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unauthorized';
@@ -63,7 +57,7 @@ studentsRouter.get('/:id', async (req: Request, res: Response) => {
     if (!snap.exists) {
       return res.status(404).json({ message: 'Not found' });
     }
-    return res.json(toStudentData(snap.data() ?? {}, snap.id));
+    return res.json({ id: snap.id, ...snap.data() });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Unauthorized';
     return res.status(401).json({ message });
@@ -74,7 +68,7 @@ studentsRouter.get('/:id', async (req: Request, res: Response) => {
 studentsRouter.post('/', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
-    const parsed: StudentCreate = createSchema.parse(req.body ?? {});
+    const parsed = createSchema.parse(req.body ?? {});
     const now = FieldValue.serverTimestamp();
 
     const payload: Record<string, unknown> = {
@@ -84,12 +78,12 @@ studentsRouter.post('/', async (req: Request, res: Response) => {
     };
 
     if ('birthdate' in parsed) {
-      payload.birthdate = toFirestoreTimestamp(parsed.birthdate);
+      payload.birthdate = toTimestamp(parsed.birthdate);
     }
 
     const ref = await db.collection(`users/${uid}/students`).add(payload);
     const saved = await ref.get();
-    return res.status(201).json(toStudentData(saved.data() ?? {}, ref.id));
+    return res.status(201).json({ id: ref.id, ...saved.data() });
   } catch (err: unknown) {
     const isZod = err instanceof z.ZodError;
     const message = err instanceof Error ? err.message : 'Unknown error';
@@ -101,7 +95,7 @@ studentsRouter.post('/', async (req: Request, res: Response) => {
 studentsRouter.patch('/:id', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
-    const updates: StudentUpdate = updateSchema.parse(req.body ?? {});
+    const updates = updateSchema.parse(req.body ?? {});
     const ref = db.doc(`users/${uid}/students/${req.params.id}`);
     const now = FieldValue.serverTimestamp();
 
@@ -111,12 +105,12 @@ studentsRouter.patch('/:id', async (req: Request, res: Response) => {
     };
 
     if (Object.prototype.hasOwnProperty.call(updates, 'birthdate')) {
-      toUpdate.birthdate = toFirestoreTimestamp(updates.birthdate);
+      toUpdate.birthdate = toTimestamp(updates.birthdate);
     }
 
     await ref.update(toUpdate);
     const fresh = await ref.get();
-    return res.json(toStudentData(fresh.data() ?? {}, fresh.id));
+    return res.json({ id: fresh.id, ...fresh.data() });
   } catch (err: unknown) {
     const isZod = err instanceof z.ZodError;
     const message = err instanceof Error ? err.message : 'Unknown error';

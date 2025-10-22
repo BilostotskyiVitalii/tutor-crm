@@ -15,7 +15,7 @@ export const useUploadAvatar = () => {
   const { notification } = AntApp.useApp();
 
   const uploadAvatar = useCallback(
-    async (file: File, studentId: string, oldAvatarUrl?: string) => {
+    async (file: File, studentId: string, oldAvatarUrl?: string | null) => {
       const user = getAuth().currentUser;
 
       if (!user) {
