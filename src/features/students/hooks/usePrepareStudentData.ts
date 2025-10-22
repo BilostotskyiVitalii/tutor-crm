@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import type { UploadFile } from 'antd';
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
 
 import type {
   Student,
@@ -9,6 +8,7 @@ import type {
   StudentFormValues,
 } from '@/features/students/types/studentTypes';
 import { useUploadAvatar } from '@/shared/hooks/useUploadAvatar';
+import { normalizeData } from '@/shared/utils/normalizeData';
 
 export const usePrepareStudentData = () => {
   const { uploadAvatar } = useUploadAvatar();
@@ -21,18 +21,13 @@ export const usePrepareStudentData = () => {
     ): Promise<StudentData> => {
       const studentId = editedStudent ? editedStudent.id : crypto.randomUUID();
 
-      const normalized: StudentData = {
+      const normalized = normalizeData({
         ...formValues,
+        isActive: editedStudent?.isActive || true,
         birthdate: formValues.birthdate
-          ? Timestamp.fromMillis(formValues.birthdate.valueOf())
+          ? formValues.birthdate.toDate().getTime()
           : null,
-        isActive: editedStudent?.isActive ?? true,
-        phone: formValues.phone || null,
-        contact: formValues.contact || null,
-        notes: formValues.notes || null,
-        ...(editedStudent ? {} : { createdAt: serverTimestamp() }),
-        updatedAt: serverTimestamp(),
-      };
+      });
 
       if (fileList.length > 0) {
         const file = fileList[0].originFileObj as File;
@@ -41,6 +36,8 @@ export const usePrepareStudentData = () => {
           studentId,
           editedStudent?.avatarUrl,
         );
+      } else if (fileList.length === 0) {
+        normalized.avatarUrl = editedStudent?.avatarUrl;
       }
 
       return normalized;

@@ -1,48 +1,22 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { db } from '@/app/firebase';
+import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type {
   Lesson,
   LessonData,
   UpdateLesson,
 } from '@/features/lessons/types/lessonTypes';
-import { mapFirestoreLesson } from '@/features/lessons/utils/mapFirestoreLesson';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
-import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
-const { lessons, users } = endpointsURL;
+const { lessons } = endpointsURL;
 
 export const lessonsApi = createApi({
   reducerPath: 'lessonsApi',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ['Lessons'],
   endpoints: (builder) => ({
     getLessons: builder.query<Lesson[], void>({
-      async queryFn() {
-        try {
-          const uid = getCurrentUid();
-          const snapshot = await getDocs(
-            collection(db, `${users}/${uid}/${lessons}`),
-          );
-
-          const lessonsData: Lesson[] = snapshot.docs.map((docSnap) =>
-            mapFirestoreLesson(docSnap.id, docSnap.data()),
-          );
-
-          return { data: lessonsData };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+      query: () => ({ url: lessons, method: 'GET' }),
       providesTags: (result) =>
         result
           ? [
@@ -53,61 +27,27 @@ export const lessonsApi = createApi({
     }),
 
     getLessonById: builder.query<Lesson | null, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          const docRef = doc(db, `${users}/${uid}/${lessons}/${id}`);
-          const docSnap = await getDoc(docRef);
-
-          if (!docSnap.exists()) {
-            return { data: null };
-          }
-
-          return { data: mapFirestoreLesson(docSnap.id, docSnap.data()) };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
-      providesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
+      query: (id) => ({ url: `${lessons}/${id}`, method: 'GET' }),
+      providesTags: (_r, _e, id) => [{ type: 'Lessons', id }],
     }),
 
-    addLesson: builder.mutation<void, LessonData>({
-      async queryFn(newLesson) {
-        try {
-          const uid = getCurrentUid();
-          await addDoc(collection(db, `${users}/${uid}/${lessons}`), newLesson);
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+    addLesson: builder.mutation<Lesson, LessonData>({
+      query: (newLesson) => ({ url: lessons, method: 'POST', body: newLesson }),
       invalidatesTags: [{ type: 'Lessons', id: 'LIST' }],
     }),
 
-    updateLesson: builder.mutation<void, UpdateLesson>({
-      async queryFn({ id, data }) {
-        try {
-          const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${lessons}/${id}`), data);
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'Lessons', id }],
+    updateLesson: builder.mutation<Lesson, UpdateLesson>({
+      query: ({ id, data }) => ({
+        url: `${lessons}/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (_r, _e, { id }) => [{ type: 'Lessons', id }],
     }),
 
     deleteLesson: builder.mutation<void, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          await deleteDoc(doc(db, `${users}/${uid}/${lessons}/${id}`));
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
-      invalidatesTags: (_result, _error, id) => [{ type: 'Lessons', id }],
+      query: (id) => ({ url: `${lessons}/${id}`, method: 'DELETE' }),
+      invalidatesTags: (_r, _e, id) => [{ type: 'Lessons', id }],
     }),
   }),
 });

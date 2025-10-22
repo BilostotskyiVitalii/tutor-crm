@@ -5,9 +5,9 @@ import { Form } from 'antd';
 import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { GroupData } from '@/features/groups/types/groupTypes';
-import { normalizeGroupData } from '@/features/groups/utils/normalizeGroupData';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+import { normalizeData } from '@/shared/utils/normalizeData';
 
 interface useGroupFormProps {
   groupId?: string | null;
@@ -24,7 +24,7 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
 
   useEffect(() => {
     if (group) {
-      form.setFieldsValue({ ...group, notes: group.notes || null });
+      form.setFieldsValue({ ...group });
     }
   }, [group, form]);
 
@@ -42,7 +42,7 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
       setIsLoading(true);
 
       const formValues: GroupData = await form.validateFields();
-      const updateData = normalizeGroupData(formValues, group);
+      const updateData = normalizeData(formValues);
 
       if (groupId) {
         await updateGroupData(groupId, updateData);

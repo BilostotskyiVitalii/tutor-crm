@@ -23,7 +23,9 @@ export const useStudentForm = ({
   setFileList,
 }: useStudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
-  const { data: editedStudent } = useGetStudentByIdQuery(studentId ?? '');
+  const { data: editedStudent } = useGetStudentByIdQuery(studentId!, {
+    skip: !studentId,
+  });
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);

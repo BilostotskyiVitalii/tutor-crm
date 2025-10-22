@@ -1,48 +1,22 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { db } from '@/app/firebase';
+import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type {
   Student,
   StudentData,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
-import { mapFirestoreStudent } from '@/features/students/utils/mapFirestoreStudent';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
-import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
-const { students, users } = endpointsURL;
+const { students } = endpointsURL;
 
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ['Students'],
   endpoints: (builder) => ({
     getStudents: builder.query<Student[], void>({
-      async queryFn() {
-        try {
-          const uid = getCurrentUid();
-          const snapshot = await getDocs(
-            collection(db, `${users}/${uid}/${students}`),
-          );
-
-          const studentsData: Student[] = snapshot.docs.map((docSnap) =>
-            mapFirestoreStudent(docSnap.id, docSnap.data()),
-          );
-
-          return { data: studentsData };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+      query: () => ({ url: students, method: 'GET' }),
       providesTags: (result) =>
         result
           ? [
@@ -53,63 +27,30 @@ export const studentsApi = createApi({
     }),
 
     getStudentById: builder.query<Student | null, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          const docRef = doc(db, `${users}/${uid}/${students}/${id}`);
-          const docSnap = await getDoc(docRef);
-
-          if (!docSnap.exists()) {
-            return { data: null };
-          }
-
-          return { data: mapFirestoreStudent(docSnap.id, docSnap.data()) };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+      query: (id) => ({ url: `${students}/${id}`, method: 'GET' }),
       providesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
 
-    addStudent: builder.mutation<void, StudentData>({
-      async queryFn(newStudent) {
-        try {
-          const uid = getCurrentUid();
-          await addDoc(
-            collection(db, `${users}/${uid}/${students}`),
-            newStudent,
-          );
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+    addStudent: builder.mutation<Student, StudentData>({
+      query: (newStudent) => ({
+        url: students,
+        method: 'POST',
+        body: newStudent,
+      }),
       invalidatesTags: [{ type: 'Students', id: 'LIST' }],
     }),
 
-    updateStudent: builder.mutation<void, UpdateUser>({
-      async queryFn({ id, data }) {
-        try {
-          const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${students}/${id}`), data);
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+    updateStudent: builder.mutation<Student, UpdateUser>({
+      query: ({ id, data }) => ({
+        url: `${students}/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
       invalidatesTags: (_result, _error, { id }) => [{ type: 'Students', id }],
     }),
 
     deleteStudent: builder.mutation<void, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          await deleteDoc(doc(db, `${users}/${uid}/${students}/${id}`));
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+      query: (id) => ({ url: `${students}/${id}`, method: 'DELETE' }),
       invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
   }),

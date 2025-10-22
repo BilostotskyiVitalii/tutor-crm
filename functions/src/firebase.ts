@@ -1,13 +1,17 @@
 import * as admin from 'firebase-admin';
+import { getApps } from 'firebase-admin/app';
 
-admin.initializeApp();
-
-if (admin.apps.length === 0) {
-  admin.initializeApp();
+if (getApps().length === 0) {
+  admin.initializeApp({
+    projectId:
+      process.env.GCLOUD_PROJECT ||
+      process.env.GOOGLE_CLOUD_PROJECT ||
+      'tutor-crm-49cae',
+    storageBucket: 'tutor-crm-49cae.appspot.com',
+  });
 }
 
-const db = admin.firestore();
-const auth = admin.auth();
-const storage = admin.storage();
-
-export { admin, auth, db, storage };
+export { admin };
+export const db = admin.firestore();
+export const auth = admin.auth();
+export const storage = admin.storage();

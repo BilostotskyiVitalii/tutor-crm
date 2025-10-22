@@ -1,5 +1,4 @@
 import type { Dayjs } from 'dayjs';
-import type { FieldValue, Timestamp } from 'firebase/firestore';
 
 export interface Lesson {
   id: string;
@@ -19,10 +18,8 @@ export interface Lesson {
 
 export interface LessonData
   extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {
-  start: Timestamp;
-  end: Timestamp;
-  createdAt?: FieldValue | Timestamp;
-  updatedAt?: FieldValue | Timestamp;
+  start: number;
+  end: number;
 }
 
 export interface LessonFormValues

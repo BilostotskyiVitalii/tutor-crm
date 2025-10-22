@@ -1,32 +1,35 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+import express, { json } from 'express';
+import * as functions from 'firebase-functions/v1';
 
-import { setGlobalOptions } from 'firebase-functions';
+import { serializeDatesToISO } from './middleware/serializeDatesToISO';
+import { dashboardRouter } from './routes/dashboard.router';
+import { groupsRouter } from './routes/groups.router';
+import { lessonsRouter } from './routes/lessons.router';
+import { studentsRouter } from './routes/students.router';
+import { corsHandler } from './utils/cors';
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
+import './firebase';
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+const app = express();
+app.set('trust proxy', true);
+app.use(corsHandler);
+app.options(/.*/, corsHandler);
+app.use(json());
+app.use(
+  serializeDatesToISO({
+    keys: [
+      'createdAt',
+      'updatedAt',
+      'start',
+      'end',
+      'birthdate',
+      /Date$/i, // birthDate, eventDate
+    ],
+  }),
+);
+app.use('/groups', groupsRouter);
+app.use('/students', studentsRouter);
+app.use('/lessons', lessonsRouter);
+app.use('/dashboard', dashboardRouter);
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
-
-export { getDashboardStats } from './handlers/dashboard.handler';
+export const api = functions.region('us-central1').https.onRequest(app);

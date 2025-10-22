@@ -1,5 +1,4 @@
-import { serverTimestamp, Timestamp } from 'firebase/firestore';
-
+// CHANGED — шлемо числа (ms), без serverTimestamp()
 import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import type {
   LessonData,
@@ -18,24 +17,18 @@ export const useBuildLessonData = (editedLessonId?: string | null) => {
     const lessonMap = new Map(lesson?.students.map((s) => [s.id, s]) ?? []);
 
     const selectedStudents = formValues.studentIds.map((id) => {
-      const student = studentMap.get(id) ||
+      const s = studentMap.get(id) ||
         lessonMap.get(id) || { id, name: id, email: '' };
-      return {
-        id: student.id,
-        name: student.name,
-        email: student.email || '',
-      };
+      return { id: s.id, name: s.name, email: s.email || '' };
     });
 
     return {
       students: selectedStudents,
       groupId: formValues.groupId || null,
-      start: Timestamp.fromMillis(formValues.date[0].valueOf()),
-      end: Timestamp.fromMillis(formValues.date[1].valueOf()),
+      start: formValues.date[0].toDate().valueOf(), // ✅ ms
+      end: formValues.date[1].toDate().valueOf(), // ✅ ms
       notes: formValues.notes || null,
       price: formValues.price,
-      ...(editedLessonId ? {} : { createdAt: serverTimestamp() }),
-      updatedAt: serverTimestamp(),
     };
   };
 

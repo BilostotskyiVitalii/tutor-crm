@@ -1,6 +1,7 @@
 export const endpointsURL = {
-  students: 'students',
-  lessons: 'lessons',
-  groups: 'groups',
-  users: 'users',
+  apiBaseUrl: import.meta.env.VITE_FUNCTIONS_API_BASE as string,
+  users: '/users',
+  students: '/students',
+  lessons: '/lessons',
+  groups: '/groups',
 } as const;

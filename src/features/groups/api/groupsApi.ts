@@ -1,48 +1,22 @@
-import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  updateDoc,
-} from 'firebase/firestore';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { db } from '@/app/firebase';
+import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type {
   Group,
   GroupData,
   UpdateGroup,
 } from '@/features/groups/types/groupTypes';
-import { mapFirestoreGroup } from '@/features/groups/utils/mapFirestoreGroup';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
-import { getCurrentUid } from '@/shared/utils/getCurrentUid';
 
-const { groups, users } = endpointsURL;
+const { groups } = endpointsURL;
 
 export const groupsApi = createApi({
   reducerPath: 'groupsApi',
-  baseQuery: fakeBaseQuery(),
+  baseQuery: baseQueryWithAuth,
   tagTypes: ['Groups'],
   endpoints: (builder) => ({
     getGroups: builder.query<Group[], void>({
-      async queryFn() {
-        try {
-          const uid = getCurrentUid();
-          const snapshot = await getDocs(
-            collection(db, `${users}/${uid}/${groups}`),
-          );
-
-          const groupsData: Group[] = snapshot.docs.map((docSnap) =>
-            mapFirestoreGroup(docSnap.id, docSnap.data()),
-          );
-
-          return { data: groupsData };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+      query: () => ({ url: groups, method: 'GET' }),
       providesTags: (result) =>
         result
           ? [
@@ -52,64 +26,28 @@ export const groupsApi = createApi({
           : [{ type: 'Groups', id: 'LIST' }],
     }),
 
-    getGroupById: builder.query<Group | null, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          const docRef = doc(db, `${users}/${uid}/${groups}/${id}`);
-          const docSnap = await getDoc(docRef);
-
-          if (!docSnap.exists()) {
-            return { data: null };
-          }
-
-          const data = docSnap.data();
-
-          return { data: mapFirestoreGroup(docSnap.id, data) };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+    getGroupById: builder.query<Group, string>({
+      query: (id) => ({ url: `${groups}/${id}`, method: 'GET' }),
       providesTags: (_result, _error, id) => [{ type: 'Groups', id }],
     }),
 
-    addGroup: builder.mutation<void, GroupData>({
-      async queryFn(newGroup) {
-        try {
-          const uid = getCurrentUid();
-          await addDoc(collection(db, `${users}/${uid}/${groups}`), newGroup);
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
+    addGroup: builder.mutation<Group, GroupData>({
+      query: (newGroup) => ({ url: groups, method: 'POST', body: newGroup }),
       invalidatesTags: [{ type: 'Groups', id: 'LIST' }],
     }),
 
-    updateGroup: builder.mutation<void, UpdateGroup>({
-      async queryFn({ id, data }) {
-        try {
-          const uid = getCurrentUid();
-          await updateDoc(doc(db, `${users}/${uid}/${groups}/${id}`), data);
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'Groups', id }],
+    updateGroup: builder.mutation<Group, UpdateGroup>({
+      query: ({ id, data }) => ({
+        url: `${groups}/${id}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (_res, _err, { id }) => [{ type: 'Groups', id }],
     }),
 
     deleteGroup: builder.mutation<void, string>({
-      async queryFn(id) {
-        try {
-          const uid = getCurrentUid();
-          await deleteDoc(doc(db, `${users}/${uid}/${groups}/${id}`));
-          return { data: undefined };
-        } catch (err) {
-          return { error: { message: (err as Error).message } };
-        }
-      },
-      invalidatesTags: (_result, _error, id) => [{ type: 'Groups', id }],
+      query: (id) => ({ url: `${groups}/${id}`, method: 'DELETE' }),
+      invalidatesTags: (_res, _err, id) => [{ type: 'Groups', id }],
     }),
   }),
 });

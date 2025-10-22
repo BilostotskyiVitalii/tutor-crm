@@ -1,27 +1,14 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { getAuth } from 'firebase/auth';
+import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { DashboardStats } from '@/features/dashboard/types/DashboardStats';
-
-import { app } from '../../../app/firebase';
+import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
+import type { DashboardStats } from '@/features/dashboard/types/dashboardStats';
 
 export const dashboardApi = createApi({
   reducerPath: 'dashboardApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'https://us-central1-tutor-crm-49cae.cloudfunctions.net/',
-    prepareHeaders: async (headers) => {
-      const auth = getAuth(app);
-      const user = auth.currentUser;
-      if (user) {
-        const token = await user.getIdToken();
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithAuth,
   endpoints: (builder) => ({
     getDashboardStats: builder.query<DashboardStats, void>({
-      query: () => 'getDashboardStats',
+      query: () => ({ url: 'dashboard/stats', method: 'GET' }),
     }),
   }),
 });

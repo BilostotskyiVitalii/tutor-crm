@@ -37,7 +37,7 @@ export function useStudentActions() {
         await updateStudent({ id, data }).unwrap();
         notification.success({ message: 'Student updated!' });
       } catch (err) {
-        handleError(err, 'Failed to update student');
+        handleError(err, 'Failed to create student');
       }
     },
     [updateStudent, handleError, notification],

@@ -1,4 +1,3 @@
-// import type { Dayjs } from 'dayjs';
 import type { Timestamp } from 'firebase/firestore';
 
 export interface StudentData {
@@ -19,13 +18,6 @@ export interface StudentData {
 export interface Student extends StudentData {
   id: string;
 }
-
-// export interface StudentData
-//   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
-//   birthdate: Timestamp | null;
-//   createdAt?: FieldValue | Timestamp;
-//   updatedAt?: FieldValue | Timestamp;
-// }
 
 // export type UpdateUser = {
 //   id: string;
