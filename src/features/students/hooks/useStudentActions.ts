@@ -32,8 +32,7 @@ export function useStudentActions() {
   );
 
   const updateStudentData = useCallback(
-    async (id: string, data: StudentData) => {
-      console.log(data);
+    async (id: string, data: Partial<StudentData>) => {
       try {
         await updateStudent({ id, data }).unwrap();
         notification.success({ message: 'Student updated!' });

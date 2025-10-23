@@ -4,7 +4,6 @@ import { z } from 'zod';
 import { admin, db } from '../firebase';
 import { extractUidFromBearer } from '../utils/auth';
 import { toTimestamp } from '../utils/toTimestamp';
-// import { toNullable } from '../utils/toNullable';
 
 const FieldValue = admin.firestore.FieldValue;
 export const studentsRouter = Router();
@@ -14,7 +13,6 @@ export const studentsRouter = Router();
 // --------------------
 const createSchema = z.object({
   name: z.string().min(1),
-  // email: toNullable(z.email()).default(null),
   email: z.email().nullable().default(null),
   phone: z.string().optional().nullable().default(null),
   contact: z.string().optional().nullable().default(null),
@@ -29,7 +27,18 @@ const createSchema = z.object({
   isActive: z.boolean().optional().default(true),
 });
 
-const updateSchema = createSchema.partial();
+const updateSchema = z.object({
+  name: z.string().min(1).optional(),
+  email: z.email().optional().nullable(),
+  phone: z.string().optional().nullable(),
+  contact: z.string().optional().nullable(),
+  birthdate: z.union([z.number(), z.string(), z.null()]).optional(),
+  currentLevel: z.string().optional().nullable(),
+  price: z.number().nonnegative().optional(),
+  notes: z.string().optional().nullable(),
+  avatarUrl: z.url().optional().nullable(),
+  isActive: z.boolean().optional(),
+});
 
 // --------------------
 // 🔹 ROUTES
@@ -75,11 +84,9 @@ studentsRouter.post('/', async (req: Request, res: Response) => {
       ...parsed,
       createdAt: now,
       updatedAt: now,
+      birthdate:
+        parsed.birthdate !== null ? toTimestamp(parsed.birthdate) : null,
     };
-
-    if ('birthdate' in parsed) {
-      payload.birthdate = toTimestamp(parsed.birthdate);
-    }
 
     const ref = await db.collection(`users/${uid}/students`).add(payload);
     const saved = await ref.get();

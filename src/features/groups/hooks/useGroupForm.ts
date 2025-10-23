@@ -7,7 +7,7 @@ import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { normalizeData } from '@/shared/utils/normalizeData';
+import { toNullData } from '@/shared/utils/toNullData';
 
 interface useGroupFormProps {
   groupId?: string | null;
@@ -42,7 +42,7 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
       setIsLoading(true);
 
       const formValues: GroupData = await form.validateFields();
-      const updateData = normalizeData(formValues);
+      const updateData = toNullData(formValues);
 
       if (groupId) {
         await updateGroupData(groupId, updateData);
