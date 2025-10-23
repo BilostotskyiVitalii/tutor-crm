@@ -8,6 +8,20 @@ const FieldValue = admin.firestore.FieldValue;
 
 export const groupsRouter = Router();
 
+const createSchema = z.object({
+  title: z.string().min(1),
+  studentIds: z.array(z.string()).default([]),
+  notes: z.string().nullable().optional().default(null),
+  price: z.number().nonnegative().default(0),
+});
+
+const updateSchema = z.object({
+  title: z.string().min(1).optional(),
+  studentIds: z.array(z.string()).optional(),
+  notes: z.string().nullable().optional(),
+  price: z.number().nonnegative().optional(),
+});
+
 // ===== GET all groups =====
 groupsRouter.get('/', async (req: Request, res: Response) => {
   try {
@@ -22,13 +36,6 @@ groupsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 // ===== CREATE group =====
-const createSchema = z.object({
-  title: z.string().min(1),
-  studentIds: z.array(z.string()).default([]),
-  notes: z.string().nullable().optional(),
-  price: z.number().nonnegative().default(0),
-});
-
 groupsRouter.post('/', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);
@@ -69,13 +76,6 @@ groupsRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // ===== UPDATE group =====
-const updateSchema = z.object({
-  title: z.string().min(1).optional(),
-  studentIds: z.array(z.string()).optional(),
-  notes: z.string().nullable().optional(),
-  price: z.number().nonnegative().optional(),
-});
-
 groupsRouter.patch('/:id', async (req: Request, res: Response) => {
   try {
     const uid = await extractUidFromBearer(req);

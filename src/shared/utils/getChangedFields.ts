@@ -27,6 +27,19 @@ function normalizeDateToTime(value: unknown): number | undefined {
   return undefined;
 }
 
+function arraysEqual<T>(a?: T[], b?: T[]): boolean {
+  if (!a && !b) {
+    return true;
+  }
+  if (!a || !b) {
+    return false;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+  return a.every((v, i) => v === b[i]);
+}
+
 export function getChangedFields<T extends Record<string, unknown>>(
   newData: T,
   oldData: Partial<T> | null | undefined,
@@ -41,9 +54,17 @@ export function getChangedFields<T extends Record<string, unknown>>(
     const newValue = newData[key];
     const oldValue = oldData[key];
 
+    // 🔹 масиви
+    if (Array.isArray(newValue) && Array.isArray(oldValue)) {
+      if (!arraysEqual(newValue, oldValue)) {
+        changed[key] = newValue;
+      }
+      continue;
+    }
+
+    // 🔹 дати / timestamp-подібні
     const newTime = normalizeDateToTime(newValue);
     const oldTime = normalizeDateToTime(oldValue);
-
     if (newTime !== undefined && oldTime !== undefined) {
       if (newTime !== oldTime) {
         changed[key] = newValue;
@@ -51,6 +72,7 @@ export function getChangedFields<T extends Record<string, unknown>>(
       continue;
     }
 
+    // 🔹 інші значення
     if (newValue !== oldValue) {
       changed[key] = newValue;
     }

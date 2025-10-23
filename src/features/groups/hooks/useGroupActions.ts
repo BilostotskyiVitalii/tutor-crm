@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 
 import { App as AntApp } from 'antd';
-import { serverTimestamp } from 'firebase/firestore';
 
 import {
   useAddGroupMutation,
@@ -33,7 +32,7 @@ export function useGroupActions() {
   );
 
   const updateGroupData = useCallback(
-    async (id: string, data: GroupData) => {
+    async (id: string, data: Partial<GroupData>) => {
       try {
         await updateGroup({ id, data }).unwrap();
         notification.success({ message: 'Group updated!' });
@@ -74,7 +73,6 @@ export function useGroupActions() {
                 id: group.id,
                 data: {
                   studentIds: group.studentIds.filter((id) => id !== studentId),
-                  updatedAt: serverTimestamp(),
                 },
               }).unwrap();
             }

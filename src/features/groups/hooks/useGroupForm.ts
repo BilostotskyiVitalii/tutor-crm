@@ -7,6 +7,7 @@ import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
 import type { GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+import { getChangedFields } from '@/shared/utils/getChangedFields';
 import { toNullData } from '@/shared/utils/toNullData';
 
 interface useGroupFormProps {
@@ -18,7 +19,10 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
   const [form] = Form.useForm<GroupData>();
   const [isLoading, setIsLoading] = useState(false);
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: group } = useGetGroupByIdQuery(groupId ?? '');
+  // TODO pass group, not id
+  const { data: group } = useGetGroupByIdQuery(groupId!, {
+    skip: !groupId,
+  });
   const { createGroup, updateGroupData } = useGroupActions();
   const { handleError } = useErrorHandler();
 
@@ -44,8 +48,12 @@ export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
       const formValues: GroupData = await form.validateFields();
       const updateData = toNullData(formValues);
 
-      if (groupId) {
-        await updateGroupData(groupId, updateData);
+      if (group) {
+        const changedFields = getChangedFields(updateData, group);
+
+        if (Object.keys(changedFields).length > 0) {
+          await updateGroupData(group.id, changedFields);
+        }
       } else {
         await createGroup(updateData);
       }
