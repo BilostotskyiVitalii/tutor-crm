@@ -7,7 +7,7 @@ import { useModal } from '@/shared/providers/ModalProvider';
 
 export const AppModal = () => {
   const { modal, closeModal } = useModal();
-  const { type, mode, entityId, open, initData } = modal;
+  const { type, mode, entity, open, initData } = modal;
 
   const getContent = () => {
     switch (type) {
@@ -15,18 +15,16 @@ export const AppModal = () => {
         return (
           <LessonForm
             mode={mode}
-            lessonId={entityId}
+            lesson={entity}
             initData={initData}
             onClose={closeModal}
           />
         );
       case 'group':
-        return (
-          <GroupForm mode={mode} groupId={entityId} onClose={closeModal} />
-        );
+        return <GroupForm mode={mode} group={entity} onClose={closeModal} />;
       case 'student':
         return (
-          <StudentForm mode={mode} studentId={entityId} onClose={closeModal} />
+          <StudentForm mode={mode} student={entity} onClose={closeModal} />
         );
       default:
         return null;

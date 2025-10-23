@@ -2,27 +2,22 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { Form } from 'antd';
 
-import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
 import { useGroupActions } from '@/features/groups/hooks/useGroupActions';
-import type { GroupData } from '@/features/groups/types/groupTypes';
+import type { Group, GroupData } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { getChangedFields } from '@/shared/utils/getChangedFields';
 import { toNullData } from '@/shared/utils/toNullData';
 
 interface useGroupFormProps {
-  groupId?: string | null;
+  group?: Group | null;
   onClose: () => void;
 }
 
-export const useGroupForm = ({ groupId, onClose }: useGroupFormProps) => {
+export const useGroupForm = ({ group, onClose }: useGroupFormProps) => {
   const [form] = Form.useForm<GroupData>();
   const [isLoading, setIsLoading] = useState(false);
   const { data: students = [] } = useGetStudentsQuery();
-  // TODO pass group, not id
-  const { data: group } = useGetGroupByIdQuery(groupId!, {
-    skip: !groupId,
-  });
   const { createGroup, updateGroupData } = useGroupActions();
   const { handleError } = useErrorHandler();
 

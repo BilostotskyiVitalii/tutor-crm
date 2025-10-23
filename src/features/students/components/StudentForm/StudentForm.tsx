@@ -13,6 +13,7 @@ import {
 import TextArea from 'antd/es/input/TextArea';
 
 import { useStudentForm } from '@/features/students/hooks/useStudentForm';
+import type { Student } from '@/features/students/types/studentTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
@@ -23,13 +24,13 @@ const DATE_FORMAT = 'DD.MM.YYYY';
 interface StudentFormProps {
   mode?: string;
   onClose: () => void;
-  studentId?: string | null;
+  student?: Student | null;
 }
 
-const StudentForm: FC<StudentFormProps> = ({ mode, onClose, studentId }) => {
+const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const { form, onFinish, isLoading } = useStudentForm({
-    studentId,
+    student,
     onClose,
     fileList,
     setFileList,

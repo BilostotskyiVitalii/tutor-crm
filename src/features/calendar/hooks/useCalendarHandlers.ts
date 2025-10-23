@@ -42,6 +42,7 @@ export const useCalendarHandlers = (setCurrentDate: (date: Dayjs) => void) => {
           initStart: slotInfo.start,
           initEnd: new Date(slotInfo.start.getTime() + 60 * 60 * 1000),
         },
+        entity: null,
       });
     },
     [openModal],
@@ -52,7 +53,7 @@ export const useCalendarHandlers = (setCurrentDate: (date: Dayjs) => void) => {
       openModal({
         type: 'lesson',
         mode: 'edit',
-        entityId: event.id,
+        entity: event.resource,
         initData: { initGroup: event.resource.groupId },
       });
     },

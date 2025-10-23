@@ -14,7 +14,8 @@ export const useGroupCard = (group: Group) => {
     openModal({
       type: 'lesson',
       mode: 'create',
-      initData: { initGroup: group.id },
+      initData: { initGroup: group },
+      entity: null,
     });
   }
 
@@ -22,7 +23,7 @@ export const useGroupCard = (group: Group) => {
     openModal({
       type: 'group',
       mode: 'edit',
-      entityId: group.id,
+      entity: group,
     });
   }
 

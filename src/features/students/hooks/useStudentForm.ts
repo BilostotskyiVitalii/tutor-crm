@@ -3,47 +3,44 @@ import { useCallback, useEffect, useState } from 'react';
 import { Form, type UploadFile } from 'antd';
 import dayjs from 'dayjs';
 
-import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
-import type { StudentFormValues } from '@/features/students/types/studentTypes';
+import type {
+  Student,
+  StudentFormValues,
+} from '@/features/students/types/studentTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import { useUploadAvatar } from '@/shared/hooks/useUploadAvatar';
 import { getChangedFields } from '@/shared/utils/getChangedFields';
 import { toNullData } from '@/shared/utils/toNullData';
 
 type useStudentFormProps = {
-  studentId?: string | null;
+  student?: Student | null;
   onClose: () => void;
   fileList: UploadFile[];
   setFileList: (fileList: UploadFile[] | []) => void;
 };
 
 export const useStudentForm = ({
-  studentId,
+  student,
   onClose,
   fileList,
   setFileList,
 }: useStudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
-  // TODO pass student, not id
-  const { data: editedStudent } = useGetStudentByIdQuery(studentId!, {
-    skip: !studentId,
-  });
+
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
   const { uploadAvatar } = useUploadAvatar();
 
   useEffect(() => {
-    if (editedStudent) {
+    if (student) {
       form.setFieldsValue({
-        ...editedStudent,
-        birthdate: editedStudent.birthdate
-          ? dayjs(editedStudent.birthdate)
-          : null,
+        ...student,
+        birthdate: student.birthdate ? dayjs(student.birthdate) : null,
       });
     }
-  }, [editedStudent, form]);
+  }, [student, form]);
 
   const prepareStudentData = useCallback(async () => {
     const values = await form.validateFields();
@@ -56,15 +53,15 @@ export const useStudentForm = ({
       const file = fileList[0].originFileObj as File;
       normalized.avatarUrl = await uploadAvatar(
         file,
-        editedStudent ? editedStudent.id : crypto.randomUUID(),
-        editedStudent?.avatarUrl,
+        student ? student.id : crypto.randomUUID(),
+        student?.avatarUrl,
       );
     } else {
-      normalized.avatarUrl = editedStudent?.avatarUrl || null;
+      normalized.avatarUrl = student?.avatarUrl || null;
     }
 
     return normalized;
-  }, [form, fileList, editedStudent, uploadAvatar]);
+  }, [form, fileList, student, uploadAvatar]);
 
   const onFinish = async () => {
     try {
@@ -72,11 +69,11 @@ export const useStudentForm = ({
 
       const normalized = await prepareStudentData();
 
-      if (editedStudent) {
-        const changedFields = getChangedFields(normalized, editedStudent);
+      if (student) {
+        const changedFields = getChangedFields(normalized, student);
 
         if (Object.keys(changedFields).length > 0) {
-          await updateStudentData(editedStudent.id, changedFields);
+          await updateStudentData(student.id, changedFields);
         }
       } else {
         await createStudent(normalized);

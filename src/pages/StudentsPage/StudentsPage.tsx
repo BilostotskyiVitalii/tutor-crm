@@ -18,6 +18,7 @@ const StudentsPage: FC = () => {
     openModal({
       type: 'student',
       mode: 'create',
+      entity: null,
     });
   }
 

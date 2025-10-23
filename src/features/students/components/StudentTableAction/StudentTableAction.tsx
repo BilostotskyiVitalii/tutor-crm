@@ -23,7 +23,7 @@ export const StudentTableActions: FC<StudentTableActionsProps> = ({
           openModal({
             type: 'student',
             mode: 'edit',
-            entityId: student.id,
+            entity: student,
           })
         }
         size="small"
@@ -35,7 +35,8 @@ export const StudentTableActions: FC<StudentTableActionsProps> = ({
           openModal({
             type: 'lesson',
             mode: 'create',
-            initData: { initStudent: student.id },
+            initData: { initStudent: student },
+            entity: null,
           })
         }
         size="small"

@@ -64,7 +64,8 @@ const StudentCard: FC<StudentCardProps> = ({ student }) => {
           openModal({
             type: 'lesson',
             mode: 'create',
-            initData: { initStudent: student.id },
+            initData: { initStudent: student },
+            entity: null,
           })
         }
       />,
@@ -74,7 +75,7 @@ const StudentCard: FC<StudentCardProps> = ({ student }) => {
           openModal({
             type: 'student',
             mode: 'edit',
-            entityId: student.id,
+            entity: student,
           })
         }
       />,
@@ -82,7 +83,7 @@ const StudentCard: FC<StudentCardProps> = ({ student }) => {
         <MoreOutlined key="more" />
       </Dropdown>,
     ],
-    [openModal, student.id, menuItems],
+    [openModal, student, menuItems],
   );
 
   return (

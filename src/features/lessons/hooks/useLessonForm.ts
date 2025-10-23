@@ -3,25 +3,25 @@ import { useCallback, useEffect, useState } from 'react';
 import { App as AntApp, Form } from 'antd';
 import dayjs from 'dayjs';
 
-import { useGetGroupByIdQuery } from '@/features/groups/api/groupsApi';
-import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import { useBuildLessonData } from '@/features/lessons/hooks/useBuildLessonData';
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
-import type { LessonFormValues } from '@/features/lessons/types/lessonTypes';
-import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
+import type {
+  Lesson,
+  LessonFormValues,
+} from '@/features/lessons/types/lessonTypes';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
 import { getChangedFields } from '@/shared/utils/getChangedFields';
 
 interface useLessonFormProps {
-  lessonId?: string | null;
+  lesson?: Lesson | null;
   onClose: () => void;
   setIsGroup: (isGroup: boolean) => void;
   initData?: initDataType;
 }
 
 export const useLessonForm = ({
-  lessonId,
+  lesson,
   initData,
   onClose,
   setIsGroup,
@@ -29,52 +29,46 @@ export const useLessonForm = ({
   const [form] = Form.useForm<LessonFormValues>();
   const { initStudent, initGroup, initStart, initEnd } = initData ?? {};
   const [isLoading, setIsLoading] = useState(false);
-  const { data: student } = useGetStudentByIdQuery(initStudent!, {
-    skip: !initStudent,
-  });
-  const { data: group } = useGetGroupByIdQuery(initGroup!, {
-    skip: !initGroup,
-  });
-  const { data: lesson } = useGetLessonByIdQuery(lessonId!, {
-    skip: !lessonId,
-  });
   const { updateLessonData, createLesson, removeLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
-  const { buildLessonData } = useBuildLessonData(lessonId);
+  const { buildLessonData } = useBuildLessonData(lesson?.id);
   const { modal } = AntApp.useApp();
 
-  const initVal = useCallback(() => {
+  const initVal = useCallback((): {
+    values: Partial<LessonFormValues>;
+    isGroup: boolean;
+  } => {
     if (lesson) {
       return {
         values: {
-          studentIds: lesson?.students?.map((s) => s.id).filter(Boolean) ?? [],
-          groupId: lesson?.groupId,
-          date: [dayjs(lesson?.start), dayjs(lesson?.end)],
-          notes: lesson?.notes || null,
-          price: lesson?.price,
+          studentIds: lesson.students?.map((s) => s.id).filter(Boolean) ?? [],
+          groupId: lesson.groupId ?? null,
+          date: [dayjs(lesson.start), dayjs(lesson.end)],
+          notes: lesson.notes ?? null,
+          price: lesson.price,
         },
         isGroup: !!lesson.groupId,
       };
     }
 
-    if (group) {
+    if (initStudent) {
       return {
         values: {
-          studentIds: group?.studentIds?.filter(Boolean) ?? [],
-          groupId: group.id,
-          price: group.price,
+          studentIds: [initStudent.id],
+          price: initStudent.price,
         },
-        isGroup: true,
+        isGroup: false,
       };
     }
 
-    if (student && initStudent) {
+    if (initGroup) {
       return {
         values: {
-          studentIds: [initStudent].filter(Boolean) ?? [],
-          price: student.price,
+          studentIds: initGroup.studentIds?.filter(Boolean) ?? [],
+          groupId: initGroup.id,
+          price: initGroup.price,
         },
-        isGroup: false,
+        isGroup: true,
       };
     }
 
@@ -88,13 +82,13 @@ export const useLessonForm = ({
     }
 
     return { values: {}, isGroup: false };
-  }, [lesson, group, student, initStudent, initEnd, initStart]);
+  }, [lesson, initGroup, initStudent, initStart, initEnd]);
 
   useEffect(() => {
-    const initialValues = initVal();
-    form.setFieldsValue(initialValues.values);
-    setIsGroup(initialValues.isGroup);
-  }, [form, initVal, lessonId, student, group, setIsGroup]);
+    const initial = initVal();
+    form.setFieldsValue(initial.values);
+    setIsGroup(initial.isGroup);
+  }, [form, initVal, lesson, initStudent, initGroup, setIsGroup]);
 
   async function onFinish() {
     setIsLoading(true);
@@ -103,11 +97,11 @@ export const useLessonForm = ({
       const formValues = await form.validateFields();
       const lessonData = buildLessonData(formValues);
 
-      if (lessonId) {
+      if (lesson) {
         const changedFields = getChangedFields(lessonData, lesson);
 
         if (Object.keys(changedFields).length > 0) {
-          await updateLessonData(lessonId, changedFields);
+          await updateLessonData(lesson.id, changedFields);
         }
       } else {
         await createLesson(lessonData);
@@ -122,7 +116,7 @@ export const useLessonForm = ({
   }
 
   function onDeleteHandler() {
-    if (!lessonId) {
+    if (!lesson) {
       return;
     }
 
@@ -133,7 +127,7 @@ export const useLessonForm = ({
       cancelText: 'No',
       async onOk() {
         try {
-          await removeLesson(lessonId);
+          await removeLesson(lesson.id);
           onClose();
         } catch (err) {
           handleError(err, 'Failed to delete lesson');

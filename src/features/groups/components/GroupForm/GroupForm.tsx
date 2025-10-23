@@ -3,6 +3,7 @@ import { type FC } from 'react';
 import { Button, Flex, Form, Input, InputNumber, Select } from 'antd';
 
 import { useGroupForm } from '@/features/groups/hooks/useGroupForm';
+import type { Group } from '@/features/groups/types/groupTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 
@@ -11,12 +12,12 @@ const { TextArea } = Input;
 interface GroupFormProps {
   mode?: string;
   onClose: () => void;
-  groupId?: string | null;
+  group?: Group | null;
 }
 
-const GroupForm: FC<GroupFormProps> = ({ onClose, mode, groupId }) => {
+const GroupForm: FC<GroupFormProps> = ({ onClose, mode, group }) => {
   const { form, handleFinish, studentOptions, isLoading } = useGroupForm({
-    groupId,
+    group,
     onClose,
   });
 

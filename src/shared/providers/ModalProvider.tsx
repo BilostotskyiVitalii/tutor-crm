@@ -1,24 +1,30 @@
 import { createContext, type ReactNode, useContext, useState } from 'react';
 
-import type { ModalState } from '@/shared/types/modalTypes';
+import type { ModalState, OpenModalOptions } from '@/shared/types/modalTypes';
+
+type OpenModalFn = (options: OpenModalOptions) => void;
 
 interface ModalContextValue {
   modal: ModalState;
-  openModal: (options: Omit<ModalState, 'open'>) => void;
+  openModal: OpenModalFn;
   closeModal: () => void;
 }
 
 const ModalContext = createContext<ModalContextValue | null>(null);
 
 export const ModalProvider = ({ children }: { children: ReactNode }) => {
-  const [modal, setModal] = useState<ModalState>({ open: false, type: null });
+  const [modal, setModal] = useState<ModalState>({
+    open: false,
+    type: null,
+    entity: null,
+  });
 
-  const openModal = (options: Omit<ModalState, 'open'>) => {
+  const openModal: OpenModalFn = (options) => {
     setModal({ ...options, open: true });
   };
 
   const closeModal = () => {
-    setModal({ open: false, type: null });
+    setModal({ open: false, type: null, entity: null });
   };
 
   return (

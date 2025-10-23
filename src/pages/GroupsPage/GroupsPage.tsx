@@ -15,6 +15,7 @@ const GroupsPage = () => {
     openModal({
       type: 'group',
       mode: 'create',
+      entity: null,
     });
   }
 

@@ -2,31 +2,28 @@ import type { FC } from 'react';
 
 import { Form, Select } from 'antd';
 
-import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 
 type LessonFormUsersSelectProps = {
-  editedLessonId?: string | null;
+  editedLesson?: Lesson | null;
   value?: string[];
   onChange?: (val: string[]) => void;
 };
 
 export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
-  editedLessonId,
+  editedLesson,
   value,
   onChange,
 }) => {
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: lesson } = useGetLessonByIdQuery(editedLessonId!, {
-    skip: !editedLessonId,
-  });
 
   const activeStudents = students
     .filter((s) => s.isActive)
     .map((s) => ({ label: s.name, value: s.id }));
 
   const extraStudents =
-    lesson?.students.map((s) => {
+    editedLesson?.students.map((s) => {
       const fullData = students.find((st) => st.id === s.id);
       let label = fullData?.name || s.name || s.id;
 

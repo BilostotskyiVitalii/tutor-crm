@@ -13,6 +13,7 @@ import {
 import LessonFormGroupSelect from '@/features/lessons/components/LessonFormGroupSelect/LessonFormGroupSelect';
 import { LessonFormUsersSelect } from '@/features/lessons/components/LessonFormUsersSelect/LessonFormUsersSelect';
 import { useLessonForm } from '@/features/lessons/hooks/useLessonForm';
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 import type { initDataType, ModeType } from '@/shared/types/modalTypes';
@@ -25,27 +26,27 @@ const SHOW_TIME_FORMAT = { format: 'HH:mm' };
 interface LessonFormProps {
   mode?: ModeType;
   onClose: () => void;
-  lessonId?: string | null;
+  lesson?: Lesson | null;
   initData?: initDataType;
 }
 
 const LessonForm: FC<LessonFormProps> = ({
   mode,
   onClose,
-  lessonId,
+  lesson,
   initData,
 }) => {
   const [isGroup, setIsGroup] = useState(false);
   const { form, onFinish, onDeleteHandler, isLoading } = useLessonForm({
     initData,
-    lessonId,
+    lesson,
     onClose,
     setIsGroup,
   });
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
-      <LessonFormUsersSelect editedLessonId={lessonId} />
+      <LessonFormUsersSelect editedLesson={lesson} />
 
       <LessonFormGroupSelect
         isGroup={isGroup}
