@@ -11,6 +11,7 @@ import type { LessonFormValues } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentByIdQuery } from '@/features/students/api/studentsApi';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
 import type { initDataType } from '@/shared/types/modalTypes';
+import { getChangedFields } from '@/shared/utils/getChangedFields';
 
 interface useLessonFormProps {
   lessonId?: string | null;
@@ -28,9 +29,15 @@ export const useLessonForm = ({
   const [form] = Form.useForm<LessonFormValues>();
   const { initStudent, initGroup, initStart, initEnd } = initData ?? {};
   const [isLoading, setIsLoading] = useState(false);
-  const { data: student } = useGetStudentByIdQuery(initStudent ?? '');
-  const { data: group } = useGetGroupByIdQuery(initGroup ?? '');
-  const { data: lesson } = useGetLessonByIdQuery(lessonId ?? '');
+  const { data: student } = useGetStudentByIdQuery(initStudent!, {
+    skip: !initStudent,
+  });
+  const { data: group } = useGetGroupByIdQuery(initGroup!, {
+    skip: !initGroup,
+  });
+  const { data: lesson } = useGetLessonByIdQuery(lessonId!, {
+    skip: !lessonId,
+  });
   const { updateLessonData, createLesson, removeLesson } = useLessonActions();
   const { handleError } = useErrorHandler();
   const { buildLessonData } = useBuildLessonData(lessonId);
@@ -40,13 +47,11 @@ export const useLessonForm = ({
     if (lesson) {
       return {
         values: {
-          studentIds: lesson.students
-            .map((s) => s.id)
-            .filter(Boolean) as string[],
-          groupId: lesson.groupId,
-          date: [dayjs(lesson.start), dayjs(lesson.end)],
-          notes: lesson.notes || null,
-          price: lesson.price,
+          studentIds: lesson?.students?.map((s) => s.id).filter(Boolean) ?? [],
+          groupId: lesson?.groupId,
+          date: [dayjs(lesson?.start), dayjs(lesson?.end)],
+          notes: lesson?.notes || null,
+          price: lesson?.price,
         },
         isGroup: !!lesson.groupId,
       };
@@ -55,7 +60,7 @@ export const useLessonForm = ({
     if (group) {
       return {
         values: {
-          studentIds: group.studentIds.filter(Boolean) as string[],
+          studentIds: group?.studentIds?.filter(Boolean) ?? [],
           groupId: group.id,
           price: group.price,
         },
@@ -66,7 +71,7 @@ export const useLessonForm = ({
     if (student && initStudent) {
       return {
         values: {
-          studentIds: [initStudent].filter(Boolean) as string[],
+          studentIds: [initStudent].filter(Boolean) ?? [],
           price: student.price,
         },
         isGroup: false,
@@ -99,7 +104,11 @@ export const useLessonForm = ({
       const lessonData = buildLessonData(formValues);
 
       if (lessonId) {
-        await updateLessonData(lessonId, lessonData);
+        const changedFields = getChangedFields(lessonData, lesson);
+
+        if (Object.keys(changedFields).length > 0) {
+          await updateLessonData(lessonId, changedFields);
+        }
       } else {
         await createLesson(lessonData);
       }

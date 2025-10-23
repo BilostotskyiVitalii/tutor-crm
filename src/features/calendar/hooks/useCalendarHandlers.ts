@@ -2,7 +2,6 @@ import { useCallback } from 'react';
 import type { SlotInfo } from 'react-big-calendar';
 
 import type { Dayjs } from 'dayjs';
-import { Timestamp } from 'firebase/firestore';
 
 import { useLessonActions } from '@/features/lessons/hooks/useLessonActions';
 import { useModal } from '@/shared/providers/ModalProvider';
@@ -27,8 +26,8 @@ export const useCalendarHandlers = (setCurrentDate: (date: Dayjs) => void) => {
       }
 
       updateLessonData(event.id, {
-        start: Timestamp.fromDate(new Date(start)),
-        end: Timestamp.fromDate(new Date(end)),
+        start: newStart,
+        end: newEnd,
       });
     },
     [updateLessonData],

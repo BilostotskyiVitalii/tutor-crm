@@ -1,10 +1,10 @@
-// CHANGED — шлемо числа (ms), без serverTimestamp()
 import { useGetLessonByIdQuery } from '@/features/lessons/api/lessonsApi';
 import type {
   LessonData,
   LessonFormValues,
 } from '@/features/lessons/types/lessonTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
+import { toNullData } from '@/shared/utils/toNullData';
 
 export const useBuildLessonData = (editedLessonId?: string | null) => {
   const { data: students = [] } = useGetStudentsQuery();
@@ -22,14 +22,16 @@ export const useBuildLessonData = (editedLessonId?: string | null) => {
       return { id: s.id, name: s.name, email: s.email || '' };
     });
 
-    return {
+    const normalized = toNullData({
       students: selectedStudents,
       groupId: formValues.groupId || null,
-      start: formValues.date[0].toDate().valueOf(), // ✅ ms
-      end: formValues.date[1].toDate().valueOf(), // ✅ ms
+      start: formValues.date[0].toDate().valueOf(),
+      end: formValues.date[1].toDate().valueOf(),
       notes: formValues.notes || null,
       price: formValues.price,
-    };
+    });
+
+    return normalized;
   };
 
   return { buildLessonData };

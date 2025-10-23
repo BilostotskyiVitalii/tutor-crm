@@ -14,7 +14,6 @@ export const useGroupCard = (group: Group) => {
     openModal({
       type: 'lesson',
       mode: 'create',
-      entityId: group.id,
       initData: { initGroup: group.id },
     });
   }

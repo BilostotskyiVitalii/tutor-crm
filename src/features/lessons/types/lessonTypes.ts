@@ -16,11 +16,7 @@ export interface Lesson {
   updatedAt: number;
 }
 
-export interface LessonData
-  extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {
-  start: number;
-  end: number;
-}
+export type LessonData = Omit<Lesson, 'id' | 'createdAt' | 'updatedAt'>;
 
 export interface LessonFormValues
   extends Omit<Lesson, 'id' | 'start' | 'end' | 'createdAt' | 'updatedAt'> {

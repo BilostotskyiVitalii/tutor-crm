@@ -17,7 +17,9 @@ export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
   onChange,
 }) => {
   const { data: students = [] } = useGetStudentsQuery();
-  const { data: lesson } = useGetLessonByIdQuery(editedLessonId ?? '');
+  const { data: lesson } = useGetLessonByIdQuery(editedLessonId!, {
+    skip: !editedLessonId,
+  });
 
   const activeStudents = students
     .filter((s) => s.isActive)

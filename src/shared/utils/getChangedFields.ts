@@ -37,7 +37,21 @@ function arraysEqual<T>(a?: T[], b?: T[]): boolean {
   if (a.length !== b.length) {
     return false;
   }
-  return a.every((v, i) => v === b[i]);
+
+  return a.every((_v, i) => {
+    const vVal = a[i];
+    const bVal = b[i];
+
+    if (Array.isArray(vVal) && Array.isArray(bVal)) {
+      return arraysEqual(vVal, bVal);
+    }
+
+    if (typeof vVal === 'object' && typeof bVal === 'object') {
+      return JSON.stringify(vVal) === JSON.stringify(bVal);
+    }
+
+    return vVal === bVal;
+  });
 }
 
 export function getChangedFields<T extends Record<string, unknown>>(

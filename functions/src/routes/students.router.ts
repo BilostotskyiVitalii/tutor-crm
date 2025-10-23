@@ -84,8 +84,7 @@ studentsRouter.post('/', async (req: Request, res: Response) => {
       ...parsed,
       createdAt: now,
       updatedAt: now,
-      birthdate:
-        parsed.birthdate !== null ? toTimestamp(parsed.birthdate) : null,
+      birthdate: parsed.birthdate ? toTimestamp(parsed.birthdate) : null,
     };
 
     const ref = await db.collection(`users/${uid}/students`).add(payload);
