@@ -10,13 +10,8 @@ export function computeDonePlanned(
   endExclusive: admin.firestore.Timestamp,
 ) {
   const done = lessons.filter((l) => l.end && l.end <= now);
-  const planned = lessons.filter(
-    (l) => l.end && l.end > now && l.end < endExclusive,
-  );
-  const doneHours = done.reduce(
-    (s, l) => s + (l.end.toMillis() - l.start.toMillis()) / 36e5,
-    0,
-  );
+  const planned = lessons.filter((l) => l.end && l.end > now && l.end < endExclusive);
+  const doneHours = done.reduce((s, l) => s + (l.end.toMillis() - l.start.toMillis()) / 36e5, 0);
   return { done, planned, doneHours };
 }
 

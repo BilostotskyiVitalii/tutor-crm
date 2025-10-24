@@ -16,10 +16,7 @@ const createSchema = z.object({
   email: z.email().nullable().default(null),
   phone: z.string().optional().nullable().default(null),
   contact: z.string().optional().nullable().default(null),
-  birthdate: z
-    .union([z.number(), z.string(), z.null()])
-    .optional()
-    .default(null),
+  birthdate: z.union([z.number(), z.string(), z.null()]).optional().default(null),
   currentLevel: z.string().optional().nullable().default(null),
   price: z.number().nonnegative().default(0),
   notes: z.string().optional().nullable().default(null),

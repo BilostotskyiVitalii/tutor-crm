@@ -30,27 +30,17 @@ dashboardRouter.get('/stats', async (req: Request, res: Response) => {
     ]);
 
     const activeStudents = students.filter((s) => s.isActive).length;
-    const newStudents = students.filter(
-      (s) => s.createdAt && s.createdAt >= startTs,
-    ).length;
+    const newStudents = students.filter((s) => s.createdAt && s.createdAt >= startTs).length;
     const activeGroups = groups.length;
-    const newGroups = groups.filter(
-      (g) => g.createdAt && g.createdAt >= startTs,
-    ).length;
+    const newGroups = groups.filter((g) => g.createdAt && g.createdAt >= startTs).length;
 
-    const { done, planned, doneHours } = computeDonePlanned(
-      lessons,
-      now,
-      endExclusiveTs,
-    );
+    const { done, planned, doneHours } = computeDonePlanned(lessons, now, endExclusiveTs);
     const { current, expected } = computeRevenue(done, planned);
 
     const avgHourPrice = doneHours > 0 ? current / doneHours : 0;
     const avgLessonPrice = done.length > 0 ? current / done.length : 0;
     const avgPerHourStudentPrice =
-      activeStudents > 0
-        ? students.reduce((s, x) => s + (x.price || 0), 0) / activeStudents
-        : 0;
+      activeStudents > 0 ? students.reduce((s, x) => s + (x.price || 0), 0) / activeStudents : 0;
 
     const studentTops = computeStudentTops(students, lessons);
     const groupTops = computeGroupTops(groups, lessons);

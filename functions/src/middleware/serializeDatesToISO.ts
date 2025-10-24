@@ -1,13 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 
-import {
-  type DateKeyPredicate,
-  mapTimestampsToISOSelective,
-} from '../utils/serializeDates';
+import { type DateKeyPredicate, mapTimestampsToISOSelective } from '../utils/serializeDates';
 
-type Options =
-  | { keys?: (string | RegExp)[] }
-  | { predicate?: DateKeyPredicate };
+type Options = { keys?: (string | RegExp)[] } | { predicate?: DateKeyPredicate };
 
 const compilePredicate = (opt?: Options): DateKeyPredicate => {
   if (opt && 'predicate' in opt && opt.predicate) {
@@ -19,9 +14,7 @@ const compilePredicate = (opt?: Options): DateKeyPredicate => {
   }
 
   return (_path, key) => {
-    return list.some((entry) =>
-      typeof entry === 'string' ? entry === key : entry.test(key),
-    );
+    return list.some((entry) => (typeof entry === 'string' ? entry === key : entry.test(key)));
   };
 };
 
@@ -32,10 +25,7 @@ export const serializeDatesToISO =
 
     res.json = (body: unknown) => {
       try {
-        const serialized = mapTimestampsToISOSelective(
-          body,
-          isDateKey || undefined,
-        );
+        const serialized = mapTimestampsToISOSelective(body, isDateKey || undefined);
         return originalJson(serialized);
       } catch {
         return originalJson(body);

@@ -24,12 +24,15 @@
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/node": "^24.7.2",
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@typescript-eslint/parser": "^5.12.0",
-    "eslint": "^8.9.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@typescript-eslint/parser": "^8.46.2",
+    "eslint": "^9.38.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^5.5.4",
     "firebase-functions-test": "^3.1.0",
+    "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   },
   "private": true

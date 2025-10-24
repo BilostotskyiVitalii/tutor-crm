@@ -54,8 +54,7 @@ const defaultDateKeyRegex =
 
 export type DateKeyPredicate = (keyPath: string[], key: string) => boolean;
 
-const defaultPredicate: DateKeyPredicate = (_path, key) =>
-  defaultDateKeyRegex.test(key);
+const defaultPredicate: DateKeyPredicate = (_path, key) => defaultDateKeyRegex.test(key);
 
 /** Глибока мапа з селективною конвертацією */
 export const mapTimestampsToISOSelective = <T>(
@@ -71,11 +70,7 @@ export const mapTimestampsToISOSelective = <T>(
   }
 
   // Timestamp-подібні значення -> ISO
-  if (
-    isAdminTimestamp(data) ||
-    looksLikeSecNanoA(data) ||
-    looksLikeSecNanoB(data)
-  ) {
+  if (isAdminTimestamp(data) || looksLikeSecNanoA(data) || looksLikeSecNanoB(data)) {
     return toISOWhenDate(data) as unknown as T;
   }
 
