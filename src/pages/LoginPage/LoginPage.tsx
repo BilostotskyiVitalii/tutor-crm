@@ -14,7 +14,9 @@ import styles from './LoginPage.module.scss';
 const LoginPage: FC = () => {
   const { login, loading } = useLogin();
   const { loginWithGoogle } = useGoogleLogin();
-  const handleLogin: FormProps<LoginField>['onFinish'] = login;
+  const handleLogin: FormProps<LoginField>['onFinish'] = (values) => {
+    login(values.email, values.password);
+  };
 
   return (
     <Flex className="auth-backdrop">

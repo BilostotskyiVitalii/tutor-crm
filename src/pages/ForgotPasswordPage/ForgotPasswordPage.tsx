@@ -1,31 +1,20 @@
-import { type FC, useState } from 'react';
+import { type FC } from 'react';
 
 import { MailOutlined } from '@ant-design/icons';
-import { Button, Flex, Form, Input, message } from 'antd';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { Button, Flex, Form, Input } from 'antd';
 
-import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+import { useResetPassword } from '@/features/user/hooks/useResetPassword';
 
 const ForgotPasswordPage: FC = () => {
-  const [loading, setLoading] = useState(false);
-  const auth = getAuth();
-  const { handleError } = useErrorHandler();
-
-  const onFinish = async (values: { email: string }) => {
-    setLoading(true);
-    try {
-      await sendPasswordResetEmail(auth, values.email);
-      message.success('Ссылка для сброса пароля отправлена на email.');
-    } catch (err) {
-      handleError(err, 'Ошибка при отправке письма. Проверьте email.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { resetPassword, loading } = useResetPassword();
 
   return (
     <Flex className="auth-backdrop">
-      <Form className="auth-form" name="forgot-password" onFinish={onFinish}>
+      <Form
+        className="auth-form"
+        name="forgot-password"
+        onFinish={resetPassword}
+      >
         <h2 className="auth-form-title">Forgot Password</h2>
         <Form.Item
           name="email"

@@ -1,12 +1,16 @@
+import dotenv from 'dotenv';
 import express, { json } from 'express';
 import * as functions from 'firebase-functions/v1';
 
 import { serializeDatesToISO } from './middleware/serializeDatesToISO';
+import { authRouter } from './routes/auth.router';
 import { dashboardRouter } from './routes/dashboard.router';
 import { groupsRouter } from './routes/groups.router';
 import { lessonsRouter } from './routes/lessons.router';
 import { studentsRouter } from './routes/students.router';
 import { corsHandler } from './utils/cors';
+
+dotenv.config();
 
 import './firebase';
 
@@ -27,6 +31,8 @@ app.use(
     ],
   }),
 );
+
+app.use('/auth', authRouter);
 app.use('/groups', groupsRouter);
 app.use('/students', studentsRouter);
 app.use('/lessons', lessonsRouter);
