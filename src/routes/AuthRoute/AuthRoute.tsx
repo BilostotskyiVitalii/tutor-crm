@@ -3,8 +3,8 @@ import { Navigate, useLocation } from 'react-router-dom';
 
 import { Spin } from 'antd';
 
+import { useFetchProfileQuery } from '@/features/auth/api/authApi';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
-import { useAppSelector } from '@/store/reduxHooks';
 
 interface AuthRouteProps {
   requireAuth: boolean;
@@ -16,14 +16,14 @@ export const AuthRoute: FC<AuthRouteProps & { children: ReactNode }> = ({
   requireAuth,
   redirectPath,
 }) => {
-  const { email, loading } = useAppSelector((s) => s.user);
+  const { data: user, isLoading } = useFetchProfileQuery();
   const location = useLocation();
 
-  if (loading) {
+  if (isLoading) {
     return <Spin size="large" fullscreen />;
   }
 
-  const isAuth = !!email;
+  const isAuth = !!user?.email;
 
   if (requireAuth && !isAuth) {
     return (

@@ -6,7 +6,7 @@ import type { RootState } from '@/store';
 export const baseQueryWithAuth = fetchBaseQuery({
   baseUrl: endpointsURL.apiBaseUrl,
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).user.token;
+    const token = (getState() as RootState).auth.token;
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }

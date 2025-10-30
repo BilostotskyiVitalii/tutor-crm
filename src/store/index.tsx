@@ -11,30 +11,37 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+import { authApi } from '@/features/auth/api/authApi';
+import authReducer from '@/features/auth/api/authSlice';
 import { dashboardApi } from '@/features/dashboard/api/dashboardApi';
 import { groupsApi } from '@/features/groups/api/groupsApi';
 import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
 import themeReducer from '@/features/theme/themeSlice';
-import userReducer from '@/features/user/api/userSlice';
-
-const userPersistConfig = {
-  key: 'user',
-  storage,
-};
 
 const themePersistConfig = {
   key: 'theme',
   storage,
 };
 
-const persistedReducer = persistReducer(userPersistConfig, userReducer);
 const persistedThemeReducer = persistReducer(themePersistConfig, themeReducer);
+
+const authPersistConfig = {
+  key: 'auth',
+  storage,
+  whitelist: ['token', 'email', 'id'],
+};
+
+export const persistedAuthReducer = persistReducer(
+  authPersistConfig,
+  authReducer,
+);
 
 export const store = configureStore({
   reducer: {
-    user: persistedReducer,
+    auth: persistedAuthReducer,
     theme: persistedThemeReducer,
+    [authApi.reducerPath]: authApi.reducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [lessonsApi.reducerPath]: lessonsApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
@@ -46,6 +53,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }).concat(
+      authApi.middleware,
       studentsApi.middleware,
       lessonsApi.middleware,
       groupsApi.middleware,

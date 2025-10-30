@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
-import { useRegister } from '@/features/user/hooks/useRegister';
+import { useRegister } from '@/features/auth/hooks/useRegister';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import type { RegField } from '@/shared/types/authFieldsTypes';
 

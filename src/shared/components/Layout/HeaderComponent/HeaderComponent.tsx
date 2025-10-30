@@ -5,9 +5,9 @@ import { MoonFilled, SunFilled } from '@ant-design/icons';
 import { Button, Layout, Space, Switch } from 'antd';
 
 import { toggleTheme } from '@/features/theme/themeSlice';
-import { UserMenu } from '@/features/user/components/UserMenu/UserMenu';
 import LogoComponent from '@/shared/components/Layout/LogoComponent/LogoComponent';
 import SelectLang from '@/shared/components/UI/SelectLang/SelectLang';
+import { UserMenu } from '@/shared/components/UI/UserMenu/UserMenu';
 import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';
 
 import styles from './HeaderComponent.module.scss';

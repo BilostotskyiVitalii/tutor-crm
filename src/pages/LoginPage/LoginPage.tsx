@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { GoogleOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
-import { useGoogleLogin } from '@/features/user/hooks/useGoogleLogin';
-import { useLogin } from '@/features/user/hooks/useLogin';
+import { useGoogleLogin } from '@/features/auth/hooks/useGoogleLogin';
+import { useLogin } from '@/features/auth/hooks/useLogin';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import type { LoginField } from '@/shared/types/authFieldsTypes';
 
