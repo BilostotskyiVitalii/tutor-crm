@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Button } from 'antd';
+import { Button, Space } from 'antd';
 
 import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
@@ -16,37 +16,42 @@ export const StudentTableActions: FC<StudentTableActionsProps> = ({
   const { removeStudent } = useStudentActions();
   const { openModal } = useModal();
 
+  function onEditStudent() {
+    openModal({
+      type: 'student',
+      mode: 'edit',
+      entity: student,
+    });
+  }
+
+  function onCreateLesson() {
+    openModal({
+      type: 'lesson',
+      mode: 'create',
+      initData: { initStudent: student },
+      entity: null,
+    });
+  }
+
+  function onDeleteStudent() {
+    removeStudent(student.id);
+  }
+
   return (
-    <>
-      <Button
-        onClick={() =>
-          openModal({
-            type: 'student',
-            mode: 'edit',
-            entity: student,
-          })
-        }
-        size="small"
-      >
+    <Space>
+      <Button onClick={onEditStudent} size="small">
         Edit
       </Button>
       <Button
-        onClick={() =>
-          openModal({
-            type: 'lesson',
-            mode: 'create',
-            initData: { initStudent: student },
-            entity: null,
-          })
-        }
+        onClick={onCreateLesson}
         size="small"
         disabled={!student.isActive}
       >
         Add Lesson
-      </Button>{' '}
-      <Button onClick={() => removeStudent(student.id)} size="small" danger>
+      </Button>
+      <Button onClick={onDeleteStudent} size="small" danger>
         Delete
       </Button>
-    </>
+    </Space>
   );
 };

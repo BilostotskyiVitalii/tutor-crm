@@ -11,6 +11,7 @@ import {
 
 import { storage } from '@/app/firebase';
 
+// remove firebase
 export const useUploadAvatar = () => {
   const { notification } = AntApp.useApp();
 
