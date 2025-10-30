@@ -1,11 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type {
   Group,
   GroupData,
   UpdateGroup,
 } from '@/features/groups/types/groupTypes';
+import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
 const { groups } = endpointsURL;

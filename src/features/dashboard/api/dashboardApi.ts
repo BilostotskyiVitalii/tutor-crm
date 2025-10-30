@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type { DashboardStats } from '@/features/dashboard/types/dashboardStats';
+import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 
 export const dashboardApi = createApi({
   reducerPath: 'dashboardApi',

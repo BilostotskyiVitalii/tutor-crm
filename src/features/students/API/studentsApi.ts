@@ -1,11 +1,11 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQueryWithAuth } from '@/app/api/baseQueryWithAuth';
 import type {
   Student,
   StudentData,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
+import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
 const { students } = endpointsURL;
