@@ -1,15 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  persistReducer,
-  persistStore,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 
 import { authApi } from '@/features/auth/api/authApi';
 import { dashboardApi } from '@/features/dashboard/api/dashboardApi';
@@ -18,28 +7,17 @@ import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
 import themeReducer from '@/features/theme/themeSlice';
 
-const themePersistConfig = {
-  key: 'theme',
-  storage,
-};
-
-const persistedThemeReducer = persistReducer(themePersistConfig, themeReducer);
-
 export const store = configureStore({
   reducer: {
+    theme: themeReducer,
     [authApi.reducerPath]: authApi.reducer,
-    theme: persistedThemeReducer,
     [studentsApi.reducerPath]: studentsApi.reducer,
     [lessonsApi.reducerPath]: lessonsApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
     [dashboardApi.reducerPath]: dashboardApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }).concat(
+    getDefaultMiddleware().concat(
       authApi.middleware,
       studentsApi.middleware,
       lessonsApi.middleware,
@@ -48,6 +26,5 @@ export const store = configureStore({
     ),
 });
 
-export const persistor = persistStore(store);
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
