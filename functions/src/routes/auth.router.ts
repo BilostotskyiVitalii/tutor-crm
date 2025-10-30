@@ -51,7 +51,12 @@ authRouter.post('/register', async (req: Request, res: Response) => {
       throw new Error(data.error?.message || 'Registration failed');
     }
 
-    res.status(201).json({ token: data.idToken, uid: user.uid, email: user.email, nickName });
+    res.status(201).json({
+      id: user.uid,
+      email: user.email,
+      nickName,
+      token: data.idToken,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Registration failed';
     res.status(400).json({ message });
@@ -76,20 +81,17 @@ authRouter.post('/login', async (req: Request, res: Response) => {
       },
     );
 
-    interface FirebaseLoginResponse {
-      idToken: string;
-      localId: string;
-      email?: string;
-      error?: { message: string };
-    }
-
     const data = (await r.json()) as FirebaseLoginResponse;
 
     if (!r.ok) {
       throw new Error(data.error?.message || 'Login failed');
     }
 
-    res.json({ token: data.idToken, uid: data.localId, email });
+    res.json({
+      id: data.localId,
+      email,
+      token: data.idToken,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Login failed';
     res.status(400).json({ message });
@@ -114,7 +116,11 @@ authRouter.post('/google', async (req: Request, res: Response) => {
       });
     }
 
-    res.json({ token: idToken, uid, email: ticket.email });
+    res.json({
+      id: uid,
+      token: idToken,
+      email: ticket.email,
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Google login failed';
     res.status(400).json({ message });

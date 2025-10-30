@@ -1,34 +1,14 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
+import type {
+  AuthUser,
+  GoogleLoginRequest,
+  LoginRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+} from '@/features/auth/types/authTypes';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
-
-export interface AuthUser {
-  id: string;
-  email: string;
-  nickName: string;
-  avatar: string | null;
-  token: string;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  email: string;
-  password: string;
-  nickName: string;
-}
-
-interface GoogleLoginRequest {
-  idToken: string;
-}
-
-interface ResetPasswordRequest {
-  email: string;
-}
 
 export const authApi = createApi({
   reducerPath: 'authApi',

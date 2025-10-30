@@ -7,4 +7,7 @@ export const endpointsURL = {
   apiRegister: `/auth/register`,
   apiResetPassword: `/auth/register`,
   apiProfile: `/auth/profile`,
+  students: '/students',
+  lessons: '/lessons',
+  groups: '/groups',
 } as const;
