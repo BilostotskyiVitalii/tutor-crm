@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 import { setUser } from '@/features/user/api/userSlice';
+import { axs } from '@/shared/api/axiosInstance';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
@@ -29,19 +30,10 @@ export const useLogin = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${endpointsURL.apiBaseUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+      const { data } = await axs.post<LoginResponse>(endpointsURL.apiLogin, {
+        email,
+        password,
       });
-
-      const resData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(resData?.message || 'Login failed');
-      }
-
-      const data = resData as LoginResponse;
 
       await signInWithCustomToken(auth, data.token);
 
@@ -58,7 +50,7 @@ export const useLogin = () => {
       );
 
       navigate(navigationUrls.index);
-    } catch (err: unknown) {
+    } catch (err) {
       setError(handleError(err, 'Login Error'));
     } finally {
       setLoading(false);

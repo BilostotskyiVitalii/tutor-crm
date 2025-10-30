@@ -1,5 +1,11 @@
+const baseUrl = `${import.meta.env.VITE_FUNCTIONS_API_BASE}/api` as string;
+
 export const endpointsURL = {
-  apiBaseUrl: `${import.meta.env.VITE_FUNCTIONS_API_BASE}/api` as string,
+  apiBaseUrl: baseUrl,
+  apiLogin: `/auth/login`,
+  apiGoogleLogin: `/auth/google`,
+  apiRegister: `/auth/register`,
+  apiResetPassword: `/auth/register`,
   users: '/users',
   students: '/students',
   lessons: '/lessons',

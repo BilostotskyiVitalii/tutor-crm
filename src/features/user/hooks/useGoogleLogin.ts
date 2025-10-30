@@ -9,6 +9,7 @@ import {
 } from 'firebase/auth';
 
 import { setUser } from '@/features/user/api/userSlice';
+import { axs } from '@/shared/api/axiosInstance';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
@@ -34,30 +35,17 @@ export const useGoogleLogin = () => {
     setError(null);
 
     try {
-      // Логин через Google Popup
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
 
-      // Отправляем ID Token на backend
-      const res = await fetch(`${endpointsURL.apiBaseUrl}/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      });
+      const { data } = await axs.post<GoogleLoginResponse>(
+        endpointsURL.apiGoogleLogin,
+        { idToken },
+      );
 
-      const resData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(resData?.message || 'Google login failed');
-      }
-
-      const data = resData as GoogleLoginResponse;
-
-      // Входим в Firebase через Custom Token
       await signInWithCustomToken(auth, data.token);
 
-      // Сохраняем пользователя в Redux
       dispatch(
         setUser({
           id: data.uid,
@@ -71,7 +59,7 @@ export const useGoogleLogin = () => {
       );
 
       navigate(navigationUrls.index);
-    } catch (err: unknown) {
+    } catch (err) {
       setError(handleError(err, 'Google Login Error'));
     } finally {
       setLoading(false);

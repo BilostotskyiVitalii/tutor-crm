@@ -9,7 +9,7 @@ export const useLessonEvents = () => {
   const { data: groups = [] } = useGetGroupsQuery();
 
   const calendarEvents = useMemo(() => {
-    if (!lessons) {
+    if (lessons.length === 0) {
       return [];
     }
 
@@ -20,7 +20,7 @@ export const useLessonEvents = () => {
         id: lesson.id,
         title: group
           ? group.title
-          : lesson.students.map((s) => s.name).join(', '),
+          : lesson.students.map((s) => s.name).join(', ') || 'No students',
         start: new Date(lesson.start),
         end: new Date(lesson.end),
         resource: lesson,

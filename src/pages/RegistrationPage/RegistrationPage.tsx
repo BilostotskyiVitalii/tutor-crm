@@ -10,7 +10,10 @@ import type { RegField } from '@/shared/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();
-  const handleRegister: FormProps<RegField>['onFinish'] = register;
+  const handleRegister: FormProps<RegField>['onFinish'] = async (values) => {
+    const { email, password, nickName } = values;
+    await register(email, password, nickName);
+  };
 
   return (
     <Flex className="auth-backdrop">

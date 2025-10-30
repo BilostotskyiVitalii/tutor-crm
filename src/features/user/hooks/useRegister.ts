@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, signInWithCustomToken } from 'firebase/auth';
 
 import { setUser } from '@/features/user/api/userSlice';
+import { axs } from '@/shared/api/axiosInstance';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
@@ -30,20 +31,12 @@ export const useRegister = () => {
   ) => {
     setLoading(true);
     setError(null);
+
     try {
-      const res = await fetch(`${endpointsURL.apiBaseUrl}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, nickName }),
-      });
-
-      const resData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(resData?.message || 'Registration failed');
-      }
-
-      const data = resData as RegisterResponse;
+      const { data } = await axs.post<RegisterResponse>(
+        endpointsURL.apiRegister,
+        { email, password, nickName },
+      );
 
       await signInWithCustomToken(auth, data.token);
 
