@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getAuth, signInWithCustomToken } from 'firebase/auth';
-
 import { setUser } from '@/features/user/api/userSlice';
 import { axs } from '@/shared/api/axiosInstance';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
@@ -14,6 +12,7 @@ interface RegisterResponse {
   token: string;
   uid: string;
   email: string;
+  nickName?: string;
 }
 
 export const useRegister = () => {
@@ -22,7 +21,6 @@ export const useRegister = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { handleError } = useErrorHandler();
-  const auth = getAuth();
 
   const register = async (
     email: string,
@@ -38,14 +36,12 @@ export const useRegister = () => {
         { email, password, nickName },
       );
 
-      await signInWithCustomToken(auth, data.token);
-
       dispatch(
         setUser({
           id: data.uid,
           email: data.email,
           token: data.token,
-          nickName,
+          nickName: data.nickName ?? nickName,
           createdAt: Date.now(),
           avatar: null,
           refreshToken: null,

@@ -6,6 +6,7 @@ export const endpointsURL = {
   apiGoogleLogin: `/auth/google`,
   apiRegister: `/auth/register`,
   apiResetPassword: `/auth/register`,
+  apiProfile: `/auth/profile`,
   users: '/users',
   students: '/students',
   lessons: '/lessons',

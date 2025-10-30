@@ -1,84 +1,50 @@
 import { useEffect } from 'react';
 
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import {
-  doc,
-  getDoc,
-  getFirestore,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-} from 'firebase/firestore';
-
-import { groupsApi } from '@/features/groups/api/groupsApi';
-import { lessonsApi } from '@/features/lessons/api/lessonsApi';
-import { studentsApi } from '@/features/students/api/studentsApi';
 import { removeUser, setLoading, setUser } from '@/features/user/api/userSlice';
+import { axs } from '@/shared/api/axiosInstance';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { useAppDispatch } from '@/store/reduxHooks';
+import { useAppDispatch, useAppSelector } from '@/store/reduxHooks';
 
 export const useAuthProfile = () => {
   const dispatch = useAppDispatch();
-  const db = getFirestore();
-  const auth = getAuth();
+  const { token } = useAppSelector((state) => state.user);
   const { handleError } = useErrorHandler();
 
   useEffect(() => {
-    dispatch(setLoading(true));
-
-    function resetAPIs() {
-      dispatch(studentsApi.util.resetApiState());
-      dispatch(lessonsApi.util.resetApiState());
-      dispatch(groupsApi.util.resetApiState());
+    if (!token) {
+      dispatch(removeUser());
+      return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      resetAPIs();
+    const fetchProfile = async () => {
+      dispatch(setLoading(true));
 
-      if (user) {
-        try {
-          const token = await user.getIdToken();
-          const refreshToken = user.refreshToken;
-          const userRef = doc(db, 'users', user.uid);
-          const snapshot = await getDoc(userRef);
-          const dbData = snapshot.exists() ? snapshot.data() : {};
+      try {
+        const { data } = await axs.get(endpointsURL.apiProfile, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-          if (!snapshot.exists() && user.displayName) {
-            await setDoc(userRef, {
-              email: user.email,
-              nickName: user.displayName,
-              createdAt: serverTimestamp(),
-              avatar: user.photoURL,
-            });
-          }
-
-          const createdAtMillis =
-            dbData.createdAt instanceof Timestamp
-              ? dbData.createdAt.toMillis()
-              : (dbData.createdAt ?? Date.now());
-
-          dispatch(
-            setUser({
-              id: user.uid,
-              email: user.email,
-              token,
-              refreshToken,
-              nickName: dbData.nickName ?? user.displayName ?? null,
-              createdAt: createdAtMillis,
-              avatar: dbData.avatar ?? user.photoURL ?? null,
-            }),
-          );
-        } catch (err) {
-          handleError(err, 'Auth Error');
-          dispatch(removeUser());
-          resetAPIs();
-        }
-      } else {
+        // Оновлюємо Redux state користувача
+        dispatch(
+          setUser({
+            id: data.id,
+            email: data.email,
+            token, // токен залишаємо той самий
+            nickName: data.nickName,
+            avatar: data.avatar ?? null,
+            createdAt: data.createdAt,
+            refreshToken: null,
+          }),
+        );
+      } catch (err: unknown) {
+        handleError(err, 'Auth Error');
         dispatch(removeUser());
-        resetAPIs();
+      } finally {
+        dispatch(setLoading(false));
       }
-    });
+    };
 
-    return () => unsubscribe();
-  }, [dispatch, db, auth, handleError]);
+    fetchProfile();
+  }, [token, dispatch, handleError]);
 };

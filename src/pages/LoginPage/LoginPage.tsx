@@ -13,7 +13,7 @@ import styles from './LoginPage.module.scss';
 
 const LoginPage: FC = () => {
   const { login, loading } = useLogin();
-  const { loginWithGoogle } = useGoogleLogin();
+  const { googleLogin } = useGoogleLogin();
   const handleLogin: FormProps<LoginField>['onFinish'] = (values) => {
     login(values.email, values.password);
   };
@@ -57,7 +57,7 @@ const LoginPage: FC = () => {
             <Button
               block
               icon={<GoogleOutlined />}
-              onClick={loginWithGoogle}
+              onClick={googleLogin}
               loading={loading}
             >
               Log in with Google

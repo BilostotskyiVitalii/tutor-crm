@@ -1,13 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithCustomToken,
-  signInWithPopup,
-} from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
+import { auth } from '@/app/firebase';
 import { setUser } from '@/features/user/api/userSlice';
 import { axs } from '@/shared/api/axiosInstance';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
@@ -19,7 +15,6 @@ interface GoogleLoginResponse {
   token: string;
   uid: string;
   email: string;
-  nickName?: string;
 }
 
 export const useGoogleLogin = () => {
@@ -28,30 +23,26 @@ export const useGoogleLogin = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { handleError } = useErrorHandler();
-  const auth = getAuth();
 
-  const loginWithGoogle = async () => {
+  const googleLogin = async () => {
     setLoading(true);
     setError(null);
+    const provider = new GoogleAuthProvider();
 
     try {
-      const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
-
       const { data } = await axs.post<GoogleLoginResponse>(
         endpointsURL.apiGoogleLogin,
         { idToken },
       );
-
-      await signInWithCustomToken(auth, data.token);
 
       dispatch(
         setUser({
           id: data.uid,
           email: data.email,
           token: data.token,
-          nickName: data.nickName ?? result.user.displayName ?? null,
+          nickName: result.user.displayName ?? data.email,
           createdAt: Date.now(),
           avatar: result.user.photoURL ?? null,
           refreshToken: null,
@@ -59,12 +50,12 @@ export const useGoogleLogin = () => {
       );
 
       navigate(navigationUrls.index);
-    } catch (err) {
+    } catch (err: unknown) {
       setError(handleError(err, 'Google Login Error'));
     } finally {
       setLoading(false);
     }
   };
 
-  return { loginWithGoogle, loading, error };
+  return { googleLogin, loading, error };
 };
