@@ -15,7 +15,12 @@ export const useRegister = () => {
     nickName: string,
   ) => {
     try {
-      await registerMutation({ email, password, nickName }).unwrap();
+      const user = await registerMutation({
+        email,
+        password,
+        nickName,
+      }).unwrap();
+      localStorage.setItem('token', user.token);
       navigate(navigationUrls.index);
     } catch (err: unknown) {
       handleError(err, 'Registration Error');

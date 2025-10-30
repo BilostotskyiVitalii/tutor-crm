@@ -1,13 +1,9 @@
-import { useNavigate } from 'react-router-dom';
-
 import { Dropdown, type MenuProps } from 'antd';
 
-import { authApi } from '@/features/auth/api/authApi';
-import { removeUser } from '@/features/auth/api/authSlice';
+import { useFetchProfileQuery } from '@/features/auth/api/authApi';
+import { useLogout } from '@/features/auth/hooks/useLogout';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
 import { UserMenuCard } from '@/shared/components/UI/UserMenuCard/UserMenuCard';
-import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
-import { useAppDispatch } from '@/store/reduxHooks';
 
 import styles from './UserMenu.module.scss';
 
@@ -28,22 +24,12 @@ const items: MenuProps['items'] = [
 ];
 
 export const UserMenu = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { handleError } = useErrorHandler();
+  const { data: user } = useFetchProfileQuery();
+  const { logout } = useLogout();
 
-  const user = authApi.endpoints.fetchProfile.useQueryState(undefined)?.data;
-
-  const handleClick: MenuProps['onClick'] = async ({ key }) => {
+  const handleClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') {
-      try {
-        // Очищаємо весь кеш RTK Query для авторизації та студентів
-        dispatch(removeUser());
-        dispatch(authApi.util.resetApiState());
-        navigate('/login');
-      } catch (error) {
-        handleError(error, 'Logout Error');
-      }
+      logout();
     }
   };
 
