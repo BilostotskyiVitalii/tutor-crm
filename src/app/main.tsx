@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import { AppWrapper } from '@/shared/providers/AppWrapper';
+import { AppWrapper } from '@/app/AppWrapper';
 import { store } from '@/store/index.tsx';
 
 import '@/shared/styles/main.scss';

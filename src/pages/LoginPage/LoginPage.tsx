@@ -6,15 +6,15 @@ import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
 import { useGoogleLogin } from '@/features/auth/hooks/useGoogleLogin';
 import { useLogin } from '@/features/auth/hooks/useLogin';
+import type { LoginRequest } from '@/features/auth/types/authTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
-import type { LoginField } from '@/shared/types/authFieldsTypes';
 
 import styles from './LoginPage.module.scss';
 
 const LoginPage: FC = () => {
   const { login, loading } = useLogin();
   const { googleLogin } = useGoogleLogin();
-  const handleLogin: FormProps<LoginField>['onFinish'] = (values) => {
+  const handleLogin: FormProps<LoginRequest>['onFinish'] = (values) => {
     login(values.email, values.password);
   };
 

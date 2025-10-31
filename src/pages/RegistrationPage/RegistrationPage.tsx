@@ -5,12 +5,14 @@ import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, type FormProps, Input } from 'antd';
 
 import { useRegister } from '@/features/auth/hooks/useRegister';
+import type { RegisterRequest } from '@/features/auth/types/authTypes';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
-import type { RegField } from '@/shared/types/authFieldsTypes';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();
-  const handleRegister: FormProps<RegField>['onFinish'] = async (values) => {
+  const handleRegister: FormProps<RegisterRequest>['onFinish'] = async (
+    values,
+  ) => {
     const { email, password, nickName } = values;
     await register(email, password, nickName);
   };
