@@ -1,52 +1,64 @@
 import { useCallback } from 'react';
 
-import { App as AntApp } from 'antd';
-import { getAuth } from 'firebase/auth';
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from 'firebase/storage';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
-import { storage } from '@/app/firebase';
+const { apiBaseUrl } = endpointsURL;
+const token = localStorage.getItem('token');
 
-// remove firebase
 export const useUploadAvatar = () => {
-  const { notification } = AntApp.useApp();
-
   const uploadAvatar = useCallback(
-    async (file: File, studentId: string, oldAvatarUrl?: string | null) => {
-      const user = getAuth().currentUser;
+    async (
+      file: File,
+      studentId: string,
+      oldAvatarUrlOrNull?: string | null,
+    ) => {
+      const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const contentType = file.type || 'image/jpeg';
 
-      if (!user) {
-        throw new Error('User not authenticated');
+      // 1) Ініціюємо завантаження
+      const headers = { Authorization: `Bearer ${token}` };
+      const initResp = await fetch(`${apiBaseUrl}/uploads/avatars/initiate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...headers },
+        body: JSON.stringify({ studentId, contentType, ext }),
+      });
+      if (!initResp.ok) {
+        throw new Error('Failed to initiate avatar upload');
+      }
+      const { uploadUrl, objectPath } = await initResp.json();
+
+      // 2) Завантажуємо файл напряму у GCS signed URL
+      const putResp = await fetch(uploadUrl, {
+        method: 'PUT',
+        headers: { 'Content-Type': contentType },
+        body: file,
+      });
+      if (!putResp.ok) {
+        throw new Error('Failed to upload file to storage');
       }
 
-      if (oldAvatarUrl) {
-        try {
-          const url = new URL(oldAvatarUrl);
-          const pathname = decodeURIComponent(
-            url.pathname.split('/o/')[1].split('?')[0],
-          );
+      // 3) Фіналізація — отримуємо постійний downloadUrl
+      const deleteOldObjectPath =
+        oldAvatarUrlOrNull && oldAvatarUrlOrNull.includes('/o/')
+          ? decodeURIComponent(oldAvatarUrlOrNull.split('/o/')[1].split('?')[0])
+          : undefined;
 
-          const oldRef = ref(storage, pathname);
-          await deleteObject(oldRef);
-        } catch {
-          notification.error({ message: 'Old avatar deletion failed' });
-        }
-      }
-
-      const storageRef = ref(
-        storage,
-        `avatars/${user.uid}/${studentId}/${file.name}`,
+      const finalizeResp = await fetch(
+        `${apiBaseUrl}/uploads/avatars/finalize`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify({ objectPath, deleteOldObjectPath }),
+        },
       );
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadUrl = await getDownloadURL(snapshot.ref);
+      if (!finalizeResp.ok) {
+        throw new Error('Failed to finalize avatar upload');
+      }
+      const { downloadUrl } = await finalizeResp.json();
 
-      return downloadUrl;
+      return downloadUrl as string;
     },
-    [notification],
+    [],
   );
 
   return { uploadAvatar };

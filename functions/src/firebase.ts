@@ -5,6 +5,7 @@ if (!getApps().length) {
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
     projectId: 'tutor-crm-49cae',
+    storageBucket: 'tutor-crm-49cae.firebasestorage.app',
   });
 }
 

@@ -10,9 +10,11 @@ import { lessonsRouter } from './routes/lessons.router';
 import { studentsRouter } from './routes/students.router';
 import { corsHandler } from './utils/cors';
 
+import './firebase';
+
 dotenv.config();
 
-import './firebase';
+import { uploadsRouter } from './routes/uploads.router';
 
 const app = express();
 app.set('trust proxy', true);
@@ -37,5 +39,6 @@ app.use('/groups', groupsRouter);
 app.use('/students', studentsRouter);
 app.use('/lessons', lessonsRouter);
 app.use('/dashboard', dashboardRouter);
+app.use('/uploads', uploadsRouter);
 
 export const api = functions.region('us-central1').https.onRequest(app);
