@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import express, { json } from 'express';
 import * as functions from 'firebase-functions/v1';
 
@@ -8,13 +7,10 @@ import { dashboardRouter } from './routes/dashboard.router';
 import { groupsRouter } from './routes/groups.router';
 import { lessonsRouter } from './routes/lessons.router';
 import { studentsRouter } from './routes/students.router';
+import { uploadsRouter } from './routes/uploads.router';
 import { corsHandler } from './utils/cors';
 
 import './firebase';
-
-dotenv.config();
-
-import { uploadsRouter } from './routes/uploads.router';
 
 const app = express();
 app.set('trust proxy', true);
