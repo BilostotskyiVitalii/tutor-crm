@@ -9,8 +9,9 @@
     "rootDir": "src",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "compileOnSave": true,
-  "include": ["src"]
+  "include": ["src", "types"]
 }

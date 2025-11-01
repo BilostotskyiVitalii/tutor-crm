@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { z } from 'zod';
 
 import { admin, db } from '../firebase';
-import { extractUidFromBearer } from '../utils/auth';
+import { requireAuth } from '../middleware/requireAuth';
 import { toTimestamp } from '../utils/toTimestamp';
 
 const FieldValue = admin.firestore.FieldValue;
@@ -42,9 +42,9 @@ const updateSchema = z.object({
 // --------------------
 
 // GET /students
-studentsRouter.get('/', async (req: Request, res: Response) => {
+studentsRouter.get('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const snap = await db.collection(`users/${uid}/students`).get();
     const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     return res.json(items);
@@ -57,7 +57,7 @@ studentsRouter.get('/', async (req: Request, res: Response) => {
 // GET /students/:id
 studentsRouter.get('/:id', async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const ref = db.doc(`users/${uid}/students/${req.params.id}`);
     const snap = await ref.get();
     if (!snap.exists) {
@@ -71,9 +71,9 @@ studentsRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // POST /students
-studentsRouter.post('/', async (req: Request, res: Response) => {
+studentsRouter.post('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const parsed = createSchema.parse(req.body ?? {});
     const now = FieldValue.serverTimestamp();
 
@@ -95,9 +95,9 @@ studentsRouter.post('/', async (req: Request, res: Response) => {
 });
 
 // PATCH /students/:id
-studentsRouter.patch('/:id', async (req: Request, res: Response) => {
+studentsRouter.patch('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const updates = updateSchema.parse(req.body ?? {});
     const ref = db.doc(`users/${uid}/students/${req.params.id}`);
     const now = FieldValue.serverTimestamp();
@@ -122,9 +122,9 @@ studentsRouter.patch('/:id', async (req: Request, res: Response) => {
 });
 
 // DELETE /students/:id
-studentsRouter.delete('/:id', async (req: Request, res: Response) => {
+studentsRouter.delete('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     await db.doc(`users/${uid}/students/${req.params.id}`).delete();
     return res.status(204).send();
   } catch (err: unknown) {

@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import express, { json } from 'express';
 import * as functions from 'firebase-functions/v1';
 
@@ -14,6 +15,7 @@ import './firebase';
 
 const app = express();
 app.set('trust proxy', true);
+app.use(cookieParser());
 app.use(corsHandler);
 app.options(/.*/, corsHandler);
 app.use(json());

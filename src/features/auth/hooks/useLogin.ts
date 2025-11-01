@@ -11,8 +11,7 @@ export const useLogin = () => {
 
   const login = async (email: string, password: string) => {
     try {
-      const user = await loginMutation({ email, password }).unwrap();
-      localStorage.setItem('token', user.token);
+      await loginMutation({ email, password }).unwrap();
       navigate(navigationUrls.index);
     } catch (err: unknown) {
       handleError(err, 'Login Error');

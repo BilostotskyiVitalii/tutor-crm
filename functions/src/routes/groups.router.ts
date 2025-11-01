@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { z, ZodError } from 'zod';
 
 import { admin, db } from '../firebase';
-import { extractUidFromBearer } from '../utils/auth';
+import { requireAuth } from '../middleware/requireAuth';
 
 const FieldValue = admin.firestore.FieldValue;
 
@@ -23,9 +23,9 @@ const updateSchema = z.object({
 });
 
 // ===== GET all groups =====
-groupsRouter.get('/', async (req: Request, res: Response) => {
+groupsRouter.get('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const snap = await db.collection(`users/${uid}/groups`).get();
     const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     res.json(items);
@@ -36,9 +36,9 @@ groupsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 // ===== CREATE group =====
-groupsRouter.post('/', async (req: Request, res: Response) => {
+groupsRouter.post('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const parsed = createSchema.parse(req.body ?? {});
 
     const now = FieldValue.serverTimestamp();
@@ -58,9 +58,9 @@ groupsRouter.post('/', async (req: Request, res: Response) => {
 });
 
 // ===== GET one group =====
-groupsRouter.get('/:id', async (req: Request, res: Response) => {
+groupsRouter.get('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const ref = db.doc(`users/${uid}/groups/${req.params.id}`);
     const snap = await ref.get();
 
@@ -76,9 +76,9 @@ groupsRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // ===== UPDATE group =====
-groupsRouter.patch('/:id', async (req: Request, res: Response) => {
+groupsRouter.patch('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const updates = updateSchema.parse(req.body ?? {});
     const ref = db.doc(`users/${uid}/groups/${req.params.id}`);
 
@@ -96,9 +96,9 @@ groupsRouter.patch('/:id', async (req: Request, res: Response) => {
 });
 
 // ===== DELETE group =====
-groupsRouter.delete('/:id', async (req: Request, res: Response) => {
+groupsRouter.delete('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     await db.doc(`users/${uid}/groups/${req.params.id}`).delete();
     res.status(204).send();
   } catch (err: unknown) {

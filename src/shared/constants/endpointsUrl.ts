@@ -7,6 +7,7 @@ export const endpointsURL = {
   apiRegister: `/auth/register`,
   apiResetPassword: `/auth/register`,
   apiProfile: `/auth/profile`,
+  apiLogout: `/auth/logout`,
   students: '/students',
   lessons: '/lessons',
   groups: '/groups',

@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import { z, ZodError } from 'zod';
 
 import { admin, db } from '../firebase';
-import { extractUidFromBearer } from '../utils/auth';
+import { requireAuth } from '../middleware/requireAuth';
 import { toTimestamp } from '../utils/toTimestamp';
 
 const FieldValue = admin.firestore.FieldValue;
@@ -33,9 +33,9 @@ const updateSchema = z.object({
 });
 
 // ---------- GET /lessons ----------
-lessonsRouter.get('/', async (req: Request, res: Response) => {
+lessonsRouter.get('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const snap = await db.collection(`users/${uid}/lessons`).get();
     const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     return res.json(items);
@@ -46,9 +46,9 @@ lessonsRouter.get('/', async (req: Request, res: Response) => {
 });
 
 // ---------- GET /lessons/:id ----------
-lessonsRouter.get('/:id', async (req: Request, res: Response) => {
+lessonsRouter.get('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const ref = db.doc(`users/${uid}/lessons/${req.params.id}`);
     const snap = await ref.get();
     if (!snap.exists) {
@@ -62,9 +62,9 @@ lessonsRouter.get('/:id', async (req: Request, res: Response) => {
 });
 
 // ---------- POST /lessons ----------
-lessonsRouter.post('/', async (req: Request, res: Response) => {
+lessonsRouter.post('/', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const parsed = createSchema.parse(req.body ?? {});
     const now = FieldValue.serverTimestamp();
 
@@ -86,9 +86,9 @@ lessonsRouter.post('/', async (req: Request, res: Response) => {
 });
 
 // ---------- PATCH /lessons/:id ----------
-lessonsRouter.patch('/:id', async (req: Request, res: Response) => {
+lessonsRouter.patch('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     const updates = updateSchema.parse(req.body ?? {});
     const ref = db.doc(`users/${uid}/lessons/${req.params.id}`);
     const now = FieldValue.serverTimestamp();
@@ -115,9 +115,9 @@ lessonsRouter.patch('/:id', async (req: Request, res: Response) => {
 });
 
 // ---------- DELETE /lessons/:id ----------
-lessonsRouter.delete('/:id', async (req: Request, res: Response) => {
+lessonsRouter.delete('/:id', requireAuth, async (req: Request, res: Response) => {
   try {
-    const uid = await extractUidFromBearer(req);
+    const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
     await db.doc(`users/${uid}/lessons/${req.params.id}`).delete();
     return res.status(204).send();
   } catch (err: unknown) {

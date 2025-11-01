@@ -25,11 +25,11 @@ const items: MenuProps['items'] = [
 
 export const UserMenu = () => {
   const { data: user } = useFetchProfileQuery();
-  const { logout } = useLogout();
+  const { onLogout } = useLogout();
 
   const handleClick: MenuProps['onClick'] = ({ key }) => {
     if (key === 'logout') {
-      logout();
+      onLogout();
     }
   };
 
