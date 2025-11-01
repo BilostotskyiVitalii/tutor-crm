@@ -6,8 +6,6 @@ import { store } from '@/store/index.tsx';
 
 import '@/shared/styles/main.scss';
 
-import '@/app/firebase.ts';
-
 const Root = () => {
   return (
     <Provider store={store}>
