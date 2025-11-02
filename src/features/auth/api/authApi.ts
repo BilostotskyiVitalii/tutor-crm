@@ -9,6 +9,15 @@ import type {
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
+const {
+  apiLogin,
+  apiRegister,
+  apiProfile,
+  apiResetPassword,
+  apiConfirmPassword,
+  apiLogout,
+} = endpointsURL;
+
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: baseQueryWithAuth,
@@ -16,7 +25,7 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<AuthUser, LoginRequest>({
       query: (credentials) => ({
-        url: endpointsURL.apiLogin,
+        url: apiLogin,
         method: 'POST',
         body: credentials,
       }),
@@ -24,30 +33,41 @@ export const authApi = createApi({
 
     register: builder.mutation<AuthUser, RegisterRequest>({
       query: (data) => ({
-        url: endpointsURL.apiRegister,
+        url: apiRegister,
         method: 'POST',
         body: data,
       }),
     }),
 
     fetchProfile: builder.query<AuthUser, void>({
-      query: () => ({ url: endpointsURL.apiProfile }),
+      query: () => ({ url: apiProfile }),
       providesTags: ['Auth'],
     }),
 
     resetPassword: builder.mutation<{ success: boolean }, ResetPasswordRequest>(
       {
         query: (data) => ({
-          url: endpointsURL.apiResetPassword,
+          url: apiResetPassword,
           method: 'POST',
           body: data,
         }),
       },
     ),
 
+    confirmResetPassword: builder.mutation<
+      { success: boolean },
+      { oobCode: string; newPassword: string }
+    >({
+      query: (data) => ({
+        url: apiConfirmPassword,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+
     logout: builder.mutation<void, void>({
       query: () => ({
-        url: endpointsURL.apiLogout,
+        url: apiLogout,
         method: 'POST',
       }),
       invalidatesTags: ['Auth'],
@@ -60,5 +80,6 @@ export const {
   useRegisterMutation,
   useFetchProfileQuery,
   useResetPasswordMutation,
+  useConfirmResetPasswordMutation,
   useLogoutMutation,
 } = authApi;

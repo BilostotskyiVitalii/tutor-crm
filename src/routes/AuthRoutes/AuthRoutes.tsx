@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 
 import { Spin } from 'antd';
 
+import ResetPasswordPage from '@/pages/ResetPasswordPage/ResetPasswordPage';
 import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 
@@ -39,6 +40,15 @@ export const AuthRoutes = () => (
         element={
           <AuthRoute requireAuth={false}>
             <ForgotPasswordPage />
+          </AuthRoute>
+        }
+      />
+
+      <Route
+        path={navigationUrls.resetPassword.replace('/auth', '')}
+        element={
+          <AuthRoute requireAuth={false}>
+            <ResetPasswordPage />
           </AuthRoute>
         }
       />

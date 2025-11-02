@@ -10,11 +10,19 @@ import { admin, db } from '../firebase';
 import { requireAuth } from '../middleware/requireAuth';
 import { AuthenticatedRequest } from '../types/auth';
 import { axsAuth } from '../utils/axsAuth';
+import { sendEmail } from '../utils/sendEmail';
 
 export const authRouter = Router();
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI, JWT_SECRET, FRONTEND_ORIGIN } =
-  process.env;
+const {
+  API_KEY,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  OAUTH_REDIRECT_URI,
+  JWT_SECRET,
+  FRONTEND_ORIGIN,
+  FRONTEND_RESET_PASSWORD_URL,
+} = process.env;
 
 const oAuthClient = new OAuth2Client(GOOGLE_CLIENT_ID);
 
@@ -259,4 +267,58 @@ authRouter.get('/profile', requireAuth, async (req, res) => {
     return res.status(404).json({ message: 'User not found' });
   }
   return res.status(200).json({ id: uid, ...snap.data() });
+});
+
+// --------------- RESET ------------------------
+
+authRouter.post('/reset', async (req: Request, res: Response) => {
+  const { email } = req.body as { email: string };
+
+  if (!email) {
+    return res.status(400).json({ message: 'Email is required' });
+  }
+
+  try {
+    const resetLink = await admin.auth().generatePasswordResetLink(email, {
+      url: `${FRONTEND_RESET_PASSWORD_URL}?email=${email}`,
+      handleCodeInApp: true,
+    });
+
+    const query = resetLink.split('?')[1];
+    const customLink = `${FRONTEND_RESET_PASSWORD_URL}?${query}`;
+
+    await sendEmail({
+      to: email,
+      subject: 'Tutor CRM - Password Reset',
+      html: `<p>Click <a href="${customLink}">here</a> to reset your password</p>`,
+    });
+
+    return res.status(200).json({ message: 'Password reset link sent', resetLink });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to send reset link';
+    return res.status(400).json({ message });
+  }
+});
+
+authRouter.post('/reset/confirm', async (req: Request, res: Response) => {
+  const { oobCode, newPassword } = req.body as { oobCode: string; newPassword: string };
+
+  if (!oobCode || !newPassword) {
+    return res.status(400).json({ message: 'Missing oobCode or new password' });
+  }
+
+  try {
+    const response = await axios.post(
+      `https://identitytoolkit.googleapis.com/v1/accounts:resetPassword?key=${API_KEY}`,
+      {
+        oobCode,
+        newPassword,
+      },
+    );
+
+    return res.status(200).json({ success: true, email: response.data.email });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Failed to reset password';
+    return res.status(400).json({ message });
+  }
 });

@@ -8,13 +8,13 @@ import { useResetPassword } from '@/features/auth/hooks/useResetPassword';
 const ForgotPasswordPage: FC = () => {
   const { resetPassword, loading } = useResetPassword();
 
+  const onFinish = (values: { email: string }) => {
+    resetPassword(values.email);
+  };
+
   return (
     <Flex className="auth-backdrop">
-      <Form
-        className="auth-form"
-        name="forgot-password"
-        onFinish={resetPassword}
-      >
+      <Form className="auth-form" name="forgot-password" onFinish={onFinish}>
         <h2 className="auth-form-title">Forgot Password</h2>
         <Form.Item
           name="email"
