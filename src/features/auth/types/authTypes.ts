@@ -3,7 +3,6 @@ export interface AuthUser {
   email: string;
   nickName: string;
   avatar: string | null;
-  token: string;
 }
 
 export interface LoginRequest {
