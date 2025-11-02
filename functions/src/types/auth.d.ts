@@ -1,4 +1,3 @@
-// types/auth.d.ts або поруч з middleware
 import { Request } from 'express';
 
 export interface AuthUser {
@@ -7,5 +6,5 @@ export interface AuthUser {
 }
 
 export interface AuthenticatedRequest extends Request {
-  user: AuthUser; // тут уже НЕ optional
+  user: AuthUser;
 }
