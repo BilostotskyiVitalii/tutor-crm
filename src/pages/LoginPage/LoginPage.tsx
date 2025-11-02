@@ -12,8 +12,11 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 import styles from './LoginPage.module.scss';
 
 const LoginPage: FC = () => {
-  const { login, loading } = useLogin();
-  const { googleLogin } = useGoogleLogin();
+  const { login, loading: isLoginLoading } = useLogin();
+  const { googleLogin, loading: isGoogleLoading } = useGoogleLogin();
+
+  const loading = isLoginLoading || isGoogleLoading || false;
+
   const handleLogin: FormProps<LoginRequest>['onFinish'] = (values) => {
     login(values.email, values.password);
   };
