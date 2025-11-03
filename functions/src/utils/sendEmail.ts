@@ -2,6 +2,12 @@ import nodemailer from 'nodemailer';
 
 const { EMAIL_USER, EMAIL_PASS } = process.env;
 
+interface SendEmailOptions {
+  to: string;
+  subject: string;
+  html: string;
+}
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -10,15 +16,9 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-interface SendEmailOptions {
-  to: string;
-  subject: string;
-  html: string;
-}
-
 export async function sendEmail({ to, subject, html }: SendEmailOptions) {
   await transporter.sendMail({
-    from: `"Tutor CRM" <${process.env.EMAIL_USER}>`,
+    from: `"Tutor CRM" <${EMAIL_USER}>`,
     to,
     subject,
     html,
