@@ -1,20 +1,64 @@
-import { useResetPasswordMutation } from '@/features/auth/api/authApi';
-import { useErrorHandler } from '@/shared/hooks/useErrorHandler';
+// src/features/auth/hooks/useResetPassword.ts
+import { useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+
+import { message } from 'antd';
+
+import { useConfirmResetPasswordMutation } from '@/features/auth/api/authApi';
+
+interface ResetPasswordValues {
+  newPassword: string;
+  confirmPassword: string;
+}
 
 export const useResetPassword = () => {
-  const { handleError } = useErrorHandler();
-  const [resetPasswordMutation, { isLoading, error, data }] =
-    useResetPasswordMutation();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [confirmResetPassword, { isLoading }] =
+    useConfirmResetPasswordMutation();
+  const [error, setError] = useState<string | null>(null);
 
-  const resetPassword = async (email: string) => {
+  const oobCode = searchParams.get('oobCode');
+
+  const handleResetPassword = async (values: ResetPasswordValues) => {
+    if (!oobCode) {
+      setError('Invalid or missing reset code.');
+      return;
+    }
+
+    if (values.newPassword !== values.confirmPassword) {
+      setError('Passwords do not match!');
+      return;
+    }
+
     try {
-      await resetPasswordMutation({ email }).unwrap();
+      await confirmResetPassword({
+        oobCode,
+        newPassword: values.newPassword,
+      }).unwrap();
+
+      message.success('Password successfully reset!');
+      navigate('/login');
     } catch (err: unknown) {
-      handleError(err, 'Reset Password Error');
+      if (err instanceof Error) {
+        setError(err.message);
+      } else if (
+        typeof err === 'object' &&
+        err !== null &&
+        'data' in err &&
+        typeof (err as { data?: { message?: string } }).data?.message ===
+          'string'
+      ) {
+        setError((err as { data: { message: string } }).data.message);
+      } else {
+        setError('Failed to reset password');
+      }
     }
   };
 
-  const success = data ? 'Reset email sent' : null;
-
-  return { resetPassword, loading: isLoading, error, success };
+  return {
+    isLoading,
+    error,
+    handleResetPassword,
+  };
 };

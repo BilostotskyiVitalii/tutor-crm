@@ -3,10 +3,10 @@ import { type FC } from 'react';
 import { MailOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input } from 'antd';
 
-import { useResetPassword } from '@/features/auth/hooks/useResetPassword';
+import { useForgotPassword } from '@/features/auth/hooks/useForgotPassword';
 
 const ForgotPasswordPage: FC = () => {
-  const { resetPassword, loading } = useResetPassword();
+  const { resetPassword, loading } = useForgotPassword();
 
   const onFinish = (values: { email: string }) => {
     resetPassword(values.email);
