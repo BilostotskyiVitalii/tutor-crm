@@ -94,8 +94,11 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
               <XAxis dataKey="day" />
               <YAxis allowDecimals={false} />
               <Tooltip />
-              // TODO replace color from fill
-              <Bar dataKey="lessons" fill="#1890ff" radius={[4, 4, 0, 0]} />
+              <Bar
+                dataKey="lessons"
+                fill="var(--chart-cols-color)"
+                radius={[4, 4, 0, 0]}
+              />
             </BarChart>
           </ResponsiveContainer>
         ) : (

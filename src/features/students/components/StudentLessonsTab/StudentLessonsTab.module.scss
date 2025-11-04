@@ -5,6 +5,7 @@
   flex-wrap: wrap;
   align-items: flex-start;
   gap: $paddind-horizontal;
+  --chart-cols-color: #{$color-chart-cols};
 }
 
 .chartWrapper {
