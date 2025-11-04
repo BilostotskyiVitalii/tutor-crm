@@ -18,7 +18,9 @@ import { TopStudentsCard } from '@/features/dashboard/components/TopStudentsCard
 import styles from './Dashboard.module.scss';
 
 export const Dashboard: FC = () => {
-  const { data, isLoading, isError } = useGetDashboardStatsQuery();
+  const { data, isLoading, isError } = useGetDashboardStatsQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   if (isError) {
     return <Alert message="Failed to load dashboard data" type="error" />;

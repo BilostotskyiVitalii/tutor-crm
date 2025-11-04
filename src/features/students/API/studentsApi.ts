@@ -14,7 +14,7 @@ const { students } = endpointsURL;
 export const studentsApi = createApi({
   reducerPath: 'studentsApi',
   baseQuery: baseQueryWithAuth,
-  tagTypes: ['Students'],
+  tagTypes: ['Students', 'StudentStats'],
   endpoints: (builder) => ({
     getStudents: builder.query<Student[], void>({
       query: () => ({ url: students, method: 'GET' }),
@@ -69,6 +69,7 @@ export const studentsApi = createApi({
         }
         return `students/${id}/stats?${params.toString()}`;
       },
+      providesTags: ['StudentStats'],
     }),
   }),
 });

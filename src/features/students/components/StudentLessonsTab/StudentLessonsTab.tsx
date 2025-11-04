@@ -82,7 +82,7 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
         rowKey="id"
         dataSource={stats?.lessons ?? []}
         columns={lessonsColumns}
-        pagination={{ pageSize: 8 }}
+        pagination={{ pageSize: 10 }}
         size="small"
       />
 

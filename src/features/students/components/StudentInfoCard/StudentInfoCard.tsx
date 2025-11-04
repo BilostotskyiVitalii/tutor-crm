@@ -26,31 +26,43 @@ export const StudentInfoCard: FC<Props> = ({ student }) => {
       <Divider />
       <h2>{student.name}</h2>
       <p>
-        Status:{' '}
+        <Text strong>Status: </Text>
         {student.isActive ? (
           <Text type="success">Active</Text>
         ) : (
           <Text type="secondary">Inactive</Text>
         )}
       </p>
-      <p>Level: {student.currentLevel ?? '-'}</p>
-      <p>📧 Email: {student.email ?? '-'}</p>
-      <p>🛜 Contact: {student.contact ?? '-'}</p>
-      <p>☎️ Phone: {student.phone ?? '-'}</p>
-      <p>💵 Price per hour: ₴ {student.price ?? '-'}</p>
       <p>
-        🎁 Birthdate:{' '}
+        <Text strong>Level:</Text> {student.currentLevel ?? '-'}
+      </p>
+      <p>
+        <Text strong>📧 Email: </Text> {student.email ?? '-'}
+      </p>
+      <p>
+        <Text strong>🛜 Contact: </Text> {student.contact ?? '-'}
+      </p>
+      <p>
+        <Text strong>☎️ Phone: </Text> {student.phone ?? '-'}
+      </p>
+      <p>
+        <Text strong>💵 Price per hour: ₴ </Text> {student.price ?? '-'}
+      </p>
+      <p>
+        <Text strong>🎁 Birthdate: </Text>
         {student.birthdate
           ? new Date(student.birthdate).toLocaleDateString()
           : '-'}
       </p>
       <p>
-        🍼 Created at:{' '}
+        <Text strong>🍼 Created at: </Text>
         {student.createdAt
           ? new Date(student.createdAt).toLocaleDateString()
           : '-'}
       </p>
-      <p>📋 Notes: {student.notes ?? '-'}</p>
+      <p>
+        <Text strong>📋 Notes: </Text> {student.notes ?? '-'}
+      </p>
       <Divider />
       <StudentActionsButtons student={student} />
     </Card>

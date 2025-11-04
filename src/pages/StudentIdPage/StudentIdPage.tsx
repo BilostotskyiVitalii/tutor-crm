@@ -6,7 +6,7 @@ import type { RangePickerProps } from 'antd/es/date-picker';
 import { StudentInfoCard } from '@/features/students/components/StudentInfoCard/StudentInfoCard';
 import { StudentLessonsTab } from '@/features/students/components/StudentLessonsTab/StudentLessonsTab';
 import { StudentStatsTab } from '@/features/students/components/StudentStatsTab/StudentStatsTab';
-import { useStudentPage } from '@/features/students/hooks/useStudentIdPage';
+import { useStudentIdPage } from '@/features/students/hooks/useStudentIdPage';
 
 import styles from './StudentIdPage.module.scss';
 
@@ -21,7 +21,7 @@ const StudentIdPage: FC = () => {
     dateRange,
     handleDateChange,
     applyDateFilter,
-  } = useStudentPage();
+  } = useStudentIdPage();
 
   if (!student && !studentLoading) {
     return <div>Student not found</div>;

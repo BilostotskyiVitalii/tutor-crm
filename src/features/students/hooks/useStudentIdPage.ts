@@ -8,7 +8,7 @@ import {
   useGetStudentStatsQuery,
 } from '@/features/students/api/studentsApi';
 
-export const useStudentPage = () => {
+export const useStudentIdPage = () => {
   const { id } = useParams<{ id: string }>();
   const defaultStart = dayjs().startOf('month');
   const defaultEnd = dayjs().endOf('month');
@@ -27,10 +27,10 @@ export const useStudentPage = () => {
     id || '',
   );
 
-  const { data: stats, isLoading: statsLoading } = useGetStudentStatsQuery({
-    id: id || '',
-    ...queryParams,
-  });
+  const { data: stats, isLoading: statsLoading } = useGetStudentStatsQuery(
+    { id: id || '', ...queryParams },
+    { refetchOnMountOrArgChange: true },
+  );
 
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
     setDateRange(dates ?? [defaultStart, defaultEnd]);
