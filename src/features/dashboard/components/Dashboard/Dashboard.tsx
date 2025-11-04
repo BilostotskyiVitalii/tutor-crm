@@ -8,10 +8,9 @@ import {
   UsergroupAddOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Alert, Card, Flex, Spin, Statistic } from 'antd';
+import { Alert, Card, Divider, Flex, Spin, Statistic } from 'antd';
 
 import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
-import { DividerVertical } from '@/features/dashboard/components/DividerVertical/DividerVertical';
 import PieRevenueMix from '@/features/dashboard/components/PieRevenueMix/PieRevenueMix';
 import { TopGroupsCard } from '@/features/dashboard/components/TopGroupsCard/TopGroupsCard';
 import { TopStudentsCard } from '@/features/dashboard/components/TopStudentsCard/TopStudentsCard';
@@ -42,7 +41,7 @@ export const Dashboard: FC = () => {
                 prefix="$"
                 precision={0}
               />
-              <DividerVertical />
+              <Divider type="vertical" />
               <Statistic
                 title="Expected"
                 value={data?.expectedMonthRevenue}
@@ -59,7 +58,7 @@ export const Dashboard: FC = () => {
                 precision={0}
                 value={data?.averageHourPrice}
               />
-              <DividerVertical />
+              <Divider type="vertical" />
               <Statistic
                 title="Student per/hour"
                 prefix="$"
@@ -75,7 +74,7 @@ export const Dashboard: FC = () => {
                 value={data?.activeStudents}
                 prefix={<UserOutlined />}
               />
-              <DividerVertical />
+              <Divider type="vertical" />
               <Statistic
                 title="New"
                 value={data?.newStudents}
@@ -91,7 +90,7 @@ export const Dashboard: FC = () => {
                 value={data?.activeGroups}
                 prefix={<TeamOutlined />}
               />
-              <DividerVertical />
+              <Divider type="vertical" />
               <Statistic
                 title="New"
                 value={data?.newGroups}
@@ -107,7 +106,7 @@ export const Dashboard: FC = () => {
                 value={data?.doneLessons}
                 prefix={<CheckOutlined />}
               />
-              <DividerVertical />
+              <Divider type="vertical" />
               <Statistic
                 title="Planned"
                 value={data?.plannedLessons}

@@ -1,10 +1,8 @@
 import type { FC } from 'react';
 
 import { CalendarOutlined, CheckOutlined } from '@ant-design/icons';
-import { Card } from 'antd';
-import { Space, Statistic } from 'antd';
+import { Card, Divider, Space, Statistic } from 'antd';
 
-import { DividerVertical } from '@/features/dashboard/components/DividerVertical/DividerVertical';
 import type { StudentStats } from '@/features/students/types/studentTypes';
 import { formatHours } from '@/shared/utils/formatHours';
 
@@ -23,7 +21,7 @@ export const StudentStatsTab: FC<Props> = ({ stats }) => (
           value={stats?.doneLessons ?? 0}
           prefix={<CheckOutlined />}
         />
-        <DividerVertical />
+        <Divider type="vertical" />
         <Statistic
           title="Planned"
           value={stats?.plannedLessons ?? 0}
@@ -39,7 +37,7 @@ export const StudentStatsTab: FC<Props> = ({ stats }) => (
           value={stats?.totalRevenue ?? 0}
           prefix="₴"
         />
-        <DividerVertical />
+        <Divider type="vertical" />
         <Statistic
           title="Total Hours"
           value={stats?.totalHours ?? 0}

@@ -48,10 +48,7 @@ export const TopGroupsCard = () => {
               <span style={{ fontSize: 28 }}>
                 {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
               </span>
-              <Divider
-                type="vertical"
-                style={{ height: '64px', margin: '0 12px' }}
-              />
+              <Divider type="vertical" />
               <List.Item.Meta
                 style={{ display: 'flex', alignItems: 'center' }}
                 title={<Link to={`/groups/${item.id}`}>{item.title}</Link>}
