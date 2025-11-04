@@ -6,6 +6,7 @@ import { createStudent } from './students/createStudent';
 import { deleteStudent } from './students/deleteStudent';
 import { geetStudentById } from './students/getStudentById';
 import { getStudents } from './students/getStudents';
+import { getStudentStats } from './students/getStudentStats';
 import { updateStudent } from './students/updateStudent';
 
 export const studentsRouter = Router();
@@ -15,3 +16,4 @@ studentsRouter.get('/:id', requireAuth, geetStudentById);
 studentsRouter.post('/', requireAuth, createStudent);
 studentsRouter.patch('/:id', requireAuth, updateStudent);
 studentsRouter.delete('/:id', requireAuth, deleteStudent);
+studentsRouter.get('/:id/stats', requireAuth, getStudentStats);

@@ -2,8 +2,8 @@ import { Link } from 'react-router-dom';
 
 import type { ColumnsType } from 'antd/es/table';
 
+import { StudentActionsButtons } from '@/features/students/components/StudentActionsButtons/StudentActionsButtons';
 import { StatusDropdown } from '@/features/students/components/StudentStatusDropdown/StudentStatusDropdown';
-import { StudentTableActions } from '@/features/students/components/StudentTableAction/StudentTableAction';
 import {
   type Student,
   studentStatus,
@@ -63,7 +63,7 @@ export const useStudentColumns = (): ColumnsType<Student> => {
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, student) => <StudentTableActions student={student} />,
+      render: (_, student) => <StudentActionsButtons student={student} />,
     },
   ];
 };

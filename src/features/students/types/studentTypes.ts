@@ -32,3 +32,22 @@ export interface StudentFormValues
   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
   birthdate: Dayjs | null;
 }
+
+export type StudentStats = {
+  doneLessons: number;
+  plannedLessons: number;
+  totalHours: number;
+  totalRevenue: number;
+  avgHourPrice: number;
+  lessons: LessonWithStatus[];
+  lessonsByDayOfWeek: { day: number; count: number }[];
+};
+
+export type LessonWithStatus = {
+  id: string;
+  start: string;
+  end: string;
+  price?: number;
+  status: 'Done' | 'Planned';
+  durationHours: number;
+};

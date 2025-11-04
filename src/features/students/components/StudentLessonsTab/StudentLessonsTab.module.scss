@@ -1,0 +1,12 @@
+@use '@/shared/styles/variables' as *;
+
+.lessons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: $paddind-horizontal;
+}
+
+.chartWrapper {
+  min-width: 400px;
+}

@@ -1,0 +1,7 @@
+@use '@/shared/styles/variables' as *;
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $paddind-horizontal;
+}

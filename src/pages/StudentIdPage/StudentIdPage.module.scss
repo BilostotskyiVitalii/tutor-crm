@@ -1,0 +1,15 @@
+@use '@/shared/styles/variables' as *;
+
+.wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: $paddind-horizontal;
+}
+
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}

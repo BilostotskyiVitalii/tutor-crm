@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type {
   Student,
   StudentData,
+  StudentStats,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
@@ -53,6 +54,22 @@ export const studentsApi = createApi({
       query: (id) => ({ url: `${students}/${id}`, method: 'DELETE' }),
       invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
+
+    getStudentStats: builder.query<
+      StudentStats,
+      { id: string; start?: string; end?: string }
+    >({
+      query: ({ id, start, end }) => {
+        const params = new URLSearchParams();
+        if (start) {
+          params.append('start', start);
+        }
+        if (end) {
+          params.append('end', end);
+        }
+        return `students/${id}/stats?${params.toString()}`;
+      },
+    }),
   }),
 });
 
@@ -62,4 +79,5 @@ export const {
   useAddStudentMutation,
   useUpdateStudentMutation,
   useDeleteStudentMutation,
+  useGetStudentStatsQuery,
 } = studentsApi;

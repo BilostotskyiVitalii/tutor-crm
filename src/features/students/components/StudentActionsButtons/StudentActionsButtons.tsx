@@ -6,13 +6,11 @@ import { useStudentActions } from '@/features/students/hooks/useStudentActions';
 import type { Student } from '@/features/students/types/studentTypes';
 import { useModal } from '@/shared/providers/ModalProvider';
 
-interface StudentTableActionsProps {
+interface StudentActionsProps {
   student: Student;
 }
 
-export const StudentTableActions: FC<StudentTableActionsProps> = ({
-  student,
-}) => {
+export const StudentActionsButtons: FC<StudentActionsProps> = ({ student }) => {
   const { removeStudent } = useStudentActions();
   const { openModal } = useModal();
 
