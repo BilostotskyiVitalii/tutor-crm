@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Timestamp } from 'firebase-admin/firestore';
 
+import { admin } from '../firebase';
 import { requireAuth } from '../middleware/requireAuth';
 import { fetchGroups } from '../repos/groupsRepo';
 import { fetchLessonsForRange } from '../repos/lessonsRepo';
@@ -12,27 +13,23 @@ import {
   computeRevenueMix,
   computeStudentTops,
 } from '../services/stats.service';
-import { nowTs } from '../utils/dates';
+import { AuthenticatedRequest } from '../types/auth';
 
 export const dashboardRouter = Router();
 
 dashboardRouter.get('/stats', requireAuth, async (req, res) => {
-  const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
-  const userPath = `users/${uid}`;
+  const { uid } = (req as AuthenticatedRequest).user;
 
   const { start, end } = req.query;
 
-  const startDate = start ? new Date(start as string) : new Date(0);
-  const endDate = end ? new Date(end as string) : new Date();
-
-  const startTs = Timestamp.fromDate(startDate);
-  const endExclusiveTs = Timestamp.fromDate(endDate);
-  const now = nowTs();
+  const startTs = Timestamp.fromDate(new Date(start as string));
+  const endExclusiveTs = Timestamp.fromDate(new Date(end as string));
+  const now = admin.firestore.Timestamp.now();
 
   const [students, groups, lessons] = await Promise.all([
-    fetchStudents(userPath),
-    fetchGroups(userPath),
-    fetchLessonsForRange(userPath, startTs, endExclusiveTs),
+    fetchStudents(uid),
+    fetchGroups(uid),
+    fetchLessonsForRange(uid, startTs, endExclusiveTs),
   ]);
 
   const activeStudents = students.filter((s) => s.isActive).length;
@@ -52,6 +49,16 @@ dashboardRouter.get('/stats', requireAuth, async (req, res) => {
   const groupTops = computeGroupTops(groups, lessons);
   const mixes = computeRevenueMix(done, [...done, ...planned]);
 
+  const lessonsByDayOfWeek = [0, 1, 2, 3, 4, 5, 6].map((day) => ({
+    day,
+    count: 0,
+  }));
+
+  for (const lesson of lessons) {
+    const day = lesson.start.toDate().getDay();
+    lessonsByDayOfWeek[day].count += 1;
+  }
+
   return res.json({
     activeStudents,
     newStudents,
@@ -70,5 +77,6 @@ dashboardRouter.get('/stats', requireAuth, async (req, res) => {
     topGroupsByRevenue: groupTops.byRevenue,
     revenueMixCurrent: mixes.current,
     revenueMixExpected: mixes.expected,
+    lessonsByDayOfWeek,
   });
 });

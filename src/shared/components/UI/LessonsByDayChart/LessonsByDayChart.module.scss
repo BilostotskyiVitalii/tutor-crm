@@ -1,0 +1,6 @@
+@use '@/shared/styles/variables' as *;
+
+.chartWrapper {
+  min-width: 350px;
+  --chart-cols-color: #{$color-chart-cols};
+}

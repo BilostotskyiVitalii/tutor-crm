@@ -1,53 +1,33 @@
 import type { FC } from 'react';
 
-import { Card, Table, Typography } from 'antd';
+import { Table } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
 
-import type {
-  LessonWithStatus,
-  StudentStats,
-} from '@/features/students/types/studentTypes';
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
+import type { StudentStatsReq } from '@/features/students/types/studentTypes';
+import { LessonsByDayChart } from '@/shared/components/UI/LessonsByDayChart/LessonsByDayChart';
 import { formatHours } from '@/shared/utils/formatHours';
 
 import styles from './StudentLessonsTab.module.scss';
 
-const { Text } = Typography;
-const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 type Props = {
-  stats?: StudentStats;
+  stats?: StudentStatsReq;
 };
 
 export const StudentLessonsTab: FC<Props> = ({ stats }) => {
-  const lessonsByDayData =
-    stats?.lessonsByDayOfWeek?.map((i) => ({
-      day: daysOfWeek[i.day],
-      lessons: i.count,
-    })) ?? [];
-
   const lessonsColumns = [
     {
       title: 'Date',
       key: 'date',
-      render: (_: unknown, l: LessonWithStatus) =>
-        new Date(l.start).toLocaleDateString(),
-      sorter: (a: LessonWithStatus, b: LessonWithStatus) =>
+      render: (_: unknown, l: Lesson) => new Date(l.start).toLocaleDateString(),
+      sorter: (a: Lesson, b: Lesson) =>
         new Date(a.start).getTime() - new Date(b.start).getTime(),
       defaultSortOrder: 'ascend' as SortOrder,
     },
     {
       title: 'Time',
       key: 'time',
-      render: (_: unknown, l: LessonWithStatus) =>
+      render: (_: unknown, l: Lesson) =>
         new Date(l.start).toLocaleTimeString([], {
           hour: '2-digit',
           minute: '2-digit',
@@ -56,23 +36,26 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
     {
       title: 'Status',
       key: 'status',
-      render: (_: unknown, l: LessonWithStatus) => l.status,
+      render: (_: unknown, l: Lesson) =>
+        new Date(l.end).getTime() <= Date.now() ? 'Done' : 'Planned',
     },
     {
       title: 'Duration',
       key: 'duration',
-      render: (_: unknown, l: LessonWithStatus) =>
-        l.durationHours ? formatHours(l.durationHours) : '-',
-      sorter: (a: LessonWithStatus, b: LessonWithStatus) =>
-        (a.durationHours ?? 0) - (b.durationHours ?? 0),
+      render: (_: unknown, l: Lesson) =>
+        formatHours(
+          (new Date(l.end).getTime() - new Date(l.start).getTime()) / 3_600_000,
+        ),
+      sorter: (a: Lesson, b: Lesson) =>
+        new Date(a.end).getTime() -
+        new Date(a.start).getTime() -
+        (new Date(b.end).getTime() - new Date(b.start).getTime()),
     },
     {
       title: 'Price',
       key: 'price',
-      render: (_: unknown, l: LessonWithStatus) =>
-        l.price ? `₴ ${l.price}` : '-',
-      sorter: (a: LessonWithStatus, b: LessonWithStatus) =>
-        (a.price ?? 0) - (b.price ?? 0),
+      render: (_: unknown, l: Lesson) => (l.price ? `₴ ${l.price}` : '-'),
+      sorter: (a: Lesson, b: Lesson) => (a.price ?? 0) - (b.price ?? 0),
     },
   ];
 
@@ -86,25 +69,7 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
         size="small"
       />
 
-      <Card title="Lessons by Day of Week" className={styles.chartWrapper}>
-        {lessonsByDayData.length ? (
-          <ResponsiveContainer height={250}>
-            <BarChart data={lessonsByDayData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="day" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              <Bar
-                dataKey="lessons"
-                fill="var(--chart-cols-color)"
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        ) : (
-          <Text type="secondary">No lesson data available</Text>
-        )}
-      </Card>
+      <LessonsByDayChart data={stats?.lessonsByDayOfWeek} />
     </div>
   );
 };

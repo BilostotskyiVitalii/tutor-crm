@@ -1,5 +1,7 @@
 import type { Dayjs } from 'dayjs';
 
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
+
 export interface Student {
   id: string;
   name: string;
@@ -39,7 +41,7 @@ export type StudentStatsReq = {
   totalHours: number;
   totalRevenue: number;
   avgHourPrice: number;
-  lessons: LessonWithStatus[];
+  lessons: Lesson[];
   lessonsByDayOfWeek: { day: number; count: number }[];
 };
 
@@ -47,13 +49,4 @@ export type StudentStatsRes = {
   id: string;
   start?: string;
   end?: string;
-};
-
-export type LessonWithStatus = {
-  id: string;
-  start: string;
-  end: string;
-  price?: number;
-  status: 'Done' | 'Planned';
-  durationHours: number;
 };

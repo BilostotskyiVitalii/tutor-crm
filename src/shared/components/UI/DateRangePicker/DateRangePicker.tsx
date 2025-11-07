@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, Card, DatePicker, Space } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 
+import styles from './DateRangePicker.module.scss';
+
 const { RangePicker } = DatePicker;
 
 interface DateRangePickerProps {
-  range: {
+  range?: {
     start: string;
     end: string;
   };
@@ -16,13 +18,24 @@ interface DateRangePickerProps {
 }
 
 export const DateRangePicker = ({ range, onApply }: DateRangePickerProps) => {
+  const initialStart = range?.start
+    ? dayjs(range.start)
+    : dayjs().startOf('month');
+  const initialEnd = range?.end ? dayjs(range.end) : dayjs().endOf('month');
+
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([
-    dayjs(range.start),
-    dayjs(range.end),
+    initialStart,
+    initialEnd,
   ]);
 
+  useEffect(() => {
+    if (range?.start && range?.end) {
+      setDateRange([dayjs(range.start), dayjs(range.end)]);
+    }
+  }, [range]);
+
   const handleDateChange: RangePickerProps['onChange'] = (dates) => {
-    setDateRange(dates ?? [dayjs(range.start), dayjs(range.end)]);
+    setDateRange(dates ?? [initialStart, initialEnd]);
   };
 
   const applyDateFilter = () => {
@@ -35,7 +48,7 @@ export const DateRangePicker = ({ range, onApply }: DateRangePickerProps) => {
   };
 
   return (
-    <Card title="Select Period">
+    <Card title="Select Period" className={styles.card}>
       <Space>
         <RangePicker
           value={dateRange}

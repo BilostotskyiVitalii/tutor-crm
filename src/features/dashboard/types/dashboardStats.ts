@@ -37,6 +37,10 @@ export interface DashboardStats {
     individualPct: number;
     groupPct: number;
   };
+  lessonsByDayOfWeek: {
+    day: number;
+    count: number;
+  }[];
 }
 
 export type DashboardStatsRes = {

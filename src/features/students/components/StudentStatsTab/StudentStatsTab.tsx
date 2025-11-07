@@ -3,13 +3,13 @@ import type { FC } from 'react';
 import { CalendarOutlined, CheckOutlined } from '@ant-design/icons';
 import { Card, Divider, Space, Statistic } from 'antd';
 
-import type { StudentStats } from '@/features/students/types/studentTypes';
+import type { StudentStatsReq } from '@/features/students/types/studentTypes';
 import { formatHours } from '@/shared/utils/formatHours';
 
 import styles from './StudentStatsTab.module.scss';
 
 type Props = {
-  stats?: StudentStats;
+  stats?: StudentStatsReq;
 };
 
 export const StudentStatsTab: FC<Props> = ({ stats }) => (

@@ -1,13 +1,26 @@
 @use '@/shared/styles/variables' as *;
 
+.wrapper,
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: $padding-lg;
+}
+
+.cardContainer {
+  display: flex;
+  justify-content: space-evenly;
+  gap: $paddind-vertical;
+}
+
 .layoutGrid {
   display: grid;
-  gap: 12px;
+  gap: $paddind-vertical;
 }
 
 .leftGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: $paddind-vertical;
 }
 
@@ -17,18 +30,18 @@
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
+@media (max-width: $laptop-view) {
+  .leftGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: $mobile-view) {
   .leftGrid {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
   }
 
   .rightGrid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-}
-
-@media (max-width: $laptop-view) {
-  .leftGrid {
-    grid-template-columns: 1fr;
   }
 }

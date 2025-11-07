@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
+import { Timestamp } from 'firebase-admin/firestore';
 
-import { db } from '../../firebase';
+import { admin } from '../../firebase';
+import { fetchLessonsForRange } from '../../repos/lessonsRepo';
 import { AuthenticatedRequest } from '../../types/auth';
-import { Lesson } from '../../types/lessonTypes';
 
 export const getStudentStats = async (req: Request, res: Response) => {
   try {
@@ -10,44 +11,26 @@ export const getStudentStats = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { start, end } = req.query;
 
-    const startDate = start ? new Date(start as string) : new Date(0);
-    const endDate = end ? new Date(end as string) : new Date();
+    const startTs = Timestamp.fromDate(new Date(start as string));
+    const endExclusiveTs = Timestamp.fromDate(new Date(end as string));
+    const now = admin.firestore.Timestamp.now();
 
-    const userPath = `users/${uid}`;
-    const lessonsSnap = await db.collection(`${userPath}/lessons`).get();
-
-    const lessons = lessonsSnap.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    })) as Lesson[];
+    const lessons = await fetchLessonsForRange(uid, startTs, endExclusiveTs);
 
     const studentLessons = lessons
       .filter((l) => l.students.some((s) => s.id === id))
       .filter((l) => {
-        const lessonStart = l.start.toDate().getTime();
-        return lessonStart >= startDate.getTime() && lessonStart <= endDate.getTime();
+        return l.start >= startTs && l.start <= endExclusiveTs;
       });
 
-    const now = Date.now();
-    const doneLessons = studentLessons.filter((l) => l.end.toDate().getTime() <= now);
-    const plannedLessons = studentLessons.filter((l) => l.end.toDate().getTime() > now);
+    const doneLessons = studentLessons.filter((l) => l.end <= now);
+    const plannedLessons = studentLessons.filter((l) => l.end > now);
 
     const totalHours = doneLessons.reduce((sum, l) => {
-      const startTs = l.start.toDate().getTime();
-      const endTs = l.end.toDate().getTime();
-      return sum + (endTs - startTs) / 3_600_000;
+      return sum + (l.end.toMillis() - l.start.toMillis()) / 3_600_000;
     }, 0);
 
     const totalRevenue = doneLessons.reduce((sum, l) => sum + (l.price || 0), 0);
-
-    const lessonsWithStatus = studentLessons.map((l) => ({
-      id: l.id,
-      start: l.start.toDate().toISOString(),
-      end: l.end.toDate().toISOString(),
-      price: l.price,
-      durationHours: (l.end.toDate().getTime() - l.start.toDate().getTime()) / 3_600_000,
-      status: l.end.toDate().getTime() <= now ? 'Done' : 'Planned',
-    }));
 
     const lessonsByDayOfWeek = [0, 1, 2, 3, 4, 5, 6].map((day) => ({
       day,
@@ -64,7 +47,7 @@ export const getStudentStats = async (req: Request, res: Response) => {
       plannedLessons: plannedLessons.length,
       totalHours,
       totalRevenue,
-      lessons: lessonsWithStatus,
+      lessons: studentLessons,
       lessonsByDayOfWeek,
     });
   } catch {

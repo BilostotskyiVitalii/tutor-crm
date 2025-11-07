@@ -45,11 +45,7 @@ const StudentIdPage: FC = () => {
         {student && <StudentInfoCard student={student} />}
 
         <section className={styles.rightSection}>
-          <DateRangePicker
-            onApply={setQueryParams}
-            defaultStart={queryParams.start}
-            defaultEnd={queryParams.end}
-          />
+          <DateRangePicker onApply={setQueryParams} range={queryParams} />
 
           <Tabs
             defaultActiveKey="stats"
