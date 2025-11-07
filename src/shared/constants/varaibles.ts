@@ -1,6 +1,5 @@
 import {
   BarChartOutlined,
-  HomeOutlined,
   ScheduleOutlined,
   SettingFilled,
   TeamOutlined,
@@ -19,14 +18,13 @@ export const langLevels = [
 ];
 
 export const navItems = [
-  { title: 'Dashboard', icon: HomeOutlined, path: navigationUrls.dashboard },
+  {
+    title: 'Dashboard',
+    icon: BarChartOutlined,
+    path: navigationUrls.dashboard,
+  },
   { title: 'Schedule', icon: ScheduleOutlined, path: navigationUrls.schedule },
   { title: 'Students', icon: UserOutlined, path: navigationUrls.students },
   { title: 'Groups', icon: TeamOutlined, path: navigationUrls.groups },
-  {
-    title: 'Analytics',
-    icon: BarChartOutlined,
-    path: navigationUrls.analytics,
-  },
   { title: 'Settings', icon: SettingFilled, path: navigationUrls.settings },
 ];

@@ -10,7 +10,6 @@ const StudentsPage = lazy(() => import('@/pages/StudentsPage/StudentsPage'));
 const StudentIdPage = lazy(() => import('@/pages/StudentIdPage/StudentIdPage'));
 const SchedulePage = lazy(() => import('@/pages/SchedulePage/SchedulePage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage/SettingsPage'));
-const AnalyticsPage = lazy(() => import('@/pages/AnalyticsPage/AnalyticsPage'));
 const GroupsPage = lazy(() => import('@/pages/GroupsPage/GroupsPage'));
 
 export function AppRoutes() {
@@ -22,7 +21,6 @@ export function AppRoutes() {
         <Route path={navigationUrls.student} element={<StudentIdPage />} />
         <Route path={navigationUrls.schedule} element={<SchedulePage />} />
         <Route path={navigationUrls.settings} element={<SettingsPage />} />
-        <Route path={navigationUrls.analytics} element={<AnalyticsPage />} />
         <Route path={navigationUrls.groups} element={<GroupsPage />} />
 
         <Route

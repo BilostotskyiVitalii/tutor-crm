@@ -10,6 +10,5 @@ export const navigationUrls = {
   student: '/students/:id',
   schedule: '/schedule',
   settings: '/settings',
-  analytics: '/analytics',
   groups: '/groups',
 } as const;
