@@ -3,7 +3,8 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type {
   Student,
   StudentData,
-  StudentStats,
+  StudentStatsReq,
+  StudentStatsRes,
   UpdateUser,
 } from '@/features/students/types/studentTypes';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
@@ -55,10 +56,7 @@ export const studentsApi = createApi({
       invalidatesTags: (_result, _error, id) => [{ type: 'Students', id }],
     }),
 
-    getStudentStats: builder.query<
-      StudentStats,
-      { id: string; start?: string; end?: string }
-    >({
+    getStudentStats: builder.query<StudentStatsReq, StudentStatsRes>({
       query: ({ id, start, end }) => {
         const params = new URLSearchParams();
         if (start) {

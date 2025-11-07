@@ -1,8 +1,9 @@
 import { Router } from 'express';
+import { Timestamp } from 'firebase-admin/firestore';
 
 import { requireAuth } from '../middleware/requireAuth';
 import { fetchGroups } from '../repos/groupsRepo';
-import { fetchLessonsForMonth } from '../repos/lessonsRepo';
+import { fetchLessonsForRange } from '../repos/lessonsRepo';
 import { fetchStudents } from '../repos/studentsRepo';
 import {
   computeDonePlanned,
@@ -11,7 +12,7 @@ import {
   computeRevenueMix,
   computeStudentTops,
 } from '../services/stats.service';
-import { monthRange, nowTs } from '../utils/dates';
+import { nowTs } from '../utils/dates';
 
 export const dashboardRouter = Router();
 
@@ -19,13 +20,19 @@ dashboardRouter.get('/stats', requireAuth, async (req, res) => {
   const { uid } = (req as import('../types/auth').AuthenticatedRequest).user;
   const userPath = `users/${uid}`;
 
-  const { startTs, endExclusiveTs } = monthRange();
+  const { start, end } = req.query;
+
+  const startDate = start ? new Date(start as string) : new Date(0);
+  const endDate = end ? new Date(end as string) : new Date();
+
+  const startTs = Timestamp.fromDate(startDate);
+  const endExclusiveTs = Timestamp.fromDate(endDate);
   const now = nowTs();
 
   const [students, groups, lessons] = await Promise.all([
     fetchStudents(userPath),
     fetchGroups(userPath),
-    fetchLessonsForMonth(userPath, startTs, endExclusiveTs),
+    fetchLessonsForRange(userPath, startTs, endExclusiveTs),
   ]);
 
   const activeStudents = students.filter((s) => s.isActive).length;

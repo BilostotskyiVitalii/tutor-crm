@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TrophyOutlined } from '@ant-design/icons';
@@ -7,8 +7,15 @@ import Title from 'antd/es/typography/Title';
 
 import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
 
-export const TopGroupsCard = () => {
-  const { data } = useGetDashboardStatsQuery();
+interface TopGroupsCardProps {
+  range: {
+    start: string;
+    end: string;
+  };
+}
+
+export const TopGroupsCard: FC<TopGroupsCardProps> = ({ range }) => {
+  const { data } = useGetDashboardStatsQuery(range);
   const [topGroupMode, setTopGroupMode] = useState<'hours' | 'revenue'>(
     'hours',
   );

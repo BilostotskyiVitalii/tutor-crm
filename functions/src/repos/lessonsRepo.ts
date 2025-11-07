@@ -1,10 +1,10 @@
-import { admin, db } from '../firebase';
+import { db } from '../firebase';
 import { Lesson, LessonData } from '../types/lessonTypes';
 
-export const fetchLessonsForMonth = async (
+export const fetchLessonsForRange = async (
   userPath: string,
-  startTs: admin.firestore.Timestamp,
-  endExclusiveTs: admin.firestore.Timestamp,
+  startTs: FirebaseFirestore.Timestamp,
+  endExclusiveTs: FirebaseFirestore.Timestamp,
 ): Promise<Lesson[]> => {
   const snap = await db
     .collection(`${userPath}/lessons`)

@@ -1,30 +1,42 @@
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
-import { Button, Card, DatePicker, Space, Spin, Tabs } from 'antd';
-import type { RangePickerProps } from 'antd/es/date-picker';
+import { Empty, Spin, Tabs } from 'antd';
+import dayjs from 'dayjs';
 
+import {
+  useGetStudentByIdQuery,
+  useGetStudentStatsQuery,
+} from '@/features/students/api/studentsApi';
 import { StudentInfoCard } from '@/features/students/components/StudentInfoCard/StudentInfoCard';
 import { StudentLessonsTab } from '@/features/students/components/StudentLessonsTab/StudentLessonsTab';
 import { StudentStatsTab } from '@/features/students/components/StudentStatsTab/StudentStatsTab';
-import { useStudentIdPage } from '@/features/students/hooks/useStudentIdPage';
+import { DateRangePicker } from '@/shared/components/UI/DateRangePicker/DateRangePicker';
 
 import styles from './StudentIdPage.module.scss';
 
-const { RangePicker } = DatePicker;
-
 const StudentIdPage: FC = () => {
-  const {
-    student,
-    stats,
-    studentLoading,
-    statsLoading,
-    dateRange,
-    handleDateChange,
-    applyDateFilter,
-  } = useStudentIdPage();
+  const { id } = useParams<{ id: string }>();
+
+  const defaultStart = dayjs().startOf('month');
+  const defaultEnd = dayjs().endOf('month');
+
+  const [queryParams, setQueryParams] = useState({
+    start: defaultStart.toISOString(),
+    end: defaultEnd.toISOString(),
+  });
+
+  const { data: student, isLoading: studentLoading } = useGetStudentByIdQuery(
+    id || '',
+  );
+
+  const { data: stats, isLoading: statsLoading } = useGetStudentStatsQuery(
+    { id: id || '', ...queryParams },
+    { refetchOnMountOrArgChange: true },
+  );
 
   if (!student && !studentLoading) {
-    return <div>Student not found</div>;
+    return <Empty description={'Student not found'} />;
   }
 
   return (
@@ -33,19 +45,11 @@ const StudentIdPage: FC = () => {
         {student && <StudentInfoCard student={student} />}
 
         <section className={styles.rightSection}>
-          <Card title="Select Period">
-            <Space>
-              <RangePicker
-                value={dateRange}
-                onChange={handleDateChange as RangePickerProps['onChange']}
-                allowClear
-                format="DD.MM.YYYY"
-              />
-              <Button type="primary" onClick={applyDateFilter}>
-                Apply
-              </Button>
-            </Space>
-          </Card>
+          <DateRangePicker
+            onApply={setQueryParams}
+            defaultStart={queryParams.start}
+            defaultEnd={queryParams.end}
+          />
 
           <Tabs
             defaultActiveKey="stats"

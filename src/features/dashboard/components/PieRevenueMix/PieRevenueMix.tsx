@@ -11,9 +11,16 @@ import styles from './PieRevenueMix.module.scss';
 
 type ModeType = 'current' | 'expected';
 
-const PieRevenueMix: FC = () => {
+interface PieRevenueMixProps {
+  range: {
+    start: string;
+    end: string;
+  };
+}
+
+const PieRevenueMix: FC<PieRevenueMixProps> = ({ range }) => {
   const [mode, setMode] = useState<ModeType>('current');
-  const { data: dashData, isLoading } = useGetDashboardStatsQuery();
+  const { data: dashData, isLoading } = useGetDashboardStatsQuery(range);
 
   const modeOptions = [
     { label: 'Current', value: 'current' },

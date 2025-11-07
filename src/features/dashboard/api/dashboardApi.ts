@@ -1,6 +1,9 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import type { DashboardStats } from '@/features/dashboard/types/dashboardStats';
+import type {
+  DashboardStats,
+  DashboardStatsRes,
+} from '@/features/dashboard/types/dashboardStats';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
 
 export const dashboardApi = createApi({
@@ -8,8 +11,17 @@ export const dashboardApi = createApi({
   baseQuery: baseQueryWithAuth,
   tagTypes: ['DashboardStats'],
   endpoints: (builder) => ({
-    getDashboardStats: builder.query<DashboardStats, void>({
-      query: () => ({ url: 'dashboard/stats', method: 'GET' }),
+    getDashboardStats: builder.query<DashboardStats, DashboardStatsRes>({
+      query: ({ start, end }) => {
+        const params = new URLSearchParams();
+        if (start) {
+          params.append('start', start);
+        }
+        if (end) {
+          params.append('end', end);
+        }
+        return `dashboard/stats?${params.toString()}`;
+      },
       providesTags: ['DashboardStats'],
     }),
   }),

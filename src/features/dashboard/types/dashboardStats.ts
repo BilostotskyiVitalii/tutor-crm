@@ -38,3 +38,8 @@ export interface DashboardStats {
     groupPct: number;
   };
 }
+
+export type DashboardStatsRes = {
+  start?: string;
+  end?: string;
+};

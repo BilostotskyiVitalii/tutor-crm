@@ -33,7 +33,7 @@ export interface StudentFormValues
   birthdate: Dayjs | null;
 }
 
-export type StudentStats = {
+export type StudentStatsReq = {
   doneLessons: number;
   plannedLessons: number;
   totalHours: number;
@@ -41,6 +41,12 @@ export type StudentStats = {
   avgHourPrice: number;
   lessons: LessonWithStatus[];
   lessonsByDayOfWeek: { day: number; count: number }[];
+};
+
+export type StudentStatsRes = {
+  id: string;
+  start?: string;
+  end?: string;
 };
 
 export type LessonWithStatus = {

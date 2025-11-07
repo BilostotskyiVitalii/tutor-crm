@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useState } from 'react';
 
 import {
   CalendarOutlined,
@@ -9,18 +9,26 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Alert, Card, Divider, Flex, Spin, Statistic } from 'antd';
+import dayjs from 'dayjs';
 
 import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
 import PieRevenueMix from '@/features/dashboard/components/PieRevenueMix/PieRevenueMix';
 import { TopGroupsCard } from '@/features/dashboard/components/TopGroupsCard/TopGroupsCard';
 import { TopStudentsCard } from '@/features/dashboard/components/TopStudentsCard/TopStudentsCard';
+import { DateRangePicker } from '@/shared/components/UI/DateRangePicker/DateRangePicker';
 
 import styles from './Dashboard.module.scss';
 
 export const Dashboard: FC = () => {
-  const { data, isLoading, isError } = useGetDashboardStatsQuery(undefined, {
-    refetchOnMountOrArgChange: true,
+  const [queryParams, setQueryParams] = useState({
+    start: dayjs().startOf('month').toISOString(),
+    end: dayjs().endOf('month').toISOString(),
   });
+
+  const { data, isLoading, isError } = useGetDashboardStatsQuery(
+    { ...queryParams },
+    { refetchOnMountOrArgChange: true },
+  );
 
   if (isError) {
     return <Alert message="Failed to load dashboard data" type="error" />;
@@ -28,11 +36,12 @@ export const Dashboard: FC = () => {
 
   return (
     <Spin spinning={isLoading}>
+      <DateRangePicker onApply={setQueryParams} range={queryParams} />
       <div className={styles.layoutGrid}>
         <div className={styles.leftGrid}>
-          <TopStudentsCard />
-          <TopGroupsCard />
-          <PieRevenueMix />
+          <TopStudentsCard range={queryParams} />
+          <TopGroupsCard range={queryParams} />
+          <PieRevenueMix range={queryParams} />
         </div>
         <div className={styles.rightGrid}>
           <Card title="💰 Month revenue">
