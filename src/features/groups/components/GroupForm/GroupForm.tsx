@@ -5,7 +5,6 @@ import { Button, Flex, Form, Input, InputNumber, Select } from 'antd';
 import { useGroupForm } from '@/features/groups/hooks/useGroupForm';
 import type { Group } from '@/features/groups/types/groupTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
-import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 
 const { TextArea } = Input;
 
@@ -49,11 +48,7 @@ const GroupForm: FC<GroupFormProps> = ({ onClose, mode, group }) => {
       </Form.Item>
 
       <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-        <InputNumber
-          min={0}
-          placeholder="500"
-          addonAfter={<CurrencySelect />}
-        />
+        <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
       </Form.Item>
 
       <Form.Item label="Notes:" name="notes">

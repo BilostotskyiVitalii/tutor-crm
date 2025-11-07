@@ -16,7 +16,6 @@ import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import type { Student } from '@/features/students/types/studentTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
-import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 import { langLevels } from '@/shared/constants/varaibles';
 
 const DATE_FORMAT = 'DD.MM.YYYY';
@@ -68,11 +67,7 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
         </Form.Item>
 
         <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-          <InputNumber
-            min={0}
-            placeholder="500"
-            addonAfter={<CurrencySelect />}
-          />
+          <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
         </Form.Item>
       </Flex>
 

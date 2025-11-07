@@ -53,14 +53,14 @@ export const Dashboard: FC = () => {
                   <Statistic
                     title="Current"
                     value={data?.currentMonthRevenue}
-                    prefix="$"
+                    prefix="₴"
                     precision={0}
                   />
                   <Divider type="vertical" />
                   <Statistic
                     title="Expected"
                     value={data?.expectedMonthRevenue}
-                    prefix="$"
+                    prefix="₴"
                     precision={0}
                   />
                 </div>
@@ -69,14 +69,14 @@ export const Dashboard: FC = () => {
                 <div className={styles.cardContainer}>
                   <Statistic
                     title="Per/hour"
-                    prefix="$"
+                    prefix="₴"
                     precision={0}
                     value={data?.averageHourPrice}
                   />
                   <Divider type="vertical" />
                   <Statistic
                     title="Student per/hour"
-                    prefix="$"
+                    prefix="₴"
                     precision={0}
                     value={data?.averagePerHourStudentPrice}
                   />

@@ -39,6 +39,7 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
       render: (_: unknown, l: Lesson) =>
         new Date(l.end).getTime() <= Date.now() ? 'Done' : 'Planned',
     },
+    // TODO add group or indiv lesson
     {
       title: 'Duration',
       key: 'duration',

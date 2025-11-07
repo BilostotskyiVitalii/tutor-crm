@@ -15,7 +15,6 @@ import { LessonFormUsersSelect } from '@/features/lessons/components/LessonFormU
 import { useLessonForm } from '@/features/lessons/hooks/useLessonForm';
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
-import CurrencySelect from '@/shared/components/UI/CurrencySelect/CurrencySelect';
 import type { initDataType, ModeType } from '@/shared/types/modalTypes';
 
 const { RangePicker } = DatePicker;
@@ -59,11 +58,7 @@ const LessonForm: FC<LessonFormProps> = ({
       </Form.Item>
 
       <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-        <InputNumber
-          min={0}
-          placeholder="500"
-          addonAfter={<CurrencySelect />}
-        />
+        <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
       </Form.Item>
 
       <Form.Item name="notes" label="Notes:">
