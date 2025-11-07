@@ -45,3 +45,11 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
+
+.success :global(.ant-statistic-content) {
+  color: $color-success;
+}
+
+.planed :global(.ant-statistic-content) {
+  color: $color-planed;
+}

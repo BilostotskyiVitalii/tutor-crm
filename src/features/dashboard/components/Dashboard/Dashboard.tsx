@@ -94,7 +94,7 @@ export const Dashboard: FC = () => {
                     title="New"
                     value={data?.newStudents}
                     prefix={<UserAddOutlined />}
-                    valueStyle={{ color: '#52c41a' }}
+                    className={styles.success}
                   />
                 </div>
               </Card>
@@ -110,7 +110,7 @@ export const Dashboard: FC = () => {
                     title="New"
                     value={data?.newGroups}
                     prefix={<UsergroupAddOutlined />}
-                    valueStyle={{ color: '#3f8600' }}
+                    className={styles.success}
                   />
                 </div>
               </Card>
@@ -120,12 +120,14 @@ export const Dashboard: FC = () => {
                     title="Done"
                     value={data?.doneLessons}
                     prefix={<CheckOutlined />}
+                    className={styles.success}
                   />
                   <Divider type="vertical" />
                   <Statistic
                     title="Planned"
                     value={data?.plannedLessons}
                     prefix={<CalendarOutlined />}
+                    className={styles.planed}
                   />
                 </div>
               </Card>

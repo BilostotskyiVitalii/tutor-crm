@@ -20,12 +20,14 @@ export const StudentStatsTab: FC<Props> = ({ stats }) => (
           title="Done"
           value={stats?.doneLessons ?? 0}
           prefix={<CheckOutlined />}
+          className={styles.success}
         />
         <Divider type="vertical" />
         <Statistic
           title="Planned"
           value={stats?.plannedLessons ?? 0}
           prefix={<CalendarOutlined />}
+          className={styles.planed}
         />
       </Space>
     </Card>

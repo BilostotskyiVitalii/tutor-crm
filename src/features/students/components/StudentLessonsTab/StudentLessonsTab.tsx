@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import { Table } from 'antd';
+import { Typography } from 'antd';
 import type { SortOrder } from 'antd/es/table/interface';
 
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
@@ -9,6 +10,8 @@ import { LessonsByDayChart } from '@/shared/components/UI/LessonsByDayChart/Less
 import { formatHours } from '@/shared/utils/formatHours';
 
 import styles from './StudentLessonsTab.module.scss';
+
+const { Text } = Typography;
 
 type Props = {
   stats?: StudentStatsReq;
@@ -37,9 +40,22 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
       title: 'Status',
       key: 'status',
       render: (_: unknown, l: Lesson) =>
-        new Date(l.end).getTime() <= Date.now() ? 'Done' : 'Planned',
+        new Date(l.end).getTime() <= Date.now() ? (
+          <Text type="success">Done</Text>
+        ) : (
+          <Text type="warning">Planned</Text>
+        ),
     },
-    // TODO add group or indiv lesson
+    {
+      title: 'Type',
+      key: 'type',
+      render: (_: unknown, l: Lesson) =>
+        l.groupId ? (
+          <span className={styles.group}>Group</span>
+        ) : (
+          <span className={styles.indiv}>Indiv</span>
+        ),
+    },
     {
       title: 'Duration',
       key: 'duration',

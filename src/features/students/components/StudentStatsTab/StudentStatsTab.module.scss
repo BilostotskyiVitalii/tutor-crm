@@ -5,3 +5,11 @@
   flex-wrap: wrap;
   gap: $paddind-horizontal;
 }
+
+.success :global(.ant-statistic-content) {
+  color: $color-success;
+}
+
+.planed :global(.ant-statistic-content) {
+  color: $color-planed;
+}
