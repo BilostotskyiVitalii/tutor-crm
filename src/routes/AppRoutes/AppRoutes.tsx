@@ -11,6 +11,7 @@ const StudentIdPage = lazy(() => import('@/pages/StudentIdPage/StudentIdPage'));
 const SchedulePage = lazy(() => import('@/pages/SchedulePage/SchedulePage'));
 const SettingsPage = lazy(() => import('@/pages/SettingsPage/SettingsPage'));
 const GroupsPage = lazy(() => import('@/pages/GroupsPage/GroupsPage'));
+const GroupIdPage = lazy(() => import('@/pages/GroupIdPage/GroupIdPage'));
 
 export function AppRoutes() {
   return (
@@ -22,6 +23,7 @@ export function AppRoutes() {
         <Route path={navigationUrls.schedule} element={<SchedulePage />} />
         <Route path={navigationUrls.settings} element={<SettingsPage />} />
         <Route path={navigationUrls.groups} element={<GroupsPage />} />
+        <Route path={navigationUrls.group} element={<GroupIdPage />} />
 
         <Route
           path=""

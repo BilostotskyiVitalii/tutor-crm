@@ -3,6 +3,8 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import type {
   Group,
   GroupData,
+  GroupStatsReq,
+  GroupStatsRes,
   UpdateGroup,
 } from '@/features/groups/types/groupTypes';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
@@ -13,7 +15,7 @@ const { groups } = endpointsURL;
 export const groupsApi = createApi({
   reducerPath: 'groupsApi',
   baseQuery: baseQueryWithAuth,
-  tagTypes: ['Groups'],
+  tagTypes: ['Groups', 'GroupStats'],
   endpoints: (builder) => ({
     getGroups: builder.query<Group[], void>({
       query: () => ({ url: groups, method: 'GET' }),
@@ -49,6 +51,20 @@ export const groupsApi = createApi({
       query: (id) => ({ url: `${groups}/${id}`, method: 'DELETE' }),
       invalidatesTags: (_res, _err, id) => [{ type: 'Groups', id }],
     }),
+
+    getGroupStats: builder.query<GroupStatsReq, GroupStatsRes>({
+      query: ({ id, start, end }) => {
+        const params = new URLSearchParams();
+        if (start) {
+          params.append('start', start);
+        }
+        if (end) {
+          params.append('end', end);
+        }
+        return `groups/${id}/stats?${params.toString()}`;
+      },
+      providesTags: ['GroupStats'],
+    }),
   }),
 });
 
@@ -58,4 +74,5 @@ export const {
   useAddGroupMutation,
   useUpdateGroupMutation,
   useDeleteGroupMutation,
+  useGetGroupStatsQuery,
 } = groupsApi;

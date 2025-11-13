@@ -11,4 +11,5 @@ export const navigationUrls = {
   schedule: '/schedule',
   settings: '/settings',
   groups: '/groups',
+  group: '/groups/:id',
 } as const;
