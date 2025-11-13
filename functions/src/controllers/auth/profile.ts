@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import { db } from '../../firebase';
-import { AuthenticatedRequest } from '../../types/auth';
+import { AuthenticatedRequest } from '../../types/authTypes';
 
 export const profile = async (req: Request, res: Response) => {
   const { uid } = (req as AuthenticatedRequest).user;

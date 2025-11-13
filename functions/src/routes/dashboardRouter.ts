@@ -13,7 +13,7 @@ import {
   computeRevenueMix,
   computeStudentTops,
 } from '../services/stats.service';
-import { AuthenticatedRequest } from '../types/auth';
+import { AuthenticatedRequest } from '../types/authTypes';
 
 export const dashboardRouter = Router();
 

@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 
-import { db } from '../../firebase';
-import { AuthenticatedRequest } from '../../types/auth';
+import { db } from '../firebase';
+import { AuthenticatedRequest } from '../types/authTypes';
+import { EntitiesType } from '../types/entitiesType';
 
-export const getStudents = async (req: Request, res: Response) => {
+export const getEntities = (type: EntitiesType) => async (req: Request, res: Response) => {
   try {
     const { uid } = (req as AuthenticatedRequest).user;
-    const snap = await db.collection(`users/${uid}/students`).get();
+    const snap = await db.collection(`users/${uid}/${type}`).get();
     const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     return res.json(items);
   } catch (err: unknown) {

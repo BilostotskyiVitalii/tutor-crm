@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { z, ZodError } from 'zod';
 
 import { admin, db } from '../../firebase';
-import { AuthenticatedRequest } from '../../types/auth';
+import { AuthenticatedRequest } from '../../types/authTypes';
 import { toTimestamp } from '../../utils/toTimestamp';
 
 const studentShape = z.object({

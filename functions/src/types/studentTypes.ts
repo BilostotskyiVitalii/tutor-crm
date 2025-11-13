@@ -18,18 +18,3 @@ export interface StudentData {
 export interface Student extends StudentData {
   id: string;
 }
-
-// export type UpdateUser = {
-//   id: string;
-//   data: Partial<StudentData>;
-// };
-
-// export const studentStatus = {
-//   active: 'active',
-//   inactive: 'inactive',
-// } as const;
-
-// export interface StudentFormValues
-//   extends Omit<Student, 'id' | 'birthdate' | 'createdAt' | 'updatedAt'> {
-//   birthdate: Dayjs | null;
-// }

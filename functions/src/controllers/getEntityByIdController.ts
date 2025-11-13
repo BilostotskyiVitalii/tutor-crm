@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 
-import { db } from '../../firebase';
-import { AuthenticatedRequest } from '../../types/auth';
+import { db } from '../firebase';
+import { AuthenticatedRequest } from '../types/authTypes';
+import { EntitiesType } from '../types/entitiesType';
 
-export const getGroupById = async (req: Request, res: Response) => {
+export const getEntityById = (type: EntitiesType) => async (req: Request, res: Response) => {
   try {
     const { uid } = (req as AuthenticatedRequest).user;
-    const ref = db.doc(`users/${uid}/groups/${req.params.id}`);
+    const ref = db.doc(`users/${uid}/${type}/${req.params.id}`);
     const snap = await ref.get();
 
     if (!snap.exists) {

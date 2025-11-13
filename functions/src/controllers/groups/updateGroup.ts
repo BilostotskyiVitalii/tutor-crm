@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { z, ZodError } from 'zod';
 
 import { admin, db } from '../../firebase';
-import { AuthenticatedRequest } from '../../types/auth';
+import { AuthenticatedRequest } from '../../types/authTypes';
 
 const FieldValue = admin.firestore.FieldValue;
 

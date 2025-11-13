@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { AuthenticatedRequest, AuthUser } from '../types/auth';
+import { AuthenticatedRequest, AuthUser } from '../types/authTypes';
 
 export function requireAuth(
   req: Request,
