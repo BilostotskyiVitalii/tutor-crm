@@ -1,17 +1,14 @@
-import { admin } from '../firebase';
+import { Timestamp } from 'firebase-admin/firestore';
 
-export const toTimestamp = (v: unknown) => {
-  if (v === null) {
-    return null;
+export const toTimestamp = (value: number | string | Date): Timestamp => {
+  if (value instanceof Date) {
+    return Timestamp.fromDate(value);
   }
-  if (typeof v === 'number') {
-    return admin.firestore.Timestamp.fromMillis(v);
+
+  if (typeof value === 'number') {
+    return Timestamp.fromMillis(value);
   }
-  if (v instanceof Date) {
-    return admin.firestore.Timestamp.fromDate(v);
-  }
-  if (typeof v === 'string' && /^\d+$/.test(v)) {
-    return admin.firestore.Timestamp.fromMillis(Number(v));
-  }
-  return v;
+
+  const d = new Date(value);
+  return Timestamp.fromDate(d);
 };

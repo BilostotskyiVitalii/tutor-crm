@@ -7,6 +7,7 @@ export const useLessonEvents = () => {
   const { data: lessons = [], isLoading: isLessonsLoading } =
     useGetLessonsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
+  console.log(lessons);
 
   const calendarEvents = useMemo(() => {
     if (lessons.length === 0) {

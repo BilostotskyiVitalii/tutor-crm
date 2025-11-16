@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Timestamp } from 'firebase-admin/firestore';
 
 import { admin } from '../firebase';
-import { fetchLessonsForRange } from '../repos/lessonsRepo';
+import { LessonRepo } from '../repos/lesson.repo';
 import { AuthenticatedRequest } from '../types/authTypes';
 
 type EntityType = 'group' | 'student';
@@ -17,7 +17,7 @@ export const getStats = (type: EntityType) => async (req: Request, res: Response
     const endExclusiveTs = Timestamp.fromDate(new Date(end as string));
     const now = admin.firestore.Timestamp.now();
 
-    const lessons = await fetchLessonsForRange(uid, startTs, endExclusiveTs);
+    const lessons = await LessonRepo.getByRange(uid, startTs, endExclusiveTs);
 
     const filteredLessons = lessons.filter((l) => {
       if (type === 'group') {

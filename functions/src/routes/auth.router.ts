@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
-import { googleAuth, googleCallback } from '../controllers/auth/googleAuth';
-import { login } from '../controllers/auth/login';
-import { logout } from '../controllers/auth/logout';
-import { profile } from '../controllers/auth/profile';
-import { register } from '../controllers/auth/register';
-import { reset, resetConfirm } from '../controllers/auth/resetPassword';
+import { googleAuth, googleCallback } from '../controllers/auth/googleAuth.controller';
+import { login } from '../controllers/auth/login.controller';
+import { logout } from '../controllers/auth/logout.controller';
+import { profile } from '../controllers/auth/profile.controller';
+import { register } from '../controllers/auth/register.controller';
+import { reset, resetConfirm } from '../controllers/auth/resetPassword.controller';
 import { requireAuth } from '../middleware/requireAuth';
 
 export const authRouter = Router();

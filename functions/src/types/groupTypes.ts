@@ -1,12 +1,12 @@
-import type { Timestamp } from 'firebase/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 export interface GroupData {
   title: string;
   studentIds: string[];
   notes?: string | null;
   price: number;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
+  updatedAt: Timestamp | FieldValue;
 }
 
 export interface Group extends GroupData {

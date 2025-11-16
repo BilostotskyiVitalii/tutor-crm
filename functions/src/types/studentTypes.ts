@@ -1,18 +1,18 @@
-import type { Timestamp } from 'firebase/firestore';
+import { FieldValue, Timestamp } from 'firebase-admin/firestore';
 
 export interface StudentData {
   name: string;
-  email: string;
+  email: string | null;
   phone: string | null;
   contact: string | null;
   birthdate: Timestamp | null;
-  currentLevel: string;
+  currentLevel: string | null;
   price: number;
   notes: string | null;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   isActive: boolean;
-  createdAt: Timestamp;
-  updatedAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
+  updatedAt: Timestamp | FieldValue;
 }
 
 export interface Student extends StudentData {
