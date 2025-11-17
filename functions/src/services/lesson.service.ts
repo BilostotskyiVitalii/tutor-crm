@@ -2,13 +2,11 @@ import { z } from 'zod';
 
 import { admin } from '../firebase';
 import { LessonRepo } from '../repos/lesson.repo';
-import { lessonCreateSchema } from '../schemas/lessons.schema';
+import { lessonCreateSchema, lessonUpdateSchema } from '../schemas/lessons.schema';
 import { AuthenticatedRequest } from '../types/authTypes';
 import { Lesson, LessonData } from '../types/lessonTypes';
 import { toISOString } from '../utils/toIsoString';
 import { toTimestamp } from '../utils/toTimestamp';
-
-export const lessonUpdateSchema = lessonCreateSchema.partial();
 
 export const LessonService = {
   create: async (

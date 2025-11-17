@@ -46,6 +46,7 @@ export const GroupService = {
     await GroupRepo.update(req.user.uid, id, toUpdate);
 
     const fresh = await GroupRepo.getById(req.user.uid, id);
+
     if (!fresh) {
       throw new Error('Not found');
     }
