@@ -125,7 +125,6 @@ export const DashboardService = {
   ) {
     const now = admin.firestore.Timestamp.now();
 
-    // Завантажуємо всі сутності через репозиторії
     const [students, groups, lessons] = await Promise.all([
       StudentRepo.getAll(uid),
       GroupRepo.getAll(uid),

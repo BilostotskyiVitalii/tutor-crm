@@ -19,6 +19,8 @@ interface FinalizeUploadBody {
   deleteOldObjectPath?: string;
 }
 
+// TODO split to constroller and service
+
 // --- INITIATE ---
 uploadsRouter.post(
   '/avatars/initiate',

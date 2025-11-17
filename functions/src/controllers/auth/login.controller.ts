@@ -1,40 +1,17 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 
-import { db } from '../../firebase';
-import { axsAuth } from '../../utils/axsAuth';
-
-const { JWT_SECRET } = process.env;
+import { AuthService } from '../../services/auth/auth.service';
+import { EmailAuthService } from '../../services/auth/emailAuth.service';
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-
   try {
-    const { data } = await axsAuth.post('accounts:signInWithPassword', {
-      email,
-      password,
-      returnSecureToken: true,
-    });
+    const { email, password } = req.body;
 
-    const uid = data.localId;
-    const userDoc = await db.collection('users').doc(uid).get();
-    const userData = userDoc.data();
+    const { jwt, uid } = await EmailAuthService.login(email, password);
 
-    const ourJwt = jwt.sign({ uid, email }, JWT_SECRET!, { expiresIn: '7d' });
+    AuthService.setAuthCookie(res, jwt);
 
-    res.cookie('auth', ourJwt, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-      maxAge: 7 * 24 * 3600 * 1000,
-    });
-
-    res.status(200).json({
-      id: uid,
-      email,
-      nickName: userData?.nickName || 'UserName',
-      avatar: userData?.avatar || null,
-    });
+    res.json({ id: uid, email });
   } catch (err) {
     res.status(400).json({ message: (err as Error).message });
   }

@@ -4,6 +4,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { admin } from '../firebase';
 import { LessonRepo } from '../repos/lesson.repo';
 import { AuthenticatedRequest } from '../types/authTypes';
+import { toISOString } from '../utils/toIsoString';
 
 type EntityType = 'group' | 'student';
 
@@ -58,7 +59,7 @@ export const getStats = (type: EntityType) => async (req: Request, res: Response
       plannedLessons: plannedLessons.length,
       totalHours,
       totalRevenue,
-      lessons: lessonsInRange,
+      lessons: toISOString(lessonsInRange),
       lessonsByDayOfWeek,
     });
   } catch {
