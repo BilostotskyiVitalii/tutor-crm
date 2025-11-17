@@ -2,6 +2,7 @@ import type { FC } from 'react';
 
 import { Avatar, Card, Divider, Typography } from 'antd';
 
+import { GroupActionsButtons } from '@/features/groups/components/GroupActionsButtons/GroupActionsButtons';
 import type { Group } from '@/features/groups/types/groupTypes';
 import { useGetStudentsQuery } from '@/features/students/api/studentsApi';
 import AvatarCustom from '@/shared/components/UI/AvatarCustom/AvatarCustom';
@@ -44,8 +45,7 @@ export const GroupInfoCard: FC<Props> = ({ group }) => {
         <Text strong>📋 Notes: </Text> {group.notes ?? '-'}
       </p>
       <Divider />
-      {/* TODO student? */}
-      {/* <StudentActionsButtons student={group} /> */}
+      <GroupActionsButtons group={group} />
     </Card>
   );
 };

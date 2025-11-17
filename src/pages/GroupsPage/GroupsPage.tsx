@@ -9,7 +9,6 @@ import styles from './GroupsPage.module.scss';
 
 const GroupsPage = () => {
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
-  console.log(groups);
   const { openModal } = useModal();
 
   function onAddGroup() {
