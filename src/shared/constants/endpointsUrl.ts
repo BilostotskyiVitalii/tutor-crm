@@ -9,6 +9,8 @@ export const endpointsURL = {
   apiConfirmPassword: `/auth/reset/confirm`,
   apiProfile: `/auth/profile`,
   apiLogout: `/auth/logout`,
+  apiUploadInit: '/uploads/avatars/initiate',
+  apiUploadfinal: '/uploads/avatars/finalize',
   students: '/students',
   lessons: '/lessons',
   groups: '/groups',

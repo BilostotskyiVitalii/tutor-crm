@@ -1,3 +1,7 @@
+import type { Group } from '@/features/groups/types/groupTypes';
+import type { Lesson } from '@/features/lessons/types/lessonTypes';
+import type { Student } from '@/features/students/types/studentTypes';
+
 export type ModalType = 'lesson' | 'group' | 'student' | null;
 export type ModeType = 'create' | 'edit';
 
@@ -13,10 +17,6 @@ type BaseState = {
   mode?: ModeType;
   initData?: initDataType;
 };
-
-import type { Group } from '@/features/groups/types/groupTypes';
-import type { Lesson } from '@/features/lessons/types/lessonTypes';
-import type { Student } from '@/features/students/types/studentTypes';
 
 type GroupModal = BaseState & { type: 'group'; entity: Group | null };
 type LessonModal = BaseState & { type: 'lesson'; entity: Lesson | null };

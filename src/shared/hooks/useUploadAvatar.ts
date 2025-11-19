@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { axs } from '@/shared/api/axiosInstance';
+import { UploadsAPI } from '@/shared/api/uploads.api';
 
 export const useUploadAvatar = () => {
   const uploadAvatar = useCallback(
@@ -11,31 +11,25 @@ export const useUploadAvatar = () => {
     ) => {
       const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
       const contentType = file.type || 'image/jpeg';
-
       const token = localStorage.getItem('token');
-      const headers = { Authorization: `Bearer ${token}` };
 
-      const { data: initData } = await axs.post(
-        '/uploads/avatars/initiate',
+      const { data: initData } = await UploadsAPI.initiateAvatar(
         { entityId, contentType, ext },
-        { headers },
+        token || undefined,
       );
+
       const { uploadUrl, objectPath } = initData;
 
-      await axs.put(uploadUrl, file, {
-        headers: { 'Content-Type': contentType },
-        transformRequest: [(data) => data],
-      });
+      await UploadsAPI.uploadToPresignedUrl(uploadUrl, file);
 
       const deleteOldObjectPath =
         oldAvatarUrlOrNull && oldAvatarUrlOrNull.includes('/o/')
           ? decodeURIComponent(oldAvatarUrlOrNull.split('/o/')[1].split('?')[0])
           : undefined;
 
-      const { data: finalizeData } = await axs.post(
-        '/uploads/avatars/finalize',
+      const { data: finalizeData } = await UploadsAPI.finalizeAvatar(
         { objectPath, deleteOldObjectPath },
-        { headers },
+        token || undefined,
       );
 
       return finalizeData.downloadUrl as string;
