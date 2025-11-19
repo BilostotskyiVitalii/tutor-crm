@@ -16,9 +16,17 @@ import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import type { Student } from '@/features/students/types/studentTypes';
 import { studentFormRules } from '@/features/students/utils/validationFormFields';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
-import { langLevels } from '@/shared/constants/varaibles';
 
 const DATE_FORMAT = 'DD.MM.YYYY';
+
+const langLevels = [
+  { value: 'A1', label: 'A1' },
+  { value: 'A2', label: 'A2' },
+  { value: 'B1', label: 'B1' },
+  { value: 'B2', label: 'B2' },
+  { value: 'C1', label: 'C1' },
+  { value: 'C2', label: 'C2' },
+];
 
 interface StudentFormProps {
   mode?: string;

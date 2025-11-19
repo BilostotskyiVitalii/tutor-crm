@@ -1,4 +1,4 @@
-interface StudentStat {
+export interface StudentStat {
   id: string;
   name: string;
   totalHours: number;
@@ -6,11 +6,16 @@ interface StudentStat {
   avatar: string;
 }
 
-interface GroupStat {
+export interface GroupStat {
   id: string;
   title: string;
   totalHours: number;
   totalRevenue: number;
+}
+
+export interface RevenueMix {
+  individualPct: number;
+  groupPct: number;
 }
 
 export interface DashboardStats {
@@ -29,14 +34,8 @@ export interface DashboardStats {
   averagePerHourStudentPrice: number;
   topStudentsByRevenue: StudentStat[];
   topStudentsByHours: StudentStat[];
-  revenueMixExpected: {
-    individualPct: number;
-    groupPct: number;
-  };
-  revenueMixCurrent: {
-    individualPct: number;
-    groupPct: number;
-  };
+  revenueMixExpected: RevenueMix;
+  revenueMixCurrent: RevenueMix;
   lessonsByDayOfWeek: {
     day: number;
     count: number;

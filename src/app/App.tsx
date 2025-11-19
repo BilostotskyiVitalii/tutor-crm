@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
-import { AuthRoutes } from '@/routes/AuthRoutes/AuthRoutes';
+import { AuthRoute } from '@/routes/AuthRoute';
+import { AuthRoutes } from '@/routes/AuthRoutes';
 import { MainLayout } from '@/shared/components/Layout/MainLayout/MainLayout';
 import { AppModal } from '@/shared/components/UI/AppModal/AppModal';
 import { ModalProvider } from '@/shared/providers/ModalProvider';

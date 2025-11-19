@@ -1,10 +1,10 @@
-// src/features/auth/hooks/useResetPassword.ts
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { message } from 'antd';
 
 import { useConfirmResetPasswordMutation } from '@/features/auth/api/authApi';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 interface ResetPasswordValues {
   newPassword: string;
@@ -38,7 +38,7 @@ export const useResetPassword = () => {
       }).unwrap();
 
       message.success('Password successfully reset!');
-      navigate('/login');
+      navigate(navigationUrls.login);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

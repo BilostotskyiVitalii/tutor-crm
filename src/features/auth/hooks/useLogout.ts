@@ -5,6 +5,7 @@ import { dashboardApi } from '@/features/dashboard/api/dashboardApi';
 import { groupsApi } from '@/features/groups/api/groupsApi';
 import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
+import { navigationUrls } from '@/shared/constants/navigationUrls';
 import { useAppDispatch } from '@/store/reduxHooks';
 
 export const useLogout = () => {
@@ -19,7 +20,7 @@ export const useLogout = () => {
     dispatch(lessonsApi.util.resetApiState());
     dispatch(groupsApi.util.resetApiState());
     dispatch(dashboardApi.util.resetApiState());
-    navigate('/login', { replace: true });
+    navigate(navigationUrls.login, { replace: true });
   };
 
   return { onLogout };

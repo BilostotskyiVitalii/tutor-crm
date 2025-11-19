@@ -5,6 +5,7 @@ import type {
   DashboardStatsRes,
 } from '@/features/dashboard/types/dashboardStats';
 import { baseQueryWithAuth } from '@/shared/api/baseQueryWithAuth';
+import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
 export const dashboardApi = createApi({
   reducerPath: 'dashboardApi',
@@ -20,7 +21,7 @@ export const dashboardApi = createApi({
         if (end) {
           params.append('end', end);
         }
-        return `dashboard/stats?${params.toString()}`;
+        return `${endpointsURL.dashboardStats}?${params.toString()}`;
       },
       providesTags: ['DashboardStats'],
     }),

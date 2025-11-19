@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Spin } from 'antd';
 
 import ResetPasswordPage from '@/pages/ResetPasswordPage/ResetPasswordPage';
-import { AuthRoute } from '@/routes/AuthRoute/AuthRoute';
+import { AuthRoute } from '@/routes/AuthRoute';
 import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));

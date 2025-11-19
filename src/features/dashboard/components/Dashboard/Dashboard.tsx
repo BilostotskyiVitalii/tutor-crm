@@ -1,4 +1,4 @@
-import { type FC, useState } from 'react';
+import { useState } from 'react';
 
 import {
   CalendarOutlined,
@@ -13,14 +13,13 @@ import dayjs from 'dayjs';
 
 import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
 import PieRevenueMix from '@/features/dashboard/components/PieRevenueMix/PieRevenueMix';
-import { TopGroupsCard } from '@/features/dashboard/components/TopGroupsCard/TopGroupsCard';
-import { TopStudentsCard } from '@/features/dashboard/components/TopStudentsCard/TopStudentsCard';
+import { TopListCard } from '@/features/dashboard/components/TopListCard/TopListCard';
 import { DateRangePicker } from '@/shared/components/UI/DateRangePicker/DateRangePicker';
 import { LessonsByDayChart } from '@/shared/components/UI/LessonsByDayChart/LessonsByDayChart';
 
 import styles from './Dashboard.module.scss';
 
-export const Dashboard: FC = () => {
+export const Dashboard = () => {
   const [queryParams, setQueryParams] = useState({
     start: dayjs().startOf('month').toISOString(),
     end: dayjs().endOf('month').toISOString(),
@@ -42,9 +41,26 @@ export const Dashboard: FC = () => {
         <div className={styles.content}>
           <div className={styles.layoutGrid}>
             <div className={styles.leftGrid}>
-              <TopStudentsCard range={queryParams} />
-              <TopGroupsCard range={queryParams} />
-              <PieRevenueMix range={queryParams} />
+              <TopListCard
+                title="Top Students"
+                data={{
+                  hours: data?.topStudentsByHours ?? [],
+                  revenue: data?.topStudentsByRevenue ?? [],
+                }}
+              />
+              <TopListCard
+                title="Top Groups"
+                data={{
+                  hours: data?.topGroupsByHours ?? [],
+                  revenue: data?.topGroupsByRevenue ?? [],
+                }}
+              />
+              <PieRevenueMix
+                data={{
+                  current: data?.revenueMixCurrent,
+                  expected: data?.revenueMixExpected,
+                }}
+              />
               <LessonsByDayChart data={data?.lessonsByDayOfWeek} />
             </div>
             <div className={styles.rightGrid}>

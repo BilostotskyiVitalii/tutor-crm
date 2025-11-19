@@ -5,32 +5,28 @@ import { Card, Flex, Segmented } from 'antd';
 import type { PieLabelRenderProps } from 'recharts';
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from 'recharts';
 
-import { useGetDashboardStatsQuery } from '@/features/dashboard/api/dashboardApi';
+import type { RevenueMix } from '@/features/dashboard/types/dashboardStats';
 
 import styles from './PieRevenueMix.module.scss';
 
 type ModeType = 'current' | 'expected';
 
 interface PieRevenueMixProps {
-  range: {
-    start: string;
-    end: string;
+  data?: {
+    current?: RevenueMix;
+    expected?: RevenueMix;
   };
 }
 
-const PieRevenueMix: FC<PieRevenueMixProps> = ({ range }) => {
+const PieRevenueMix: FC<PieRevenueMixProps> = ({ data }) => {
   const [mode, setMode] = useState<ModeType>('current');
-  const { data: dashData, isLoading } = useGetDashboardStatsQuery(range);
 
   const modeOptions = [
     { label: 'Current', value: 'current' },
     { label: 'Expected', value: 'expected' },
   ];
 
-  const mix =
-    mode === 'current'
-      ? dashData?.revenueMixCurrent
-      : dashData?.revenueMixExpected;
+  const mix = mode === 'current' ? data?.current : data?.expected;
 
   const chartData = [
     { name: 'Individual', value: mix?.individualPct },
@@ -39,7 +35,6 @@ const PieRevenueMix: FC<PieRevenueMixProps> = ({ range }) => {
 
   return (
     <Card
-      loading={isLoading}
       title={
         <Flex justify="space-between">
           <span>🍰 Revenue mix</span>

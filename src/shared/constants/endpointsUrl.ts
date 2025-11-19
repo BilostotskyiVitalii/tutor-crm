@@ -12,4 +12,5 @@ export const endpointsURL = {
   students: '/students',
   lessons: '/lessons',
   groups: '/groups',
+  dashboardStats: '/dashboard/stats',
 } as const;
