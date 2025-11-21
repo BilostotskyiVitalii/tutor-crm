@@ -9,6 +9,7 @@ import { groupsRouter } from './routes/groups.router';
 import { lessonsRouter } from './routes/lessons.router';
 import { studentsRouter } from './routes/students.router';
 import { uploadsRouter } from './routes/uploads.router';
+import { userRouter } from './routes/user.router';
 
 import './firebase';
 
@@ -23,6 +24,7 @@ app.use('/groups', groupsRouter);
 app.use('/students', studentsRouter);
 app.use('/lessons', lessonsRouter);
 app.use('/dashboard', dashboardRouter);
+app.use('/user', userRouter);
 app.use('/uploads', uploadsRouter);
 
 export const api = functions.region('us-central1').https.onRequest(app);

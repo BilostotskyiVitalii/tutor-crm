@@ -6,6 +6,7 @@ import { groupsApi } from '@/features/groups/api/groupsApi';
 import { lessonsApi } from '@/features/lessons/api/lessonsApi';
 import { studentsApi } from '@/features/students/api/studentsApi';
 import themeReducer from '@/features/theme/themeSlice';
+import { userApi } from '@/features/user/api/userApi';
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export const store = configureStore({
     [lessonsApi.reducerPath]: lessonsApi.reducer,
     [groupsApi.reducerPath]: groupsApi.reducer,
     [dashboardApi.reducerPath]: dashboardApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -23,6 +25,7 @@ export const store = configureStore({
       lessonsApi.middleware,
       groupsApi.middleware,
       dashboardApi.middleware,
+      userApi.middleware,
     ),
 });
 

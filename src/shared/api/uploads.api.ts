@@ -1,4 +1,3 @@
-// src/shared/api/uploads.api.ts
 import { endpointsURL } from '@/shared/constants/endpointsUrl';
 
 import { axs } from './axiosInstance';

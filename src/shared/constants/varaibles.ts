@@ -19,8 +19,3 @@ export const navItems = [
   { title: 'Groups', icon: TeamOutlined, path: navigationUrls.groups },
   { title: 'Settings', icon: SettingFilled, path: navigationUrls.settings },
 ];
-
-// export const THEME = {
-//   LIGHT: 'light',
-//   DARK: 'dark',
-// } as const;
