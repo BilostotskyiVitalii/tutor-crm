@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 
-import { Button, Form, Spin } from 'antd';
+import { Button, Form, Input, Spin } from 'antd';
 import { App as AntApp } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
 
 import { useFetchProfileQuery } from '@/features/auth/api/authApi';
+import type { UserUpdates } from '@/features/user/types/userTypes';
 import { useUserActions } from '@/features/user/useUserActions';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
 import { useUploadAvatar } from '@/shared/hooks/useUploadAvatar';
@@ -15,8 +16,9 @@ const SettingsPage = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [loading, setLoading] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState(user?.avatar || '');
+  const [nickName, setNickName] = useState(user?.nickName || '');
   const { updateUserData } = useUserActions();
-  const { notification, modal, message } = AntApp.useApp();
+  const { notification } = AntApp.useApp();
 
   useEffect(() => {
     if (user?.avatar) {
@@ -29,31 +31,47 @@ const SettingsPage = () => {
         },
       ]);
     }
+    if (user?.nickName) {
+      setNickName(user.nickName);
+    }
   }, [user]);
 
   const handleSave = async () => {
-    if (fileList.length === 0) {
-      message.warning('Будь ласка, оберіть аватар перед збереженням.');
-      return;
-    }
-
-    const file = fileList[0].originFileObj as File | undefined;
-    if (!file) {
-      notification.error({ message: 'File not found' });
+    if (fileList.length === 0 && !nickName) {
+      notification.warning({
+        message: 'Please select an avatar or enter a nickname',
+      });
       return;
     }
 
     setLoading(true);
+
     try {
-      if (!user?.id) {
-        return;
+      const updates: Partial<UserUpdates> = {};
+
+      if (fileList.length > 0) {
+        const file = fileList[0].originFileObj as File | undefined;
+        if (file) {
+          const downloadUrl = await uploadAvatar(
+            file,
+            user?.id || '',
+            avatarUrl,
+          );
+          updates.avatar = downloadUrl;
+          setAvatarUrl(downloadUrl);
+        }
       }
-      const downloadUrl = await uploadAvatar(file, user?.id || '', avatarUrl);
-      updateUserData({ avatar: downloadUrl });
-      setAvatarUrl(downloadUrl);
-      notification.success({ message: 'Avatar updated!' });
+
+      if (nickName !== user?.nickName) {
+        updates.nickName = nickName;
+      }
+
+      if (Object.keys(updates).length > 0) {
+        await updateUserData(updates);
+        notification.success({ message: 'Profile updated!' });
+      }
     } catch {
-      notification.error({ message: 'Avatar wasn`t updated!' });
+      notification.error({ message: 'Failed to update profile!' });
     } finally {
       setLoading(false);
     }
@@ -61,12 +79,21 @@ const SettingsPage = () => {
 
   return (
     <Spin spinning={loading}>
-      <Form layout="vertical" style={{ maxWidth: 300 }}>
-        <h2>Налаштування профілю</h2>
+      <Form layout="vertical" style={{ maxWidth: 400 }}>
+        <h2>Profile Settings</h2>
+
+        <Form.Item label="Nickname:">
+          <Input
+            value={nickName}
+            onChange={(e) => setNickName(e.target.value)}
+          />
+        </Form.Item>
+
         <AvatarUploader fileList={fileList} setFileList={setFileList} />
+
         <Form.Item>
           <Button type="primary" onClick={handleSave}>
-            Зберегти аватар
+            Save
           </Button>
         </Form.Item>
       </Form>
