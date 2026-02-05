@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { App as AntApp, Form } from 'antd';
 import dayjs from 'dayjs';
@@ -33,6 +34,7 @@ export const useLessonForm = ({
   const { handleError } = useErrorHandler();
   const { buildLessonData } = useBuildLessonData(lesson?.id);
   const { modal } = AntApp.useApp();
+  const { t } = useTranslation();
 
   const initVal = useCallback((): {
     values: Partial<LessonFormValues>;
@@ -109,7 +111,7 @@ export const useLessonForm = ({
 
       onClose();
     } catch (err) {
-      handleError(err, 'Lesson form error');
+      handleError(err, `${t('form.lessonFormError')}`);
     } finally {
       setIsLoading(false);
     }
@@ -121,16 +123,16 @@ export const useLessonForm = ({
     }
 
     modal.confirm({
-      title: 'Delete this lesson?',
+      title: `${t('useLessonAction.deleteConfirm')}`,
       okType: 'danger',
-      okText: 'Yes',
-      cancelText: 'No',
+      okText: `${t('okText')}`,
+      cancelText: `${t('cancelText')}`,
       async onOk() {
         try {
           await removeLesson(lesson.id);
           onClose();
         } catch (err) {
-          handleError(err, 'Failed to delete lesson');
+          handleError(err, `${t('form.deleteFailed')}`);
         }
       },
     });

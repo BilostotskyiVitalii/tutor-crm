@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useGetGroupsQuery } from '@/features/groups/api/groupsApi';
 import { useGetLessonsQuery } from '@/features/lessons/api/lessonsApi';
@@ -7,6 +8,7 @@ export const useLessonEvents = () => {
   const { data: lessons = [], isLoading: isLessonsLoading } =
     useGetLessonsQuery();
   const { data: groups = [] } = useGetGroupsQuery();
+  const { t } = useTranslation();
 
   const calendarEvents = useMemo(() => {
     if (lessons.length === 0) {
@@ -20,7 +22,8 @@ export const useLessonEvents = () => {
         id: lesson.id,
         title: group
           ? group.title
-          : lesson.students.map((s) => s.name).join(', ') || 'No students',
+          : lesson.students.map((s) => s.name).join(', ') ||
+            `${t('noStudents')}`,
         start: new Date(lesson.start),
         end: new Date(lesson.end),
         resource: lesson,

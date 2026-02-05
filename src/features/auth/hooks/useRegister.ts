@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useRegisterMutation } from '@/features/auth/api/authApi';
@@ -8,6 +9,7 @@ export const useRegister = () => {
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
   const [registerMutation, { isLoading, error }] = useRegisterMutation();
+  const { t } = useTranslation();
 
   const register = async (
     email: string,
@@ -22,7 +24,7 @@ export const useRegister = () => {
       }).unwrap();
       navigate(navigationUrls.index);
     } catch (err: unknown) {
-      handleError(err, 'Registration Error');
+      handleError(err, `${t('registration.error')}`);
     }
   };
 

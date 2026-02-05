@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -14,7 +15,7 @@ import TextArea from 'antd/es/input/TextArea';
 
 import { useStudentForm } from '@/features/students/hooks/useStudentForm';
 import type { Student } from '@/features/students/types/studentTypes';
-import { studentFormRules } from '@/features/students/utils/validationFormFields';
+import { getStudentFormRules } from '@/features/students/utils/validationFormFields';
 import AvatarUploader from '@/shared/components/UI/AvatarUploader/AvatarUploader';
 
 const DATE_FORMAT = 'DD.MM.YYYY';
@@ -42,45 +43,67 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
     fileList,
     setFileList,
   });
+  const { t } = useTranslation();
+  const studentFormRules = getStudentFormRules(t);
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical" name="student_form">
-      <Form.Item name="name" label="Name:" rules={studentFormRules.name}>
+      <Form.Item
+        name="name"
+        label={`${t('form.nameLabel')}`}
+        rules={studentFormRules.name}
+      >
         <Input placeholder="John Snow" />
       </Form.Item>
 
-      <Form.Item name="email" label="Email:" rules={studentFormRules.email}>
+      <Form.Item
+        name="email"
+        label={`${t('form.emailLabel')}`}
+        rules={studentFormRules.email}
+      >
         <Input placeholder="student@mail.com" />
       </Form.Item>
 
-      <Form.Item name="phone" label="Phone:" rules={studentFormRules.phone}>
+      <Form.Item
+        name="phone"
+        label={`${t('form.phoneLabel')}`}
+        rules={studentFormRules.phone}
+      >
         <Input placeholder="+380667462269" />
       </Form.Item>
 
-      <Form.Item name="contact" label="Contact:">
+      <Form.Item name="contact" label={`${t('form.contactLabel')}`}>
         <Input placeholder="Link to insta, telegram, etc..." />
       </Form.Item>
 
-      <Form.Item name="birthdate" label="Birthdate:">
+      <Form.Item name="birthdate" label={`${t('form.birthdateLabel')}`}>
         <DatePicker format={DATE_FORMAT} placeholder={DATE_FORMAT} />
       </Form.Item>
 
       <Flex justify="space-between" gap={24}>
         <Form.Item
           name="currentLevel"
-          label="Current level:"
+          label={`${t('form.levelLabel')}`}
           rules={studentFormRules.level}
         >
           <Select options={langLevels} />
         </Form.Item>
 
-        <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-          <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
+        <Form.Item
+          name="price"
+          label={`${t('form.priceLabel')}:`}
+          rules={studentFormRules.price}
+        >
+          <InputNumber
+            min={0}
+            placeholder={`${t('form.pricePlh')}`}
+            addonAfter="UAH ₴"
+          />
         </Form.Item>
       </Flex>
 
-      <Form.Item name="notes" label="Notes:">
-        <TextArea rows={2} placeholder="Preparing for english exam" />
+      <Form.Item name="notes" label={`${t('form.notesLabel')}:`}>
+        <TextArea rows={2} placeholder={`${t('form.notePlh')}`} />
       </Form.Item>
 
       <AvatarUploader fileList={fileList} setFileList={setFileList} />
@@ -88,10 +111,10 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
       <Form.Item>
         <Flex justify="flex-end" gap={12}>
           <Button htmlType="button" onClick={onClose}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="primary" htmlType="submit" loading={isLoading}>
-            {mode === 'create' ? 'Create' : 'Update'}
+            {mode === 'create' ? `${t('create')}` : `${t('update')}`}
           </Button>
         </Flex>
       </Form.Item>

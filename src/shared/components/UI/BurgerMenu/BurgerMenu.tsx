@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { Drawer, Menu } from 'antd';
@@ -19,10 +20,12 @@ const BurgerMenu: FC<BurgerMenuProps> = ({
 }) => {
   const navigate = useNavigate();
 
-  const burgerItems = navItems.map(({ title, icon, path }) => ({
+  const { t } = useTranslation();
+
+  const burgerItems = navItems.map(({ titleKey, icon, path }) => ({
     key: path,
     icon: icon && React.createElement(icon),
-    label: title,
+    label: t(titleKey),
   }));
 
   return (

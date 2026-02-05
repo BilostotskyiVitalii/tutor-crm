@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Card, Divider, Typography } from 'antd';
 
@@ -15,6 +16,8 @@ type Props = {
 };
 
 export const StudentInfoCard: FC<Props> = ({ student }) => {
+  const { t } = useTranslation();
+
   return (
     <Card className={styles.studentCard}>
       <AvatarCustom
@@ -26,42 +29,42 @@ export const StudentInfoCard: FC<Props> = ({ student }) => {
       <Divider />
       <h2>{student.name}</h2>
       <p>
-        <Text strong>Status: </Text>
+        <Text strong>{`${t('status')}:`}</Text>
         {student.isActive ? (
-          <Text type="success">Active</Text>
+          <Text type="success">{t('active')}</Text>
         ) : (
-          <Text type="secondary">Inactive</Text>
+          <Text type="secondary">{t('inActive')}</Text>
         )}
       </p>
       <p>
-        <Text strong>Level:</Text> {student.currentLevel ?? '-'}
+        <Text strong>{t('level')}</Text> {student.currentLevel ?? '-'}
       </p>
       <p>
-        <Text strong>📧 Email: </Text> {student.email ?? '-'}
+        <Text strong>{`📧 ${t('email')}`}</Text> {student.email ?? '-'}
       </p>
       <p>
-        <Text strong>🛜 Contact: </Text> {student.contact ?? '-'}
+        <Text strong>{`🛜 ${t('contact')}`}</Text> {student.contact ?? '-'}
       </p>
       <p>
-        <Text strong>☎️ Phone: </Text> {student.phone ?? '-'}
+        <Text strong>{`☎️ ${t('phone')}`}</Text> {student.phone ?? '-'}
       </p>
       <p>
-        <Text strong>💵 Price per hour: ₴ </Text> {student.price ?? '-'}
+        <Text strong>{`💵 ${t('pricePH')}: ₴`}</Text> {student.price ?? '-'}
       </p>
       <p>
-        <Text strong>🎁 Birthdate: </Text>
+        <Text strong>{`🎁 ${t('birthdate')}`}</Text>
         {student.birthdate
           ? new Date(student.birthdate).toLocaleDateString()
           : '-'}
       </p>
       <p>
-        <Text strong>🍼 Created at: </Text>
+        <Text strong>{`🍼 ${t('createdAt')}:`}</Text>
         {student.createdAt
           ? new Date(student.createdAt).toLocaleDateString()
           : '-'}
       </p>
       <p>
-        <Text strong>📋 Notes: </Text> {student.notes ?? '-'}
+        <Text strong>{`📋 ${t('notes')}:`}</Text> {student.notes ?? '-'}
       </p>
       <Divider />
       <StudentActionsButtons student={student} />

@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { Empty, Spin, Tabs } from 'antd';
@@ -17,6 +18,7 @@ import styles from './GroupIdPage.module.scss';
 
 const GroupIdPage: FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
   const defaultStart = dayjs().startOf('month');
   const defaultEnd = dayjs().endOf('month');
@@ -36,7 +38,7 @@ const GroupIdPage: FC = () => {
   );
 
   if (!group && !groupLoading) {
-    return <Empty description={'Group not found'} />;
+    return <Empty description={t('noGroup')} />;
   }
 
   return (
@@ -52,12 +54,12 @@ const GroupIdPage: FC = () => {
             items={[
               {
                 key: 'stats',
-                label: '📊 Stats',
+                label: `📊 ${t('stats')}`,
                 children: <GroupStatsTab stats={stats} />,
               },
               {
                 key: 'lessons',
-                label: '📘 Lessons',
+                label: `📘 ${t('lessons')}`,
                 children: <GroupLessonsTab stats={stats} />,
               },
             ]}

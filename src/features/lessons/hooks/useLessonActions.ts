@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { App as AntApp } from 'antd';
 
@@ -16,41 +17,44 @@ export function useLessonActions() {
   const [addLesson] = useAddLessonMutation();
   const { handleError } = useErrorHandler();
   const { notification } = AntApp.useApp();
+  const { t } = useTranslation();
 
   const createLesson = useCallback(
     async (data: LessonData) => {
       try {
         await addLesson(data).unwrap();
-        notification.success({ message: 'Lesson created!' });
+        notification.success({
+          message: `${t('useLessonAction.created')}`,
+        });
       } catch (err) {
-        handleError(err, 'Failed to create lesson');
+        handleError(err, `${t('useLessonAction.createFailed')}`);
       }
     },
-    [addLesson, handleError, notification],
+    [addLesson, handleError, notification, t],
   );
 
   const updateLessonData = useCallback(
     async (id: string, data: Partial<LessonData>) => {
       try {
         await updateLesson({ id, data }).unwrap();
-        notification.success({ message: 'Lesson updated!' });
+        notification.success({ message: `${t('useLessonAction.updated')}` });
       } catch (err) {
-        handleError(err, 'Failed to update lesson');
+        handleError(err, `${t('useLessonAction.updateFailed')}`);
       }
     },
-    [updateLesson, handleError, notification],
+    [updateLesson, handleError, notification, t],
   );
 
   const removeLesson = useCallback(
     async (id: string) => {
       try {
         await deleteLesson(id).unwrap();
-        notification.success({ message: 'Lesson deleted!' });
+        notification.success({ message: `${t('useLessonAction.deleted')}` });
       } catch (err) {
-        handleError(err, 'Failed to delete lesson');
+        handleError(err, `${t('useLessonAction.deleteFailed')}`);
       }
     },
-    [deleteLesson, handleError, notification],
+    [deleteLesson, handleError, notification, t],
   );
 
   return {

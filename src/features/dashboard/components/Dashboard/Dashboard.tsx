@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   CalendarOutlined,
@@ -24,6 +25,7 @@ export const Dashboard = () => {
     start: dayjs().startOf('month').toISOString(),
     end: dayjs().endOf('month').toISOString(),
   });
+  const { t } = useTranslation();
 
   const { data, isLoading, isError } = useGetDashboardStatsQuery(
     { ...queryParams },
@@ -31,7 +33,7 @@ export const Dashboard = () => {
   );
 
   if (isError) {
-    return <Alert message="Failed to load dashboard data" type="error" />;
+    return <Alert message={t('failedLoad')} type="error" />;
   }
 
   return (
@@ -42,14 +44,14 @@ export const Dashboard = () => {
           <div className={styles.layoutGrid}>
             <div className={styles.leftGrid}>
               <TopListCard
-                title="Top Students"
+                title={t('topStudents')}
                 data={{
                   hours: data?.topStudentsByHours ?? [],
                   revenue: data?.topStudentsByRevenue ?? [],
                 }}
               />
               <TopListCard
-                title="Top Groups"
+                title={t('topGroups')}
                 data={{
                   hours: data?.topGroupsByHours ?? [],
                   revenue: data?.topGroupsByRevenue ?? [],
@@ -61,86 +63,89 @@ export const Dashboard = () => {
                   expected: data?.revenueMixExpected,
                 }}
               />
-              <LessonsByDayChart data={data?.lessonsByDayOfWeek} />
+              <LessonsByDayChart
+                data={data?.lessonsByDayOfWeek}
+                title={`${t('lessonsByDay')}`}
+              />
             </div>
             <div className={styles.rightGrid}>
-              <Card title="💰 Revenue">
+              <Card title={`💰 ${t('revenue')}`}>
                 <div className={styles.cardContainer}>
                   <Statistic
-                    title="Current"
+                    title={`💰 ${t('current')}`}
                     value={data?.currentMonthRevenue}
                     prefix="₴"
                     precision={0}
                   />
                   <Divider type="vertical" />
                   <Statistic
-                    title="Expected"
+                    title={`💰 ${t('expected')}`}
                     value={data?.expectedMonthRevenue}
                     prefix="₴"
                     precision={0}
                   />
                 </div>
               </Card>
-              <Card title="💸 Average price">
+              <Card title={`💸 ${t('avgPrice')}`}>
                 <div className={styles.cardContainer}>
                   <Statistic
-                    title="Per/hour"
+                    title={t('perHour')}
                     prefix="₴"
                     precision={0}
                     value={data?.averageHourPrice}
                   />
                   <Divider type="vertical" />
                   <Statistic
-                    title="Student per/hour"
+                    title={t('studentPerHour')}
                     prefix="₴"
                     precision={0}
                     value={data?.averagePerHourStudentPrice}
                   />
                 </div>
               </Card>
-              <Card title="🧑‍🎓 Students">
+              <Card title={`🧑‍🎓 ${t('students')}`}>
                 <div className={styles.cardContainer}>
                   <Statistic
-                    title="Active"
+                    title={t('active')}
                     value={data?.activeStudents}
                     prefix={<UserOutlined />}
                   />
                   <Divider type="vertical" />
                   <Statistic
-                    title="New"
+                    title={t('new')}
                     value={data?.newStudents}
                     prefix={<UserAddOutlined />}
                     className={styles.success}
                   />
                 </div>
               </Card>
-              <Card title="🎓 Groups">
+              <Card title={`🎓 ${t('groups')}`}>
                 <div className={styles.cardContainer}>
                   <Statistic
-                    title="Active"
+                    title={t('active')}
                     value={data?.activeGroups}
                     prefix={<TeamOutlined />}
                   />
                   <Divider type="vertical" />
                   <Statistic
-                    title="New"
+                    title={t('new')}
                     value={data?.newGroups}
                     prefix={<UsergroupAddOutlined />}
                     className={styles.success}
                   />
                 </div>
               </Card>
-              <Card title="📚 Lessons">
+              <Card title={`📚 ${t('lessons')}`}>
                 <div className={styles.cardContainer}>
                   <Statistic
-                    title="Done"
+                    title={t('done')}
                     value={data?.doneLessons}
                     prefix={<CheckOutlined />}
                     className={styles.success}
                   />
                   <Divider type="vertical" />
                   <Statistic
-                    title="Planned"
+                    title={t('planed')}
                     value={data?.plannedLessons}
                     prefix={<CalendarOutlined />}
                     className={styles.planed}

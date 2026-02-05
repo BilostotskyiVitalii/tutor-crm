@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginMutation } from '@/features/auth/api/authApi';
@@ -8,13 +9,14 @@ export const useLogin = () => {
   const navigate = useNavigate();
   const { handleError } = useErrorHandler();
   const [loginMutation, { isLoading, error }] = useLoginMutation();
+  const { t } = useTranslation();
 
   const login = async (email: string, password: string) => {
     try {
       await loginMutation({ email, password }).unwrap();
       navigate(navigationUrls.index);
     } catch (err: unknown) {
-      handleError(err, 'Login Error');
+      handleError(err, `${t('login.error')}`);
     }
   };
 

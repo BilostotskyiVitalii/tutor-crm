@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { message } from 'antd';
@@ -17,17 +18,18 @@ export const useResetPassword = () => {
   const [confirmResetPassword, { isLoading }] =
     useConfirmResetPasswordMutation();
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const oobCode = searchParams.get('oobCode');
 
   const handleResetPassword = async (values: ResetPasswordValues) => {
     if (!oobCode) {
-      setError('Invalid or missing reset code.');
+      setError(`${t('reset.invalidCode')}`);
       return;
     }
 
     if (values.newPassword !== values.confirmPassword) {
-      setError('Passwords do not match!');
+      setError(`${t('validation.notMatchPass')}`);
       return;
     }
 
@@ -37,7 +39,7 @@ export const useResetPassword = () => {
         newPassword: values.newPassword,
       }).unwrap();
 
-      message.success('Password successfully reset!');
+      message.success(`${t('reset.success')}`);
       navigate(navigationUrls.login);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -51,7 +53,7 @@ export const useResetPassword = () => {
       ) {
         setError((err as { data: { message: string } }).data.message);
       } else {
-        setError('Failed to reset password');
+        setError(`${t('reset.error')}`);
       }
     }
   };

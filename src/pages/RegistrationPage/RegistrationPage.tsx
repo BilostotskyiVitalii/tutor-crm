@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { LockOutlined, MailOutlined, UserOutlined } from '@ant-design/icons';
@@ -10,6 +11,8 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 const RegistrationPage: FC = () => {
   const { register, loading } = useRegister();
+  const { t } = useTranslation();
+
   const handleRegister: FormProps<RegisterRequest>['onFinish'] = async (
     values,
   ) => {
@@ -20,16 +23,15 @@ const RegistrationPage: FC = () => {
   return (
     <Flex className="auth-backdrop">
       <Form name="register" onFinish={handleRegister} className="auth-form">
-        <h2 className="auth-form-title">Registration</h2>
+        <h2 className="auth-form-title">{t('registration.title')}</h2>
 
         <Form.Item
           name="nickName"
-          tooltip="What do you want others to call you?"
           hasFeedback
           rules={[
             {
               required: true,
-              message: 'Please input your nickname!',
+              message: `${t('registration.noNickname')}`,
               whitespace: true,
             },
           ]}
@@ -41,25 +43,28 @@ const RegistrationPage: FC = () => {
           name="email"
           hasFeedback
           rules={[
-            { type: 'email', message: 'The input is not valid E-mail!' },
-            { required: true, message: 'Please input your E-mail!' },
+            { type: 'email', message: `${t('registration.notValidEmail')}` },
+            { required: true, message: `${t('registration.noEmail')}` },
           ]}
         >
-          <Input prefix={<MailOutlined />} placeholder="E-mail" />
+          <Input
+            prefix={<MailOutlined />}
+            placeholder={t('placeholders.email')}
+          />
         </Form.Item>
 
         <Form.Item
           name="password"
           hasFeedback
           rules={[
-            { required: true, message: 'Please input your password!' },
-            { min: 6, message: 'Password must be at least 6 characters!' },
+            { required: true, message: `${t('registration.noPassword')}` },
+            { min: 6, message: `${t('registration.passLenght')}` },
           ]}
         >
           <Input.Password
             prefix={<LockOutlined />}
             type="password"
-            placeholder="Password"
+            placeholder={t('placeholders.password')}
           />
         </Form.Item>
 
@@ -68,28 +73,31 @@ const RegistrationPage: FC = () => {
           dependencies={['password']}
           hasFeedback
           rules={[
-            { required: true, message: 'Please confirm your password!' },
+            { required: true, message: `${t('validation.confirmPass')}` },
             ({ getFieldValue }) => ({
               validator(_, value) {
                 if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
-                return Promise.reject(new Error('Passwords do not match!'));
+                return Promise.reject(
+                  new Error(`${t('validation.notMatchPass')}`),
+                );
               },
             }),
           ]}
         >
           <Input.Password
             prefix={<LockOutlined />}
-            placeholder="Confirm password"
+            placeholder={t('placeholders.confirmPass')}
           />
         </Form.Item>
 
         <Form.Item>
           <Button block type="primary" htmlType="submit" loading={loading}>
-            Register
+            {t('registration.button')}
           </Button>
-          or <Link to={navigationUrls.login}>Login now!</Link>
+          {t('or')}{' '}
+          <Link to={navigationUrls.login}>{t('registration.loginNow')}!</Link>
         </Form.Item>
       </Form>
     </Flex>

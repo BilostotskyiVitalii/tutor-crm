@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Form, type UploadFile } from 'antd';
 import dayjs from 'dayjs';
@@ -27,11 +28,11 @@ export const useStudentForm = ({
   setFileList,
 }: useStudentFormProps) => {
   const [form] = Form.useForm<StudentFormValues>();
-
   const { createStudent, updateStudentData } = useStudentActions();
   const { handleError } = useErrorHandler();
   const [isLoading, setIsLoading] = useState(false);
   const { uploadAvatar } = useUploadAvatar();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (student) {
@@ -82,7 +83,7 @@ export const useStudentForm = ({
       onClose();
       setFileList([]);
     } catch (err) {
-      handleError(err, 'Student form error!');
+      handleError(err, `${t('form.studentFormError')}`);
     } finally {
       setIsLoading(false);
     }

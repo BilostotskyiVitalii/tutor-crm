@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Form } from 'antd';
 
@@ -20,6 +21,7 @@ export const useGroupForm = ({ group, onClose }: useGroupFormProps) => {
   const { data: students = [] } = useGetStudentsQuery();
   const { createGroup, updateGroupData } = useGroupActions();
   const { handleError } = useErrorHandler();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (group) {
@@ -55,7 +57,7 @@ export const useGroupForm = ({ group, onClose }: useGroupFormProps) => {
 
       onClose();
     } catch (err) {
-      handleError(err, 'Group form error!');
+      handleError(err, `${t('form.groupFormError')}`);
     } finally {
       setIsLoading(false);
     }

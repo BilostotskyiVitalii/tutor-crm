@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Select } from 'antd';
 
@@ -11,15 +12,18 @@ const langOptions = [
 ];
 
 const SelectLang: FC = () => {
+  const { i18n } = useTranslation();
+
   return (
     <Select
       className={styles.wrapper}
-      defaultValue="en"
+      value={i18n.language}
       variant="borderless"
-      options={langOptions.map((option) => ({
-        value: option.value,
-        label: option.label,
-      }))}
+      onChange={(lng) => {
+        i18n.changeLanguage(lng);
+        localStorage.setItem('lang', lng);
+      }}
+      options={langOptions}
     />
   );
 };

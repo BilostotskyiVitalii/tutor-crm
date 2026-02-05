@@ -1,5 +1,6 @@
 import type { FC } from 'react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Card, Flex, Segmented } from 'antd';
 import type { PieLabelRenderProps } from 'recharts';
@@ -20,24 +21,25 @@ interface PieRevenueMixProps {
 
 const PieRevenueMix: FC<PieRevenueMixProps> = ({ data }) => {
   const [mode, setMode] = useState<ModeType>('current');
+  const { t } = useTranslation();
 
   const modeOptions = [
-    { label: 'Current', value: 'current' },
-    { label: 'Expected', value: 'expected' },
+    { label: `${t('current')}`, value: 'current' },
+    { label: `${t('expected')}`, value: 'expected' },
   ];
 
   const mix = mode === 'current' ? data?.current : data?.expected;
 
   const chartData = [
-    { name: 'Individual', value: mix?.individualPct },
-    { name: 'Group', value: mix?.groupPct },
+    { name: `${t('indiv')}`, value: mix?.individualPct },
+    { name: `${t('group')}`, value: mix?.groupPct },
   ];
 
   return (
     <Card
       title={
         <Flex justify="space-between">
-          <span>🍰 Revenue mix</span>
+          <span>{`🍰 ${t('revenueMix')}`}</span>
           <Segmented
             size="small"
             value={mode}

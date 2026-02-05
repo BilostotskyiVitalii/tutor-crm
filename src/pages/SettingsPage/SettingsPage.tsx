@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Form, Input, Spin } from 'antd';
 import { App as AntApp } from 'antd';
@@ -19,6 +20,7 @@ const SettingsPage = () => {
   const [nickName, setNickName] = useState(user?.nickName || '');
   const { updateUserData } = useUserActions();
   const { notification } = AntApp.useApp();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (user?.avatar) {
@@ -39,7 +41,7 @@ const SettingsPage = () => {
   const handleSave = async () => {
     if (fileList.length === 0 && !nickName) {
       notification.warning({
-        message: 'Please select an avatar or enter a nickname',
+        message: `${t('settings.noChanges')}`,
       });
       return;
     }
@@ -68,10 +70,10 @@ const SettingsPage = () => {
 
       if (Object.keys(updates).length > 0) {
         await updateUserData(updates);
-        notification.success({ message: 'Profile updated!' });
+        notification.success({ message: `${t('settings.profileUpdated')}` });
       }
     } catch {
-      notification.error({ message: 'Failed to update profile!' });
+      notification.error({ message: `${t('settings.profileUpdFailed')}` });
     } finally {
       setLoading(false);
     }
@@ -80,9 +82,9 @@ const SettingsPage = () => {
   return (
     <Spin spinning={loading}>
       <Form layout="vertical" style={{ maxWidth: 400 }}>
-        <h2>Profile Settings</h2>
+        <h2>{t('settings.title')}</h2>
 
-        <Form.Item label="Nickname:">
+        <Form.Item label={t('settings.button')}>
           <Input
             value={nickName}
             onChange={(e) => setNickName(e.target.value)}
@@ -93,7 +95,7 @@ const SettingsPage = () => {
 
         <Form.Item>
           <Button type="primary" onClick={handleSave}>
-            Save
+            {t('settings.button')}
           </Button>
         </Form.Item>
       </Form>

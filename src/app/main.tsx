@@ -6,6 +6,8 @@ import { store } from '@/store/index.tsx';
 
 import '@/shared/styles/main.scss';
 
+import '../i18n.ts';
+
 const Root = () => {
   return (
     <Provider store={store}>

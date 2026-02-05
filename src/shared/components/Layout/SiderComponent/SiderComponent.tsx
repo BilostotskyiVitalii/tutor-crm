@@ -1,4 +1,5 @@
 import { createElement, type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Layout, Menu } from 'antd';
@@ -12,11 +13,12 @@ const SiderComponent: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { Sider } = Layout;
+  const { t } = useTranslation();
 
   const siderItems = navItems.map((item) => ({
     key: item.path,
     icon: createElement(item.icon),
-    label: item.title,
+    label: t(item.titleKey),
   }));
 
   const selectedItem = siderItems.find((item) =>

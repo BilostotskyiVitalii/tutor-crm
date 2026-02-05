@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Space } from 'antd';
 
@@ -13,6 +14,7 @@ interface StudentActionsProps {
 export const StudentActionsButtons: FC<StudentActionsProps> = ({ student }) => {
   const { removeStudent } = useStudentActions();
   const { openModal } = useModal();
+  const { t } = useTranslation();
 
   function onEditStudent() {
     openModal({
@@ -38,17 +40,17 @@ export const StudentActionsButtons: FC<StudentActionsProps> = ({ student }) => {
   return (
     <Space>
       <Button onClick={onEditStudent} size="small">
-        Edit
+        {t('edit')}
       </Button>
       <Button
         onClick={onCreateLesson}
         size="small"
         disabled={!student.isActive}
       >
-        Add Lesson
+        {t('addLesson')}
       </Button>
       <Button onClick={onDeleteStudent} size="small" danger>
-        Delete
+        {t('delete')}
       </Button>
     </Space>
   );

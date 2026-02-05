@@ -10,12 +10,28 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 
 export const navItems = [
   {
-    title: 'Dashboard',
+    titleKey: 'nav.dashboard',
     icon: BarChartOutlined,
     path: navigationUrls.dashboard,
   },
-  { title: 'Schedule', icon: ScheduleOutlined, path: navigationUrls.schedule },
-  { title: 'Students', icon: UserOutlined, path: navigationUrls.students },
-  { title: 'Groups', icon: TeamOutlined, path: navigationUrls.groups },
-  { title: 'Settings', icon: SettingFilled, path: navigationUrls.settings },
+  {
+    titleKey: 'nav.schedule',
+    icon: ScheduleOutlined,
+    path: navigationUrls.schedule,
+  },
+  {
+    titleKey: 'nav.students',
+    icon: UserOutlined,
+    path: navigationUrls.students,
+  },
+  {
+    titleKey: 'nav.groups',
+    icon: TeamOutlined,
+    path: navigationUrls.groups,
+  },
+  {
+    titleKey: 'nav.settings',
+    icon: SettingFilled,
+    path: navigationUrls.settings,
+  },
 ];

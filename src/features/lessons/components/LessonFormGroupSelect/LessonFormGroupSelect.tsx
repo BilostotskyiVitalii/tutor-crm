@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Form, type FormInstance, Select, Switch } from 'antd';
@@ -18,6 +19,7 @@ const LessonFormGroupSelect: FC<LessonFormGroupSelectProps> = ({
   form,
 }) => {
   const { data: groups = [] } = useGetGroupsQuery();
+  const { t } = useTranslation();
 
   function selectGroupHandler(groupId: string) {
     const group = groups.find((g) => g.id === groupId);
@@ -44,7 +46,7 @@ const LessonFormGroupSelect: FC<LessonFormGroupSelectProps> = ({
       name="groupId"
       label={
         <div>
-          <span>Group: </span>
+          <span>{t('form.group')}</span>
           <Switch
             size="small"
             checked={isGroup}
@@ -57,7 +59,7 @@ const LessonFormGroupSelect: FC<LessonFormGroupSelectProps> = ({
     >
       <Select
         disabled={!isGroup}
-        placeholder="Select group"
+        placeholder={`${t('form.groupPlh')}`}
         options={groups.map((g) => ({ label: g.title, value: g.id }))}
         onChange={selectGroupHandler}
       />

@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Space } from 'antd';
 
@@ -13,6 +14,7 @@ interface GroupActionsProps {
 export const GroupActionsButtons: FC<GroupActionsProps> = ({ group }) => {
   const { removeGroup } = useGroupActions();
   const { openModal } = useModal();
+  const { t } = useTranslation();
 
   function onEditGroup() {
     openModal({
@@ -38,13 +40,13 @@ export const GroupActionsButtons: FC<GroupActionsProps> = ({ group }) => {
   return (
     <Space>
       <Button onClick={onEditGroup} size="small">
-        Edit
+        {t('edit')}
       </Button>
       <Button onClick={onCreateLesson} size="small">
-        Add Lesson
+        {t('addLesson')}
       </Button>
       <Button onClick={onDeleteGroup} size="small" danger>
-        Delete
+        {t('delete')}
       </Button>
     </Space>
   );

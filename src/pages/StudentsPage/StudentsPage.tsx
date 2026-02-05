@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Empty, Flex, Table } from 'antd';
@@ -13,6 +14,7 @@ const StudentsPage: FC = () => {
   const { data: students, isLoading, isError } = useGetStudentsQuery();
   const { openModal } = useModal();
   const columns = useStudentColumns();
+  const { t } = useTranslation();
 
   function onAddStudent() {
     openModal({
@@ -25,10 +27,10 @@ const StudentsPage: FC = () => {
   return (
     <Flex className={styles.wrapper}>
       <Button type="primary" icon={<PlusOutlined />} onClick={onAddStudent}>
-        New student
+        {t('newStudent')}
       </Button>
 
-      {isError && <p style={{ color: 'red' }}>Failed to load students</p>}
+      {isError && <p style={{ color: 'red' }}>{t('failedLoadStudents')}</p>}
 
       <Table
         className={styles.studentsDesktop}
@@ -37,7 +39,7 @@ const StudentsPage: FC = () => {
         dataSource={students}
         pagination={{ pageSize: 30, position: ['bottomCenter'] }}
         loading={isLoading}
-        locale={{ emptyText: <Empty description="No students found" /> }}
+        locale={{ emptyText: <Empty description={t('noStudent')} /> }}
         size="small"
       />
     </Flex>

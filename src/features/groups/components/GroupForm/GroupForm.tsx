@@ -1,10 +1,11 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Flex, Form, Input, InputNumber, Select } from 'antd';
 
 import { useGroupForm } from '@/features/groups/hooks/useGroupForm';
 import type { Group } from '@/features/groups/types/groupTypes';
-import { studentFormRules } from '@/features/students/utils/validationFormFields';
+import { getStudentFormRules } from '@/features/students/utils/validationFormFields';
 
 const { TextArea } = Input;
 
@@ -19,6 +20,8 @@ const GroupForm: FC<GroupFormProps> = ({ onClose, mode, group }) => {
     group,
     onClose,
   });
+  const { t } = useTranslation();
+  const studentFormRules = getStudentFormRules(t);
 
   return (
     <Form
@@ -28,40 +31,48 @@ const GroupForm: FC<GroupFormProps> = ({ onClose, mode, group }) => {
       name="group_form"
     >
       <Form.Item
-        label="Title:"
+        label={`${t('form.titleLabel')}:`}
         name="title"
-        rules={[{ required: true, message: 'Enter title' }]}
+        rules={[{ required: true, message: `${t('form.ruleMessage')}:` }]}
       >
-        <Input placeholder="Best group ever" />
+        <Input placeholder={`${t('form.titlePlh')}`} />
       </Form.Item>
 
       <Form.Item
         name="studentIds"
-        label="Students:"
+        label={`${t('form.studentsLabel')}:`}
         rules={[{ required: true }]}
       >
         <Select
           mode="multiple"
-          placeholder="Select students"
+          placeholder={`${t('form.studentsPlh')}`}
           options={studentOptions}
         />
       </Form.Item>
 
-      <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-        <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
+      <Form.Item
+        name="price"
+        label={`${t('form.priceLabel')}:`}
+        rules={studentFormRules.price}
+      >
+        <InputNumber
+          min={0}
+          placeholder={`${t('form.pricePlh')}`}
+          addonAfter="UAH ₴"
+        />
       </Form.Item>
 
-      <Form.Item label="Notes:" name="notes">
-        <TextArea rows={3} placeholder="Note some info here" />
+      <Form.Item label={`${t('form.notesLabel')}:`} name="notes">
+        <TextArea rows={3} placeholder={`${t('form.notePlh')}`} />
       </Form.Item>
 
       <Form.Item>
         <Flex justify="flex-end" gap={12}>
           <Button htmlType="button" onClick={onClose}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="primary" htmlType="submit" loading={isLoading}>
-            {mode === 'create' ? 'Create' : 'Update'}
+            {mode === 'create' ? `${t('create')}` : `${t('update')}`}
           </Button>
         </Flex>
       </Form.Item>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Button, Card, DatePicker, Space } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
@@ -28,6 +29,8 @@ export const DateRangePicker = ({ range, onApply }: DateRangePickerProps) => {
     initialEnd,
   ]);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (range?.start && range?.end) {
       setDateRange([dayjs(range.start), dayjs(range.end)]);
@@ -48,7 +51,7 @@ export const DateRangePicker = ({ range, onApply }: DateRangePickerProps) => {
   };
 
   return (
-    <Card title="Select Period" className={styles.card}>
+    <Card title={t('dateRangePicker.period')} className={styles.card}>
       <Space>
         <RangePicker
           value={dateRange}
@@ -57,7 +60,7 @@ export const DateRangePicker = ({ range, onApply }: DateRangePickerProps) => {
           format="DD.MM.YYYY"
         />
         <Button type="primary" onClick={applyDateFilter}>
-          Apply
+          {t('dateRangePicker.apply')}
         </Button>
       </Space>
     </Card>

@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Table } from 'antd';
 import { Typography } from 'antd';
@@ -7,7 +8,7 @@ import type { SortOrder } from 'antd/es/table/interface';
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
 import type { StudentStatsReq } from '@/features/students/types/studentTypes';
 import { LessonsByDayChart } from '@/shared/components/UI/LessonsByDayChart/LessonsByDayChart';
-import { formatHours } from '@/shared/utils/formatHours';
+import { useFormatHours } from '@/shared/hooks/useFormatHours';
 
 import styles from './StudentLessonsTab.module.scss';
 
@@ -18,9 +19,11 @@ type Props = {
 };
 
 export const StudentLessonsTab: FC<Props> = ({ stats }) => {
+  const formatHours = useFormatHours();
+  const { t } = useTranslation();
   const lessonsColumns = [
     {
-      title: 'Date',
+      title: `${t('date')}`,
       key: 'date',
       render: (_: unknown, l: Lesson) => new Date(l.start).toLocaleDateString(),
       sorter: (a: Lesson, b: Lesson) =>
@@ -28,7 +31,7 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
       defaultSortOrder: 'ascend' as SortOrder,
     },
     {
-      title: 'Time',
+      title: `${t('time')}`,
       key: 'time',
       render: (_: unknown, l: Lesson) =>
         new Date(l.start).toLocaleTimeString([], {
@@ -37,27 +40,27 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
         }),
     },
     {
-      title: 'Status',
+      title: `${t('status')}`,
       key: 'status',
       render: (_: unknown, l: Lesson) =>
         new Date(l.end).getTime() <= Date.now() ? (
-          <Text type="success">Done</Text>
+          <Text type="success">{t('done')}</Text>
         ) : (
-          <Text type="warning">Planned</Text>
+          <Text type="warning">{t('planed')}</Text>
         ),
     },
     {
-      title: 'Type',
+      title: `${t('type')}`,
       key: 'type',
       render: (_: unknown, l: Lesson) =>
         l.groupId ? (
-          <span className={styles.group}>Group</span>
+          <span className={styles.group}>{t('group')}</span>
         ) : (
-          <span className={styles.indiv}>Indiv</span>
+          <span className={styles.indiv}>{t('indiv')}</span>
         ),
     },
     {
-      title: 'Duration',
+      title: `${t('duration')}`,
       key: 'duration',
       render: (_: unknown, l: Lesson) =>
         formatHours(
@@ -69,7 +72,7 @@ export const StudentLessonsTab: FC<Props> = ({ stats }) => {
         (new Date(b.end).getTime() - new Date(b.start).getTime()),
     },
     {
-      title: 'Price',
+      title: `${t('price')}`,
       key: 'price',
       render: (_: unknown, l: Lesson) => (l.price ? `₴ ${l.price}` : '-'),
       sorter: (a: Lesson, b: Lesson) => (a.price ?? 0) - (b.price ?? 0),

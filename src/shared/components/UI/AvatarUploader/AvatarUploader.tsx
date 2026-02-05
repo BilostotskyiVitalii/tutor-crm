@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { UploadOutlined } from '@ant-design/icons';
 import { Form, Upload } from 'antd';
 import type { UploadFile } from 'antd/es/upload/interface';
@@ -9,9 +11,10 @@ interface AvatarUploaderProps {
 }
 
 const AvatarUploader = ({ fileList, setFileList }: AvatarUploaderProps) => {
+  const { t } = useTranslation();
   return (
     <Form.Item>
-      <ImgCrop rotationSlider modalTitle="Crop your avatar">
+      <ImgCrop rotationSlider modalTitle={t('avatarUploader.cropTitle')}>
         <Upload
           fileList={fileList}
           customRequest={({ onSuccess }) => {
@@ -24,7 +27,7 @@ const AvatarUploader = ({ fileList, setFileList }: AvatarUploaderProps) => {
         >
           <div>
             <UploadOutlined />
-            <div>Upload avatar</div>
+            <div>{t('avatarUploader.uploadTitle')}</div>
           </div>
         </Upload>
       </ImgCrop>

@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
   Button,
@@ -14,7 +15,7 @@ import LessonFormGroupSelect from '@/features/lessons/components/LessonFormGroup
 import { LessonFormUsersSelect } from '@/features/lessons/components/LessonFormUsersSelect/LessonFormUsersSelect';
 import { useLessonForm } from '@/features/lessons/hooks/useLessonForm';
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
-import { studentFormRules } from '@/features/students/utils/validationFormFields';
+import { getStudentFormRules } from '@/features/students/utils/validationFormFields';
 import type { initDataType, ModeType } from '@/shared/types/modalTypes';
 
 const { RangePicker } = DatePicker;
@@ -42,6 +43,8 @@ const LessonForm: FC<LessonFormProps> = ({
     onClose,
     setIsGroup,
   });
+  const { t } = useTranslation();
+  const studentFormRules = getStudentFormRules(t);
 
   return (
     <Form form={form} onFinish={onFinish} layout="vertical">
@@ -53,16 +56,28 @@ const LessonForm: FC<LessonFormProps> = ({
         form={form}
       />
 
-      <Form.Item name="date" label="Date:" rules={[{ required: true }]}>
+      <Form.Item
+        name="date"
+        label={`${t('date')}: `}
+        rules={[{ required: true }]}
+      >
         <RangePicker showTime={SHOW_TIME_FORMAT} format={DATE_TIME_FORMAT} />
       </Form.Item>
 
-      <Form.Item name="price" label="Price:" rules={studentFormRules.price}>
-        <InputNumber min={0} placeholder="500" addonAfter="UAH ₴" />
+      <Form.Item
+        name="price"
+        label={`${t('form.priceLabel')}: `}
+        rules={studentFormRules.price}
+      >
+        <InputNumber
+          min={0}
+          placeholder={`${t('form.pricePlh')}`}
+          addonAfter="UAH ₴"
+        />
       </Form.Item>
 
-      <Form.Item name="notes" label="Notes:">
-        <Input.TextArea rows={3} placeholder="Note some info here" />
+      <Form.Item name="notes" label={`${t('form.notesLabel')}: `}>
+        <Input.TextArea rows={3} placeholder={`${t('form.notePlh')}`} />
       </Form.Item>
 
       <Form.Item>
@@ -70,16 +85,16 @@ const LessonForm: FC<LessonFormProps> = ({
           {mode === 'edit' && (
             <Space>
               <Button danger htmlType="button" onClick={onDeleteHandler}>
-                Delete
+                {t('delete')}
               </Button>
             </Space>
           )}
           <Space>
             <Button htmlType="button" onClick={onClose}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type="primary" htmlType="submit" loading={isLoading}>
-              {mode === 'create' ? 'Create' : 'Update'}
+              {mode === 'create' ? `${t('create')}` : `${t('update')}`}
             </Button>
           </Space>
         </Flex>

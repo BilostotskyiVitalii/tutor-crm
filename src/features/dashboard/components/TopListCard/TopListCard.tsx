@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { TrophyOutlined } from '@ant-design/icons';
@@ -30,6 +31,7 @@ function isStudent(item: TopItem): item is StudentStat {
 export const TopListCard: FC<TopListCardProps> = ({ title, data }) => {
   const [mode, setMode] = useState<'hours' | 'revenue'>('hours');
   const list = mode === 'hours' ? data?.hours : data?.revenue;
+  const { t } = useTranslation();
 
   return (
     <Card
@@ -47,8 +49,8 @@ export const TopListCard: FC<TopListCardProps> = ({ title, data }) => {
             value={mode}
             onChange={(val) => setMode(val as 'hours' | 'revenue')}
             options={[
-              { label: 'By hours', value: 'hours' },
-              { label: 'By revenue', value: 'revenue' },
+              { label: `${t('byHours')}`, value: 'hours' },
+              { label: `${t('byRevenue')}`, value: 'revenue' },
             ]}
           />
         </Flex>

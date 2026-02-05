@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
@@ -21,6 +22,7 @@ interface GroupCardProps {
 const GroupCard: FC<GroupCardProps> = ({ group }) => {
   const { removeGroup } = useGroupActions();
   const { onAddLesson, onEditGroup, filteredStudents } = useGroupCard(group);
+  const { t } = useTranslation();
 
   return (
     <Card
@@ -53,10 +55,10 @@ const GroupCard: FC<GroupCardProps> = ({ group }) => {
             </Title>
           </Link>
           <Paragraph disabled={!group.notes} className={styles.notes} italic>
-            {group.notes || 'No notes'}
+            {group.notes || `${t('noNotes')}`}
           </Paragraph>
           <Paragraph className={styles.price} italic>
-            Price: {group.price}
+            {t('price')}: {group.price}
           </Paragraph>
         </div>
       </Flex>

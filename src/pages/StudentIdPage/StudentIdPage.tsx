@@ -1,4 +1,5 @@
 import { type FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { Empty, Spin, Tabs } from 'antd';
@@ -17,6 +18,7 @@ import styles from './StudentIdPage.module.scss';
 
 const StudentIdPage: FC = () => {
   const { id } = useParams<{ id: string }>();
+  const { t } = useTranslation();
 
   const defaultStart = dayjs().startOf('month');
   const defaultEnd = dayjs().endOf('month');
@@ -36,7 +38,7 @@ const StudentIdPage: FC = () => {
   );
 
   if (!student && !studentLoading) {
-    return <Empty description={'Student not found'} />;
+    return <Empty description={t('noStudent')} />;
   }
 
   return (
@@ -52,12 +54,12 @@ const StudentIdPage: FC = () => {
             items={[
               {
                 key: 'stats',
-                label: '📊 Stats',
+                label: `📊 ${t('stats')}`,
                 children: <StudentStatsTab stats={stats} />,
               },
               {
                 key: 'lessons',
-                label: '📘 Lessons',
+                label: `📘 ${t('lessons')}`,
                 children: <StudentLessonsTab stats={stats} />,
               },
             ]}

@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Avatar, Card, Divider, Typography } from 'antd';
 
@@ -20,6 +21,7 @@ export const GroupInfoCard: FC<Props> = ({ group }) => {
   const filteredStudents = students?.filter((student) =>
     group.studentIds.includes(student.id),
   );
+  const { t } = useTranslation();
 
   return (
     <Card className={styles.groupCard}>
@@ -35,14 +37,14 @@ export const GroupInfoCard: FC<Props> = ({ group }) => {
       <Divider />
       <h2>{group.title}</h2>
       <p>
-        <Text strong>💵 Price per hour: ₴ </Text> {group.price ?? '-'}
+        <Text strong>{`💵 ${t('pricePH')}: ₴ `}</Text> {group.price ?? '-'}
       </p>
       <p>
-        <Text strong>🍼 Created at: </Text>
+        <Text strong>{`🍼 ${t('createdAt')}: `}</Text>
         {group.createdAt ? new Date(group.createdAt).toLocaleDateString() : '-'}
       </p>
       <p>
-        <Text strong>📋 Notes: </Text> {group.notes ?? '-'}
+        <Text strong>{`📋 ${t('notes')}: `}</Text> {group.notes ?? '-'}
       </p>
       <Divider />
       <GroupActionsButtons group={group} />

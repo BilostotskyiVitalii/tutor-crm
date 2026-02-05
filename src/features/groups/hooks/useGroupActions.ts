@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { App as AntApp } from 'antd';
 
@@ -18,49 +19,54 @@ export function useGroupActions() {
   const { handleError } = useErrorHandler();
   const { data: groups = [] } = useGetGroupsQuery();
   const { notification, modal } = AntApp.useApp();
+  const { t } = useTranslation();
 
   const createGroup = useCallback(
     async (data: GroupData) => {
       try {
         await addGroup(data).unwrap();
-        notification.success({ message: 'Group created!' });
+        notification.success({ message: `${t('useGroupActions.created')}` });
       } catch (err) {
-        handleError(err, 'Failed to create group');
+        handleError(err, `${t('useGroupActions.createFailed')}`);
       }
     },
-    [addGroup, handleError, notification],
+    [addGroup, handleError, notification, t],
   );
 
   const updateGroupData = useCallback(
     async (id: string, data: Partial<GroupData>) => {
       try {
         await updateGroup({ id, data }).unwrap();
-        notification.success({ message: 'Group updated!' });
+        notification.success({
+          message: `${t('useGroupActions.updated')}`,
+        });
       } catch (err) {
-        handleError(err, 'Failed to update group');
+        handleError(err, `${t('useGroupActions.updateFailed')}`);
       }
     },
-    [updateGroup, handleError, notification],
+    [updateGroup, handleError, notification, t],
   );
 
   const removeGroup = useCallback(
     async (id: string) => {
       modal.confirm({
-        title: 'Delete this group?',
+        title: `${t('useGroupActions.deleteConfirm')}`,
         okType: 'danger',
-        okText: 'Yes',
-        cancelText: 'No',
+        okText: `${t('okText')}`,
+        cancelText: `${t('cancelText')}`,
         onOk: async () => {
           try {
             await deleteGroup(id).unwrap();
-            notification.success({ message: 'Group deleted!' });
+            notification.success({
+              message: `${t('useGroupActions.deleted')}`,
+            });
           } catch (err) {
-            handleError(err, 'Failed to delete group');
+            handleError(err, `${t('useGroupActions.deleteFailed')}`);
           }
         },
       });
     },
-    [deleteGroup, handleError, notification, modal],
+    [deleteGroup, handleError, notification, modal, t],
   );
 
   const removeStudentFromGroups = useCallback(
@@ -82,14 +88,14 @@ export function useGroupActions() {
         await Promise.all(updatePromises);
         if (updatePromises.length !== 0) {
           notification.success({
-            message: 'Student removed from all groups!',
+            message: `${t('useGroupActions.removed')}`,
           });
         }
       } catch (err) {
-        handleError(err, 'Failed to remove student from groups');
+        handleError(err, `${t('useGroupActions.reemoveFailed')}`);
       }
     },
-    [updateGroup, handleError, groups, notification],
+    [updateGroup, handleError, groups, notification, t],
   );
 
   return {

@@ -1,4 +1,3 @@
-// CHANGED — підтримка і Timestamp, і number для start/end/createdAt/updatedAt
 import { type DocumentData, Timestamp } from 'firebase/firestore';
 
 import type { Lesson } from '@/features/lessons/types/lessonTypes';
@@ -15,8 +14,8 @@ export const mapFirestoreLesson = (id: string, data: DocumentData): Lesson => ({
   students: data.students ?? [],
   notes: data.notes ?? null,
   price: data.price ?? 0,
-  start: toMillisOrNumber(data.start, Date.now()), // CHANGED
-  end: toMillisOrNumber(data.end, Date.now()), // CHANGED
+  start: toMillisOrNumber(data.start, Date.now()),
+  end: toMillisOrNumber(data.end, Date.now()),
   createdAt: toMillisOrNumber(data.createdAt, Date.now()),
   updatedAt: toMillisOrNumber(data.updatedAt, Date.now()),
 });

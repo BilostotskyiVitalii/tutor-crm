@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import type { ColumnsType } from 'antd/es/table';
@@ -14,9 +15,11 @@ import { navigationUrls } from '@/shared/constants/navigationUrls';
 const { active, inactive } = studentStatus;
 
 export const useStudentColumns = (): ColumnsType<Student> => {
+  const { t } = useTranslation();
+
   return [
     {
-      title: 'Avatar',
+      title: `${t('avatar')}`,
       dataIndex: 'avatarUrl',
       key: 'avatarUrl',
       render: (avatarUrl: string | null, student) => (
@@ -28,7 +31,7 @@ export const useStudentColumns = (): ColumnsType<Student> => {
       ),
     },
     {
-      title: 'Name',
+      title: `${t('name')}`,
       dataIndex: 'name',
       key: 'name',
       sorter: (a, b) => a.name.localeCompare(b.name),
@@ -37,7 +40,7 @@ export const useStudentColumns = (): ColumnsType<Student> => {
       ),
     },
     {
-      title: 'Status',
+      title: `${t('status')}`,
       dataIndex: 'isActive',
       key: 'isActive',
       filters: [
@@ -48,20 +51,20 @@ export const useStudentColumns = (): ColumnsType<Student> => {
       render: (_, student) => <StatusDropdown student={student} />,
     },
     {
-      title: 'Level',
+      title: `${t('level')}`,
       dataIndex: 'currentLevel',
       key: 'currentLevel',
       sorter: (a, b) => a.currentLevel.localeCompare(b.currentLevel),
     },
     {
-      title: 'Price',
+      title: `${t('price')}`,
       dataIndex: 'price',
       key: 'price',
       sorter: (a, b) => (a.price ?? 0) - (b.price ?? 0),
       render: (val) => (val !== null ? `₴ ${val}` : '-'),
     },
     {
-      title: 'Actions',
+      title: `${t('actions')}`,
       key: 'actions',
       render: (_, student) => <StudentActionsButtons student={student} />,
     },

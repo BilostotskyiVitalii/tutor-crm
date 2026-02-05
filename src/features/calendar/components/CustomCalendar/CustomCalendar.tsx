@@ -1,6 +1,7 @@
 import { type FC, useState } from 'react';
 import { Calendar as RBC } from 'react-big-calendar';
 import withDragAndDrop from 'react-big-calendar/lib/addons/dragAndDrop';
+import { useTranslation } from 'react-i18next';
 
 import { Calendar as AntdCalendar, Flex, Spin } from 'antd';
 import type { Dayjs } from 'dayjs';
@@ -21,6 +22,7 @@ const CustomCalendar: FC = () => {
   const { calendarEvents, isLessonsLoading } = useLessonEvents();
   const localizer = useCalendarLocalizer();
   const SCROLL_TIME = new Date(1970, 1, 1, 8, 0, 0);
+  const { t } = useTranslation();
 
   const {
     handleEventDrop,
@@ -43,7 +45,7 @@ const CustomCalendar: FC = () => {
       <Spin
         spinning={isLessonsLoading}
         size="large"
-        tip="Loading lessons..."
+        tip={t('loading')}
         wrapperClassName={styles.mainCalendarWrapper}
       >
         <div className={styles.mainCalendarContainer}>

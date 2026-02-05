@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Card, Typography } from 'antd';
 import {
@@ -31,6 +32,7 @@ export const LessonsByDayChart: FC<Props> = ({
   data,
   title = 'Lessons by Day of Week',
 }) => {
+  const { t } = useTranslation();
   const lessonsByDayData =
     data?.map((i) => ({
       day: typeof i.day === 'number' ? daysOfWeek[i.day] : i.day,
@@ -54,7 +56,7 @@ export const LessonsByDayChart: FC<Props> = ({
           </BarChart>
         </ResponsiveContainer>
       ) : (
-        <Text type="secondary">No lesson data available</Text>
+        <Text type="secondary">{t('noLessonsData')}</Text>
       )}
     </Card>
   );

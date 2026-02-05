@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { App as AntApp } from 'antd';
 
@@ -18,50 +19,62 @@ export function useStudentActions() {
   const { removeStudentFromGroups } = useGroupActions();
   const { handleError } = useErrorHandler();
   const { notification, modal } = AntApp.useApp();
+  const { t } = useTranslation();
 
   const createStudent = useCallback(
     async (data: StudentData) => {
       try {
         await addStudent(data).unwrap();
-        notification.success({ message: 'Student created!' });
+        notification.success({
+          message: `${t('useStudentAction.created')}`,
+        });
       } catch (err) {
-        handleError(err, 'Failed to create student');
+        handleError(err, `${t('useStudentAction.createFailed')}`);
       }
     },
-    [addStudent, handleError, notification],
+    [addStudent, handleError, notification, t],
   );
 
   const updateStudentData = useCallback(
     async (id: string, data: Partial<StudentData>) => {
       try {
         await updateStudent({ id, data }).unwrap();
-        notification.success({ message: 'Student updated!' });
+        notification.success({ message: `${t('useStudentAction.updated')}` });
       } catch (err) {
-        handleError(err, 'Failed to create student');
+        handleError(err, `${t('useStudentAction.updateFailed')}`);
       }
     },
-    [updateStudent, handleError, notification],
+    [updateStudent, handleError, notification, t],
   );
 
   const removeStudent = useCallback(
     async (id: string) => {
       modal.confirm({
-        title: 'Delete this student?',
+        title: `${t('useStudentAction.deleteConfirm')}`,
         okType: 'danger',
-        okText: 'Yes',
-        cancelText: 'No',
+        okText: `${t('okText')}`,
+        cancelText: `${t('cancelText')}`,
         onOk: async () => {
           try {
             await removeStudentFromGroups(id);
             await deleteStudent(id).unwrap();
-            notification.success({ message: 'Student deleted!' });
+            notification.success({
+              message: `${t('useStudentAction.deleted')}`,
+            });
           } catch (err) {
-            handleError(err, 'Failed to delete student');
+            handleError(err, `${t('useStudentAction.deleteFailed')}`);
           }
         },
       });
     },
-    [deleteStudent, handleError, removeStudentFromGroups, modal, notification],
+    [
+      deleteStudent,
+      handleError,
+      removeStudentFromGroups,
+      modal,
+      notification,
+      t,
+    ],
   );
 
   const updateStudentStatus = useCallback(
@@ -72,12 +85,14 @@ export function useStudentActions() {
           id,
           data: { isActive: newStatus },
         }).unwrap();
-        notification.success({ message: 'Status updated!' });
+        notification.success({
+          message: `${t('useStudentAction.updatedStatus')}`,
+        });
       } catch (err) {
-        handleError(err, 'Failed to delete student status');
+        handleError(err, `${t('useStudentAction.updateStatusFailed')}`);
       }
     },
-    [updateStudent, handleError, removeStudentFromGroups, notification],
+    [updateStudent, handleError, removeStudentFromGroups, notification, t],
   );
 
   return {

@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Form, Select } from 'antd';
 
@@ -17,6 +18,7 @@ export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
   onChange,
 }) => {
   const { data: students = [] } = useGetStudentsQuery();
+  const { t } = useTranslation();
 
   const activeStudents = students
     .filter((s) => s.isActive)
@@ -42,10 +44,14 @@ export const LessonFormUsersSelect: FC<LessonFormUsersSelectProps> = ({
   );
 
   return (
-    <Form.Item name="studentIds" label="Students:" rules={[{ required: true }]}>
+    <Form.Item
+      name="studentIds"
+      label={`${t('form.studentsLabel')}:`}
+      rules={[{ required: true }]}
+    >
       <Select
         mode="multiple"
-        placeholder="Select students"
+        placeholder={`${t('form.studentsPlh')}:`}
         options={studentOptions}
         value={value}
         onChange={onChange}

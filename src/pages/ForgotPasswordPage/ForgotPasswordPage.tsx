@@ -1,4 +1,5 @@
 import { type FC } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { MailOutlined } from '@ant-design/icons';
 import { Button, Flex, Form, Input } from 'antd';
@@ -7,6 +8,7 @@ import { useForgotPassword } from '@/features/auth/hooks/useForgotPassword';
 
 const ForgotPasswordPage: FC = () => {
   const { resetPassword, loading } = useForgotPassword();
+  const { t } = useTranslation();
 
   const onFinish = (values: { email: string }) => {
     resetPassword(values.email);
@@ -15,7 +17,7 @@ const ForgotPasswordPage: FC = () => {
   return (
     <Flex className="auth-backdrop">
       <Form className="auth-form" name="forgot-password" onFinish={onFinish}>
-        <h2 className="auth-form-title">Forgot Password</h2>
+        <h2 className="auth-form-title">{t('forgotPassword.title')}</h2>
         <Form.Item
           name="email"
           rules={[
@@ -27,7 +29,7 @@ const ForgotPasswordPage: FC = () => {
         </Form.Item>
         <Form.Item>
           <Button block type="primary" htmlType="submit" loading={loading}>
-            Send reset link
+            {t('forgotPassword.resetLink')}
           </Button>
         </Form.Item>
       </Form>

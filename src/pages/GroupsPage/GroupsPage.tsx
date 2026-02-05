@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Empty, Flex, Spin } from 'antd';
 
@@ -10,6 +12,7 @@ import styles from './GroupsPage.module.scss';
 const GroupsPage = () => {
   const { data: groups, isLoading, isError } = useGetGroupsQuery();
   const { openModal } = useModal();
+  const { t } = useTranslation();
 
   function onAddGroup() {
     openModal({
@@ -27,10 +30,10 @@ const GroupsPage = () => {
         icon={<PlusOutlined />}
         onClick={onAddGroup}
       >
-        New group
+        {t('newGroup')}
       </Button>
 
-      {isError && <p style={{ color: 'red' }}>Failed to load group</p>}
+      {isError && <p style={{ color: 'red' }}>{t('noGroup')}</p>}
       {groups?.length === 0 && <Empty description={'No groups found'} />}
 
       <Spin
