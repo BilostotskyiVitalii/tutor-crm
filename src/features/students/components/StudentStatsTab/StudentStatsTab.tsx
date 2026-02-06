@@ -19,7 +19,7 @@ export const StudentStatsTab: FC<Props> = ({ stats }) => {
 
   return (
     <div className={styles.stats}>
-      <Card title="Lessons Summary">
+      <Card title={`${t('lessonsSumm')}`}>
         <Space size="large">
           <Statistic
             title={t('done')}
@@ -37,7 +37,7 @@ export const StudentStatsTab: FC<Props> = ({ stats }) => {
         </Space>
       </Card>
 
-      <Card title="Revenue Summary">
+      <Card title={`${t('revSumm')}`}>
         <Space size="large">
           <Statistic
             title={t('totalRevenue')}

@@ -23,15 +23,11 @@ interface DayData {
 
 interface Props {
   data?: DayData[];
-  title?: string;
 }
 
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-export const LessonsByDayChart: FC<Props> = ({
-  data,
-  title = 'Lessons by Day of Week',
-}) => {
+export const LessonsByDayChart: FC<Props> = ({ data }) => {
   const { t } = useTranslation();
   const lessonsByDayData =
     data?.map((i) => ({
@@ -40,7 +36,7 @@ export const LessonsByDayChart: FC<Props> = ({
     })) ?? [];
 
   return (
-    <Card title={title} className={styles.chartWrapper}>
+    <Card title={t('lessonsByDay')} className={styles.chartWrapper}>
       {data?.length ? (
         <ResponsiveContainer height={250}>
           <BarChart data={lessonsByDayData}>

@@ -123,6 +123,10 @@ i18n.use(initReactI18next).init({
         noNotes: 'No notes',
         price: 'Price',
 
+        pricePH: 'Price per hour',
+        createdAt: 'Created at',
+        notes: 'Notes',
+
         date: 'Date',
         title: 'Title',
         status: 'Status',
@@ -317,7 +321,7 @@ i18n.use(initReactI18next).init({
         current: 'Поточний',
         expected: 'Очікуваний',
         avgPrice: 'Середня ціна',
-        perHour: 'за годину',
+        perHour: 'За годину',
         studentPerHour: 'Студент за годину',
         students: 'Студенти',
         active: 'Активний',
@@ -339,6 +343,10 @@ i18n.use(initReactI18next).init({
 
         noNotes: 'Помітки відсутні',
         price: 'Ціна',
+
+        pricePH: 'Ціна за год',
+        createdAt: 'Створено',
+        notes: 'Помітки',
 
         date: 'Дата',
         title: 'Заголовок',
@@ -384,13 +392,21 @@ i18n.use(initReactI18next).init({
           contactLabel: 'Контакт:',
           birthdateLabel: 'Дата народження:',
           levelLabel: 'Поточний рівень:',
+
           titlePlh: 'Найкраща група',
           studentsPlh: 'Виберіть студентів',
           pricePlh: '500',
           groupPlh: 'Оберіть групу',
           notePlh: 'Занотуйте інформацію тут',
+
+          namePlh: 'Джон Сноу',
+          emailPlh: 'student@mail.com',
+          phonePlh: '+380667462269',
+          contactPlh: 'Посилання на інсту, телеграм, тощо',
+
           ruleMessage: 'Введіть назву',
           groupFormError: 'Помилка форми груп!',
+          lessonFormError: 'Помилка форми уроку!',
           studentFormError: 'Помилка форми студента!',
         },
 
@@ -550,9 +566,9 @@ i18n.use(initReactI18next).init({
         noNotes: 'Заметки отсутствуют',
         price: 'Цена',
 
-        pricePH: 'Price per hour',
-        createdAt: 'Created at',
-        notes: 'Notes',
+        pricePH: 'Цена в час',
+        createdAt: 'Зоздано',
+        notes: 'Заметки',
 
         date: 'Дата',
         title: 'Заглавление',
@@ -598,13 +614,21 @@ i18n.use(initReactI18next).init({
           contactLabel: 'Контакт:',
           birthdateLabel: 'Дата рождения:',
           levelLabel: 'Текущий уровень:',
+
           titlePlh: 'Лучшая группа',
           studentsPlh: 'Виберите студентов',
+          groupPlh: 'Выберите группу',
           pricePlh: '500',
           notePlh: 'Заметки тут',
-          groupPlh: 'Выберите группу',
+
+          namePlh: 'Джон Сноу',
+          emailPlh: 'student@mail.com',
+          phonePlh: '+380667462269',
+          contactPlh: 'Ссылка в инсту, телеграм, и т.д.',
+
           ruleMessage: 'Введите название',
           groupFormError: 'Ошибка формы групп!',
+          lessonFormError: 'Ошибка формы урока!',
           studentFormError: 'Ошибка формы студента!',
         },
 

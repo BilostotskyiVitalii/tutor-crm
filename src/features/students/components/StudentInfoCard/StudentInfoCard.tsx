@@ -29,7 +29,7 @@ export const StudentInfoCard: FC<Props> = ({ student }) => {
       <Divider />
       <h2>{student.name}</h2>
       <p>
-        <Text strong>{`${t('status')}:`}</Text>
+        <Text strong>{`${t('status')}: `}</Text>
         {student.isActive ? (
           <Text type="success">{t('active')}</Text>
         ) : (
@@ -52,19 +52,19 @@ export const StudentInfoCard: FC<Props> = ({ student }) => {
         <Text strong>{`💵 ${t('pricePH')}: ₴`}</Text> {student.price ?? '-'}
       </p>
       <p>
-        <Text strong>{`🎁 ${t('birthdate')}`}</Text>
+        <Text strong>{`🎁 ${t('birthdate')} `}</Text>
         {student.birthdate
           ? new Date(student.birthdate).toLocaleDateString()
           : '-'}
       </p>
       <p>
-        <Text strong>{`🍼 ${t('createdAt')}:`}</Text>
+        <Text strong>{`🍼 ${t('createdAt')}: `}</Text>
         {student.createdAt
           ? new Date(student.createdAt).toLocaleDateString()
           : '-'}
       </p>
       <p>
-        <Text strong>{`📋 ${t('notes')}:`}</Text> {student.notes ?? '-'}
+        <Text strong>{`📋 ${t('notes')}: `}</Text> {student.notes ?? '-'}
       </p>
       <Divider />
       <StudentActionsButtons student={student} />

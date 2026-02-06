@@ -53,7 +53,7 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
         label={`${t('form.nameLabel')}`}
         rules={studentFormRules.name}
       >
-        <Input placeholder="John Snow" />
+        <Input placeholder={`${t('form.namePlh')}`} />
       </Form.Item>
 
       <Form.Item
@@ -61,7 +61,7 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
         label={`${t('form.emailLabel')}`}
         rules={studentFormRules.email}
       >
-        <Input placeholder="student@mail.com" />
+        <Input placeholder={`${t('form.emailPlh')}`} />
       </Form.Item>
 
       <Form.Item
@@ -69,11 +69,11 @@ const StudentForm: FC<StudentFormProps> = ({ mode, onClose, student }) => {
         label={`${t('form.phoneLabel')}`}
         rules={studentFormRules.phone}
       >
-        <Input placeholder="+380667462269" />
+        <Input placeholder={`${t('form.phonePlh')}`} />
       </Form.Item>
 
       <Form.Item name="contact" label={`${t('form.contactLabel')}`}>
-        <Input placeholder="Link to insta, telegram, etc..." />
+        <Input placeholder={`${t('form.contactPlh')}`} />
       </Form.Item>
 
       <Form.Item name="birthdate" label={`${t('form.birthdateLabel')}`}>
