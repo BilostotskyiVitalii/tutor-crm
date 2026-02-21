@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 
+import { FRONTEND_ORIGIN } from '../../config';
 import { AuthService } from '../../services/auth/auth.service';
 import { GoogleAuthService } from '../../services/auth/googleAuth.service';
-
-const { FRONTEND_ORIGIN } = process.env;
 
 export const googleAuth = (req: Request, res: Response) => {
   const url = GoogleAuthService.generateAuthUrl();
@@ -22,7 +21,8 @@ export const googleCallback = async (req: Request, res: Response) => {
 
     AuthService.setAuthCookie(res, jwt);
 
-    return res.redirect(`${FRONTEND_ORIGIN}/dashboard`);
+    const frontendOrigin = FRONTEND_ORIGIN.value();
+    return res.redirect(`${frontendOrigin}/dashboard`);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Google OAuth failed';
     res.status(400).send(message);

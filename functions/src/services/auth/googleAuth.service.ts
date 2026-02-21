@@ -1,12 +1,16 @@
 import { FieldValue } from 'firebase-admin/firestore';
 import { OAuth2Client } from 'google-auth-library';
 
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI } from '../../config';
 import { admin, db } from '../../firebase';
 
 import { AuthService } from './auth.service';
 
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI } = process.env;
-const client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, OAUTH_REDIRECT_URI);
+const client = new OAuth2Client(
+  GOOGLE_CLIENT_ID.value(),
+  GOOGLE_CLIENT_SECRET.value(),
+  GOOGLE_REDIRECT_URI.value(),
+);
 
 export const GoogleAuthService = {
   generateAuthUrl() {
@@ -21,7 +25,7 @@ export const GoogleAuthService = {
     const { tokens } = await client.getToken(code);
     const ticket = await client.verifyIdToken({
       idToken: tokens.id_token!,
-      audience: GOOGLE_CLIENT_ID,
+      audience: GOOGLE_CLIENT_ID.value(),
     });
 
     const payload = ticket.getPayload();

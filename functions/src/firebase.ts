@@ -1,15 +1,8 @@
-import dotenv from 'dotenv';
 import * as admin from 'firebase-admin';
 import { getApps } from 'firebase-admin/app';
 
-dotenv.config();
-
 if (!getApps().length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-    projectId: process.env.PROJECT_ID,
-    storageBucket: process.env.STORAGE_BUCKET,
-  });
+  admin.initializeApp();
 }
 
 export { admin };

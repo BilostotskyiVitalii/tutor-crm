@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { JWT_SECRET } from '../config';
 import { AuthenticatedRequest, AuthUser } from '../types/authTypes';
 
 export function requireAuth(
@@ -20,7 +21,9 @@ export function requireAuth(
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as AuthUser;
+    const secret = JWT_SECRET.value();
+    const decoded = jwt.verify(token, secret) as AuthUser;
+
     (req as AuthenticatedRequest).user = decoded;
     next();
   } catch {

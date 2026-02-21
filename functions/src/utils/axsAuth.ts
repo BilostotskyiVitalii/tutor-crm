@@ -1,7 +1,9 @@
 import axios from 'axios';
-const { API_KEY } = process.env;
+import { defineString } from 'firebase-functions/params';
+
+export const API_KEY = defineString('API_KEY');
 
 export const axsAuth = axios.create({
   baseURL: 'https://identitytoolkit.googleapis.com/v1/',
-  params: { key: API_KEY },
+  params: { key: API_KEY.value() },
 });

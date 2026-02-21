@@ -1,13 +1,13 @@
 import { Response } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { JWT_SECRET } from '../../config';
 import { db } from '../../firebase';
-
-const { JWT_SECRET } = process.env;
 
 export const AuthService = {
   createJwt(uid: string, email: string) {
-    return jwt.sign({ uid, email }, JWT_SECRET!, { expiresIn: '7d' });
+    const secret = JWT_SECRET.value();
+    return jwt.sign({ uid, email }, secret, { expiresIn: '7d' });
   },
 
   setAuthCookie(res: Response, jwtToken: string) {
@@ -15,7 +15,7 @@ export const AuthService = {
       httpOnly: true,
       secure: true,
       sameSite: 'none',
-      maxAge: 7 * 24 * 3600 * 1000,
+      maxAge: 7 * 24 * 3600 * 1000, // 7 дней
     });
   },
 

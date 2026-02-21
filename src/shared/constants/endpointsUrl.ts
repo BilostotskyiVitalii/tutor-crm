@@ -1,4 +1,4 @@
-const baseUrl = `${import.meta.env.VITE_FUNCTIONS_API_BASE}/api` as string;
+const baseUrl = `${import.meta.env.VITE_API_BASE}/api` as string;
 
 export const endpointsURL = {
   apiBaseUrl: baseUrl,

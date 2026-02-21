@@ -1,18 +1,19 @@
+import { RESET_PASSWORD_URL } from '../../config';
 import { admin } from '../../firebase';
 import { axsAuth } from '../../utils/axsAuth';
 import { sendEmail } from '../../utils/sendEmail';
 
-const { FRONTEND_RESET_PASSWORD_URL } = process.env;
-
 export const ResetPasswordService = {
   async requestReset(email: string) {
+    const frontendResetUrl = RESET_PASSWORD_URL.value();
+
     const resetLink = await admin.auth().generatePasswordResetLink(email, {
-      url: `${FRONTEND_RESET_PASSWORD_URL}?email=${email}`,
+      url: `${frontendResetUrl}?email=${email}`,
       handleCodeInApp: true,
     });
 
     const query = resetLink.split('?')[1];
-    const customLink = `${FRONTEND_RESET_PASSWORD_URL}?${query}`;
+    const customLink = `${frontendResetUrl}?${query}`;
 
     await sendEmail({
       to: email,

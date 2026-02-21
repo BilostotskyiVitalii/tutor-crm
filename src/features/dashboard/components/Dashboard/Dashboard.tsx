@@ -63,10 +63,7 @@ export const Dashboard = () => {
                   expected: data?.revenueMixExpected,
                 }}
               />
-              <LessonsByDayChart
-                data={data?.lessonsByDayOfWeek}
-                title={`${t('lessonsByDay')}`}
-              />
+              <LessonsByDayChart data={data?.lessonsByDayOfWeek} />
             </div>
             <div className={styles.rightGrid}>
               <Card title={`💰 ${t('revenue')}`}>
