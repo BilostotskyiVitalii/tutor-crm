@@ -1,0 +1,10 @@
+export { default as AnalyticsPage } from './AnalyticsPage/AnalyticsPage';
+export { default as DashboardPage } from './DashboardPage/DashboardPage';
+export { default as ForgotPasswordPage } from './ForgotPasswordPage/ForgotPasswordPage';
+export { default as GroupsPage } from './GroupsPage/GroupsPage';
+export { default as LoginPage } from './LoginPage/LoginPage';
+export { default as RegistrationPage } from './RegistrationPage/RegistrationPage';
+export { default as SchedulePage } from './SchedulePage/SchedulePage';
+export { default as SettingsPage } from './SettingsPage/SettingsPage';
+export { default as StudentIdPage } from './StudentIdPage/StudentIdPage';
+export { default as StudentsPage } from './StudentsPage/StudentsPage';

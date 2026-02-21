@@ -1,0 +1,9 @@
+@use '@/shared/styles/variables' as *;
+
+.card {
+  width: $student-card-width;
+  min-height: $student-card-heigh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
